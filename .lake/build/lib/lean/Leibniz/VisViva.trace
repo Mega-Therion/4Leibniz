@@ -1,0 +1,29 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["35f11f13abd04770.olean"],
+  "m": false,
+  "i": "52943c35275e6c66.ilean",
+  "c": "f22911933fed06fc.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/mega/4Leibniz/.lake/build/lib/lean /home/mega/.elan/toolchains/leanprover--lean4---v4.33.1/bin/lean /home/mega/4Leibniz/Leibniz/VisViva.lean -o /home/mega/4Leibniz/.lake/build/lib/lean/Leibniz/VisViva.olean -i /home/mega/4Leibniz/.lake/build/lib/lean/Leibniz/VisViva.ilean -c /home/mega/4Leibniz/.lake/build/ir/Leibniz/VisViva.c --setup /home/mega/4Leibniz/.lake/build/ir/Leibniz/VisViva.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["Leibniz/Leibniz:extraDep", [["@Leibniz:extraDep", "00000000000006bb"]]],
+    ["imports", "00000000000006bb"]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.1, commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6",
+   "0051240b7c23c453"],
+  ["/home/mega/4Leibniz/Leibniz/VisViva.lean", "274d1588e022a962"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: Leibniz.VisViva", "863867f9403f3aba"],
+  ["Package.id?: (some Leibniz)", "a21a55fee1a85f58"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "3de6722ba8a2c980"}
