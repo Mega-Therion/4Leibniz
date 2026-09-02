@@ -128,27 +128,47 @@ These are the deep mathematical problems in Leibniz's *Nachlass* that require de
 
 ---
 
-## ◈ SECTION 3: THE NEWTON PAYBACK PROTOCOL (*PRINCIPIA RELATIVITATIS*)
+## ◈ SECTION 3: WHERE LEIBNIZ'S POSITIONS HELD
 
-How this standalone project formally and historically dismantles Newton on behalf of Leibniz:
+4Leibniz is not a case against Isaac Newton. It is the completion of what Leibniz
+set out to do and could not finish in his own time. Newton enters only where the
+two men disagreed on a point that modern physics has since settled — and on those
+points the record is that Leibniz's position held.
+
+Stated as positions, not as a scoreboard:
 
 ```
-  NEWTON'S FLAWED EMPIRE (1687)                LEIBNIZ-CHYREN VINDICATION (2026)
-  ───────────────────────────────────────────  ───────────────────────────────────────────
-  1. Absolute Rigid Space:                     1. Relational Information Geometry:
-     Space is a static box existing without       Space is an emergent holographic order of
-     matter. (FALSIFIED)                          boundary tensions. (PROVEN IN LEAN 4)
+  POSITION IN DISPUTE (1687–1716)              WHERE IT STANDS NOW
+  ───────────────────────────────────────────  ──────────────────────────────────────────
+  1. The nature of space                       Relational. Space is an order of
+     Newton: an absolute container existing       coexisting things, not a container.
+     independently of matter.                     General relativity and holographic
+     Leibniz: an order of coexisting things.      approaches take Leibniz's side.  [STD]
 
-  2. Instantaneous Action-at-a-Distance:       2. Horizon-Speed Boundary Projection:
-     Gravity acts magically at t=0 across         Information travels at c; acceleration scale
-     infinite space. (FALSIFIED)                  is bounded by a₀ = cH₀/2π. (OBSERVED IN SPARC)
+  2. Gravitational action at a distance        Retarded and causal. Interaction
+     Newton: instantaneous across empty space.    propagates at c; nothing acts
+     Leibniz: an "occult quality"; interaction    instantaneously across empty space.  [STD]
+     must be mediated.                            In this framework the acceleration
+                                                  scale a_0 = cH_0/2π is a proposed
+                                                  consequence, tested against SPARC.  [D]
 
-  3. Secretive Priority Hoarding:              3. Open-Source "Calculemus!":
-     Locked calculus in private drawers, used     Every theorem is public on GitHub with
-     kangaroo committees. (DISGRACED)             deterministic Lean 4 verification receipts.
+  3. The conserved measure of motion           Energy. Leibniz's vis viva (mv²) is
+     Newton: momentum; motion is destroyed in     conserved via time-translation
+     inelastic collision.                         invariance. Motion is not lost from
+     Leibniz: vis viva (mv²) is conserved.        the universe.  [STD]
 ```
 
----
+On the third row Leibniz was not merely correct — he was correct against the
+consensus of his century, and it took Helmholtz until 1847 to finish the argument.
+
+**A note on how this project treats Newton.** Newton lost these arguments; he did
+not lose stature. He worked under conditions that would have silenced most people —
+Hooke's attacks, the Blasphemy Act standing over his anti-Trinitarian work, and his
+own considerable fear of exposure. Much of his mind never reached print at all. His
+mechanics remains the limit case that this framework must reduce to, and does:
+where the correction vanishes, v_Yett → v_Newton.
+
+The disputes belong in the record. The grudge does not.
 
 ## ◈ SECTION 4: PROPOSED TITLES FOR THE STANDALONE PROJECT
 
