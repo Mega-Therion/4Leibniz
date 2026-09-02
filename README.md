@@ -46,7 +46,7 @@ Every module, namespace, and theorem in `4Leibniz` strictly employs the classica
       (Active Living Force)                                    (Kinetic Energy & Accel. Scale)
 
    6. Lex Continuitatis         Nova Methodus (1684)           Leibniz.LexContinuitatis
-      (Law of Continuity)                                      (Tri-Point Chi Invariant Band)
+      (Law of Continuity)                                      (Chiral Invariant Band)
 
    7. Harmonia Praestabilita    Système Nouveau (1695)         Leibniz.Harmonia
       (Pre-established Harmony)                                (Lindblad Anti-Drift Gate)
@@ -75,16 +75,34 @@ Every module, namespace, and theorem in `4Leibniz` strictly employs the classica
 
 ### 3. *Vis Viva* & *Lex Continuitatis* (Dynamics & The Invariant Band)
 * **Historical Origin:** In *Specimen Dynamicum* (1695), Leibniz refuted Descartes and Newton by proving that the true invariant of motion is *Vis Viva* ($m v^2$, kinetic energy). In his *Law of Continuity* (*Lex Continuitatis*), he established that *"Nature never makes leaps"* (*Natura non facit saltus*), meaning all physical transitions must be continuous differential boundaries.
-* **Formal Role in `4Leibniz`:** Formalizes the parameter-free cosmic acceleration scale $a_0 = \frac{cH_0}{2\pi}$ as the *Vis Viva* threshold at the cosmic horizon, and derives the **Chiral Tri-Point Invariant Band**:
-  - $\chi_{\text{floor}} = 1/\sqrt{2} \approx 0.707106$ (*Continuity Floor / Quantum Coherence*)
-  - $\chi_{\text{mid}} = \ln 2 \approx 0.693147$ (*Thermodynamic Dyadic Bit*)
-  - $\chi_{\text{ceil}} \approx 0.9539$ (*Kerr-Thorne Extremal Saturation Boundary*)
+* **Formal Role in `4Leibniz`:** Formalizes the parameter-free cosmic acceleration scale $a_0 = \frac{cH_0}{2\pi}$ as the *Vis Viva* threshold at the cosmic horizon, and names the **chiral invariant band**:
+  - $\chi_Y = 1/\sqrt{2} \approx 0.707107$ (*continuity floor / quantum coherence*)
+  - $\kappa_Y = \sqrt{\theta(2-\theta)} \approx 0.953939$ (*saturation ceiling, derived from $\theta = 0.7$*)
+
+  > `[O]` The floor has always been $1/\sqrt{2} \approx 0.707107$. What is withdrawn is the
+  > third value this file previously placed *inside* the band:
+  > $\chi_{\text{mid}} = \ln 2 = 0.693147$ is **below** the floor, so the stated ordering was
+  > false as arithmetic. A midpoint may be named if one is needed — it would be $0.830523$
+  > (arithmetic) or $0.821302$ (geometric), not $\ln 2$.
+  >
+  > This value entered through the auto-generated instantiation commit `6c04299` (2026-09-01);
+  > it is not a hand-authored claim. `Leibniz/LexContinuitatis.lean:22` was correct throughout —
+  > it proves $\text{mid} < \text{floor} < \text{ceil}$ — and the generated prose asserted an
+  > ordering its own Lean contradicted.
 
 ---
 
 ### 4. *Harmonia Praestabilita* & *Calculemus!* (The Stability Proofs & Oracle)
 * **Historical Origin:** In *Système Nouveau* (1695), Leibniz showed that systems maintain structural coherence through an intrinsic harmony (*Harmonia Praestabilita*). In *De Scientia Universali*, he proposed the *Calculus Ratiocinator*, where all scientific controversies would be resolved deterministically: *"Let us calculate without dispute!"*
-* **Formal Role in `4Leibniz`:** Proves the **Anti-Drift Theorem**: open quantum dissipative systems maintain their ground-state harmony if and only if the active coherent drive exceeds dissipation ($u \ge \gamma \iff \chi \ge 1/\sqrt{2}$). Provides the automated verification oracle that audits external physical datasets with zero human bias.
+* **Formal Role in `4Leibniz`:** *States* the Anti-Drift claim — open quantum dissipative systems maintain ground-state harmony iff the coherent drive exceeds dissipation ($u \ge \gamma \iff \chi \ge 1/\sqrt{2}$).
+
+  > `[O]` **Not proved here.** `Leibniz/Harmonia.lean:30` is sorry-free but takes the threshold
+  > as a *hypothesis* over scaled naturals (`h_floor : gamma ≥ 7071`); any integer substitutes
+  > for `7071` without breaking the proof, so it certifies nothing about $1/\sqrt{2}$ and nothing
+  > about a Lindblad generator. `Leibniz/Calculemus.lean:39` is not an oracle: it proves that a
+  > record of four `true` fields equals a record of four `true` fields, and audits no dataset.
+  > These six modules are day-one scaffolding — 214 lines of `Nat` arithmetic. They compile
+  > clean, and that is the whole of what they establish.
 
 ---
 
@@ -100,7 +118,7 @@ Every module, namespace, and theorem in `4Leibniz` strictly employs the classica
     ├── Characteristica.lean       # Universal binary alphabet & dual tension
     ├── SpatiumRelativum.lean      # Relational metrics on Monad bundles
     ├── VisViva.lean               # Active energy & horizon acceleration
-    ├── LexContinuitatis.lean      # Chi (χ) tri-point continuity band
+    ├── LexContinuitatis.lean      # Chi (χ) continuity band endpoints
     ├── Harmonia.lean              # Lindblad anti-drift stability theorem
     └── Calculemus.lean            # External claim verification oracle
 ```

@@ -1,0 +1,19 @@
+# Lean / Lake build artifacts — never commit these.
+# They are regenerable, they are large, and tracking them was the cause of the
+# "82.3% C" language stat on this repo (the .lake tree vendors C sources).
+.lake/
+build/
+*.olean
+*.ilean
+*.trace
+*.hash
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editor / OS
+.DS_Store
+*.swp

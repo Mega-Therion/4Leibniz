@@ -1,9 +1,0 @@
-{"plugins": [],
- "package": "Leibniz",
- "options": {},
- "name": "Leibniz.SpatiumRelativum",
- "isModule": false,
- "importArts":
- {"Leibniz.Characteristica":
-  [["/home/mega/4Leibniz/.lake/build/lib/lean/Leibniz/Characteristica.olean"]]},
- "dynlibs": []}

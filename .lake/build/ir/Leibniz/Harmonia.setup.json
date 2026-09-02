@@ -1,9 +1,0 @@
-{"plugins": [],
- "package": "Leibniz",
- "options": {},
- "name": "Leibniz.Harmonia",
- "isModule": false,
- "importArts":
- {"Leibniz.LexContinuitatis":
-  [["/home/mega/4Leibniz/.lake/build/lib/lean/Leibniz/LexContinuitatis.olean"]]},
- "dynlibs": []}

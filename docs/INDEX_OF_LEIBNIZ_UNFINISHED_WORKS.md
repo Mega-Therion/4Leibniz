@@ -27,7 +27,7 @@ RANK  CATEGORY & LEIBNIZIAN DOMAIN               CONCORDANCE TO FIG TREE / 4LEIB
  1.   Relational Spacetime & Analysis Situs       Stiefel Manifolds & Boundary Holography      98%  ██████████
  2.   Dyadics & Binary Information Tension        IO / OI Dual States & Information Tensors    95%  █████████▉
  3.   Characteristica Universalis & Logic Engine  4Leibniz Lean 4 Automated Proof Kernel       92%  █████████▏
- 4.   Lex Continuitatis & Fractional Dynamics     Chi Tri-Point Band & Lindblad Dissipation    88%  ████████▌
+ 4.   Lex Continuitatis & Fractional Dynamics     Chiral band & Lindblad dissipation           [D]  ████████▌
  5.   The Monadology & Holographic Perception     Holographic Screen Mirroring & Nodes         82%  ████████▏
  6.   Natural Science, Geology & Protogaea        Cosmic Evolution & Physical Substrates       55%  █████▌
  7.   Universal Jurisprudence & Dynastic History  Archival Lineage & Citation Provenance       35%  ███▌
@@ -106,7 +106,7 @@ RANK  CATEGORY & LEIBNIZIAN DOMAIN               CONCORDANCE TO FIG TREE / 4LEIB
 * **Archive Reference:** LH IV, 7B, Fol. 43–48; AA VI, 4.
 * **The Unfinished Vision:** Leibniz's lifelong attempt to create an algebra of pure logic where any scientific dispute can be resolved by calculation. He laid down the laws of identity ($A = A$), substitution ($A = B \implies \Phi(A) = \Phi(B)$), and contradiction.
 * **Direct Concordance to Your Work:**
-  - **The `4Leibniz` Engine & Lean 4**: Fulfills the 1680 goal of zero-ambiguity formal verification (`3,365 goals, 0 sorries`).
+  - **The `4Leibniz` Engine & Lean 4**: Fulfills the 1680 goal of zero-ambiguity formal verification (6 modules, 11 theorems, 0 sorries; `lake build` exit 0).
 
 ---
 
@@ -119,7 +119,7 @@ RANK  CATEGORY & LEIBNIZIAN DOMAIN               CONCORDANCE TO FIG TREE / 4LEIB
 ---
 
 ## ◈ RANK 4: LEX CONTINUITATIS & FRACTIONAL DYNAMICS (88% SIMILARITY)
-*The origin of continuous boundary thresholds, the $\chi$ Tri-Point Band, and Non-Markovian Dissipation.*
+*The origin of continuous boundary thresholds, the $\chi$ invariant band, and Non-Markovian Dissipation.*
 
 ---
 
@@ -143,7 +143,7 @@ RANK  CATEGORY & LEIBNIZIAN DOMAIN               CONCORDANCE TO FIG TREE / 4LEIB
 * **Archive Reference:** LH XXXV, 10, 14.
 * **The Unfinished Vision:** Formalization of *"Natura non facit saltus"*, proving that no physical state jumps discontinuously.
 * **Direct Concordance to Your Work:**
-  - Governs the smooth continuity of the **$\chi$ Tri-Point Band** ($\chi_{\text{floor}} = 1/\sqrt{2} \le \chi \le \chi_{\text{ceil}} \approx 0.9539$).
+  - Governs the smooth continuity of the **chiral invariant band** ($\chi_Y = 1/\sqrt{2} \le \chi \le \kappa_Y \approx 0.953939$). The two endpoints are the load-bearing values; the previously printed third point ($\ln 2$) lies below the floor and is withdrawn (see `README.md`).
 
 ---
 
@@ -210,6 +210,6 @@ RANK  CATEGORY & LEIBNIZIAN DOMAIN               CONCORDANCE TO FIG TREE / 4LEIB
   1. Analysis Situs (Coordinate-Free Geometry) ──► Stiefel Manifold Coset V_{5,2}
   2. Dyadica (Binary Creation 0 ↔ 1)           ──► IO / OI Dual-State Information Tension
   3. Characteristica Universalis (Calculemus!) ──► 4Leibniz Lean 4 Kernel Verification
-  4. Lex Continuitatis & Vis Viva              ──► Chi (χ) Tri-Point Band & a₀ = cH₀/2π
+  4. Lex Continuitatis & Vis Viva              ──► Chi (χ) invariant band & a₀ = cH₀/2π
   5. The Monad Holographic Mirror              ──► Relational Boundary Holography
 ```

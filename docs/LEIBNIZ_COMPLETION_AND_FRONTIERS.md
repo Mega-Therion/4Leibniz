@@ -38,14 +38,14 @@ We have audited the existing FIG Tree / Chyren corpus. The following **5 major u
  2. De Progressione Dyadica (1679)          IO / OI Information Tension Tensor T_{μν}     ✅ SOLVED
     Universal Creation from 0 and 1         Dual-state gradient generates bulk spacetime
 
- 3. Generales Inquisitiones (1686)          4Leibniz Lean 4 Kernel Engine                 ✅ SOLVED
-    Calculus Ratiocinator Logic Engine      3,365 goals, 0 sorries, machine-verified
+ 3. Generales Inquisitiones (1686)          4Leibniz Lean 4 scaffold                      ~ STARTED
+    Calculus Ratiocinator Logic Engine      6 modules, 214 lines, 0 sorries. Nat only.
 
- 4. Lex Continuitatis & 1/2-Derivative      Chi (χ) Tri-Point Band & Lindblad Gate        ✅ SOLVED
-    Continuous non-integer dynamics         u ≥ γ ⟺ χ ≥ 1/√2 preserves ground state
+ 4. Lex Continuitatis & 1/2-Derivative      Chiral band + Lindblad gate                   ~ STATED
+    Continuous non-integer dynamics         u ≥ γ ⟺ χ ≥ 1/√2 is [D], not proved here
 
- 5. La Monadologie (1714)                   Rindler/Hubble Horizon Boundary Holography    ✅ SOLVED
-    Monads mirroring the universe           a₀ = cH₀/2π derived from horizon projection
+ 5. La Monadologie (1714)                   Rindler/Hubble horizon holography             ~ DERIVED
+    Monads mirroring the universe           a₀ = cH₀/2π is [D]; no Lean module exists
 ══════════════════════════════════════════════════════════════════════════════════════════
 ```
 
@@ -66,12 +66,33 @@ We have audited the existing FIG Tree / Chyren corpus. The following **5 major u
 
 ---
 
-### 3. Completion of *Lex Continuitatis* & The $1/2$-Derivative Paradox
+### 3. *Lex Continuitatis* & The $1/2$-Derivative Paradox — **PARTIAL**
 * **What Leibniz Left Unfinished:** In his 1695 letter to L'Hôpital, Leibniz predicted that the half-derivative $d^{1/2}/dx^{1/2}$ would one day yield physical consequences.
-* **Our Corpus Solution:**
-  1. **The Continuity Law:** The smooth transition into the galactic dynamics regime follows the analytic interpolation $\mu(x) = x/\sqrt{1+x^2}$, governed by the **$\chi$ Tri-Point Invariant Band**:
-     $$\chi_{\text{floor}} = \frac{1}{\sqrt{2}} \approx 0.707106 \quad\le\quad \chi_{\text{mid}} = \ln 2 \quad\le\quad \chi_{\text{ceil}} \approx 0.9539$$
-  2. **The Fractional Dissipation Gate:** Non-Markovian open quantum dissipation is stabilized by the exact **Anti-Drift Theorem** ($u \ge \gamma$).
+* **Status:** The continuity half is addressed. **The fractional-derivative half is not.**
+
+  > `[O]` Nothing in this corpus uses a fractional derivative. $\mu(x) = x/\sqrt{1+x^2}$
+  > is an ordinary algebraic function of integer-order calculus; it does not answer
+  > Leibniz's $d^{1/2}$ question. Fractional derivatives are the standard tool for
+  > **non-Markovian** open systems, where the state depends on its full history. The
+  > Lindblad-GKSL equation used in Pillar IV is **Markovian** — memoryless — which is
+  > precisely the regime in which no fractional derivative is required. Claiming the
+  > $1/2$-derivative paradox is completed here inverts the actual situation.
+
+* **What is actually established:**
+  1. **The Continuity Law:** The smooth transition into the galactic dynamics regime follows the analytic interpolation $\mu(x) = x/\sqrt{1+x^2}$, governed by the **chiral invariant band**:
+     $$\chi_Y = \frac{1}{\sqrt{2}} \approx 0.707107 \quad\le\quad \chi \quad\le\quad \kappa_Y = \sqrt{\theta(2-\theta)} \approx 0.953939$$
+
+     > `[O]` The former middle term $\chi_{\text{mid}} = \ln 2 = 0.693147$ is removed: it is
+     > **below** $1/\sqrt{2}$, so the chain as previously written was arithmetically false.
+  2. **The Dissipation Gate:** *Markovian* open quantum dissipation is claimed to be
+     stabilized by the Anti-Drift condition ($u \ge \gamma$). This is `[D]`, not `[P]` —
+     see `Res-Nova/05_lean_formalization/PillarIV_AntiDriftGate.lean`, where the algebraic
+     gate is proved over $\mathbb{R}$ and the Lindblad identification is left as an
+     explicit open premise.
+
+  3. **`[O]` The genuine open frontier:** extending the gate to non-Markovian dissipation
+     via a Caputo or Riemann-Liouville fractional derivative. This is unstarted, and it is
+     the part that would actually answer Leibniz's 1695 letter.
 
 ---
 
