@@ -130,12 +130,9 @@ These are the deep mathematical problems in Leibniz's *Nachlass* that require de
 
 ## ◈ SECTION 3: WHERE LEIBNIZ'S POSITIONS HELD
 
-4Leibniz is not a case against Isaac Newton. It is the completion of what Leibniz
-set out to do and could not finish in his own time. Newton enters only where the
-two men disagreed on a point that modern physics has since settled — and on those
-points the record is that Leibniz's position held.
-
-Stated as positions, not as a scoreboard:
+4Leibniz completes what Leibniz set out to do and could not finish in his own
+time. Newton enters only where the two men disagreed on a point modern physics
+has since settled.
 
 ```
   POSITION IN DISPUTE (1687–1716)              WHERE IT STANDS NOW
@@ -157,18 +154,6 @@ Stated as positions, not as a scoreboard:
      inelastic collision.                         invariance. Motion is not lost from
      Leibniz: vis viva (mv²) is conserved.        the universe.  [STD]
 ```
-
-On the third row Leibniz was not merely correct — he was correct against the
-consensus of his century, and it took Helmholtz until 1847 to finish the argument.
-
-**A note on how this project treats Newton.** Newton lost these arguments; he did
-not lose stature. He worked under conditions that would have silenced most people —
-Hooke's attacks, the Blasphemy Act standing over his anti-Trinitarian work, and his
-own considerable fear of exposure. Much of his mind never reached print at all. His
-mechanics remains the limit case that this framework must reduce to, and does:
-where the correction vanishes, v_Yett → v_Newton.
-
-The disputes belong in the record. The grudge does not.
 
 ## ◈ SECTION 4: PROPOSED TITLES FOR THE STANDALONE PROJECT
 
