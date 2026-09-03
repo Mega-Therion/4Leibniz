@@ -1,0 +1,17 @@
+FROM python:3.12-slim
+
+# System deps for elan + git
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl git ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install elan (Lean version manager) — non-interactive, no default toolchain
+# (the project's lean-toolchain file selects the version at build time)
+RUN curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+    | sh -s -- -y --default-toolchain none
+ENV PATH="/root/.elan/bin:${PATH}"
+
+# Web server
+RUN pip install --no-cache-dir flask
+
+WORKDIR /app

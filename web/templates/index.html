@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4Leibniz \u2014 Calculemus Verification Oracle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="vignette"></div>
+
+  <header class="hero">
+    <div class="hero-mark">\u{1F702}</div>
+    <h1>4Leibniz</h1>
+    <p class="hero-sub">A Formal Relational Information Geometry &amp; Automated Verification Engine in Lean 4</p>
+    <p class="hero-motto"><em>\u201cCum Deus calculat et cogitationem exercet, fit mundus.\u201d</em><br>
+      <span class="attr">\u2014 Gottfried Wilhelm Leibniz (1646\u20131716)</span>
+    </p>
+  </header>
+
+  <main>
+    <!-- Calculemus panel -->
+    <section class="oracle">
+      <div class="oracle-head">
+        <h2>Calculemus! \u2014 The Verification Oracle</h2>
+        <p>Executes the Lean 4 kernel across all formal modules and certifies every proof.</p>
+      </div>
+      <div class="oracle-controls">
+        <button id="run-btn" class="run-btn">Run Calculemus</button>
+        <span id="run-status" class="run-status idle">idle</span>
+      </div>
+      <div id="oracle-result" class="oracle-result hidden">
+        <div class="receipt" id="receipt"></div>
+        <pre id="build-output" class="build-output"></pre>
+      </div>
+    </section>
+
+    <!-- Modules -->
+    <section class="modules">
+      <h2>The Leibnizian Epistemic Architecture</h2>
+      <p class="modules-sub">Six formal modules \u00b7 verified by the deterministic Lean 4 kernel.</p>
+      <div id="module-grid" class="module-grid">
+        <p class="loading-modules">Loading modules\u2026</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>\u201cCalculemus!\u201d \u2014 Let us calculate without dispute.</p>
+    <p class="footer-small">Lean 4 \u00b7 Lake build \u00b7 0 sorries \u00b7 0 errors</p>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
