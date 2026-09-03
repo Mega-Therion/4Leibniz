@@ -4,7 +4,8 @@ import json
 import subprocess
 from pathlib import Path
 from flask import Flask, jsonify, request, send_from_directory
-from ucalculus import SyntaxError as UCalcSyntaxError, compile_text
+from ucalculus import SyntaxError as UCalcSyntaxError, compile_text, parse
+from proof_engine import SemanticPatch, search_text
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -44,6 +45,45 @@ def compile_universal_claim():
         return jsonify(compile_text(text))
     except UCalcSyntaxError as exc:
         return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/prove")
+def prove_universal_claim():
+    payload = request.get_json(silent=True) or {}
+    text = payload.get("text")
+    if not isinstance(text, str):
+        return jsonify({"error": "text must be a universal-calculus declaration"}), 400
+    try:
+        return jsonify(search_text(text))
+    except UCalcSyntaxError as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/patch")
+def patch_universal_claim():
+    payload = request.get_json(silent=True) or {}
+    text, patch_data = payload.get("text"), payload.get("patch")
+    if not isinstance(text, str) or not isinstance(patch_data, dict):
+        return jsonify({"error": "text and patch are required"}), 400
+    try:
+        claim = parse(text)
+        patched = SemanticPatch(**patch_data).apply(claim)
+        patched_text = "claim " + patched.name + ":\n" + "\n".join("  given " + p.text for p in patched.premises) + "\n  infer " + patched.conclusion
+        return jsonify({"claim": patched.__dict__, "search": search_text(patched_text)})
+    except (UCalcSyntaxError, TypeError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.get("/api/epistemic/lattice")
+def epistemic_lattice():
+    statuses = ["open", "conjectured", "axiomatic", "derived", "proven"]
+    return jsonify({"nodes": [{"id": s, "rank": i} for i, s in enumerate(statuses)],
+                    "edges": [{"source": statuses[i], "target": statuses[i + 1], "relation": "can_weaken_to"}
+                              for i in range(len(statuses) - 1)]})
+
+@app.get("/api/arguments/graph")
+def argument_graph():
+    nodes = [{"id": t["name"], "module": t["module"], "status": t["status"]} for t in THEOREMS]
+    edges = [{"source": dep, "target": t["name"], "relation": "depends_on"}
+             for t in THEOREMS for dep in t["dependencies"]]
+    return jsonify({"nodes": nodes, "edges": edges})
 
 @app.get("/api/modules")
 def modules():
