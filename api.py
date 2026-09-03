@@ -6,6 +6,8 @@ from pathlib import Path
 from flask import Flask, jsonify, request, send_from_directory
 from ucalculus import SyntaxError as UCalcSyntaxError, compile_text, parse
 from proof_engine import SemanticPatch, search_text
+from counterexample import find_for_claim
+from divergence import compare_text
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -75,6 +77,28 @@ def repl():
             return jsonify({"kind": "explain", "explanations": result["explanations"]})
         return jsonify({"error": "unknown action; use compile, prove, or explain"}), 422
     except UCalcSyntaxError as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/counterexample")
+def counterexample():
+    payload = request.get_json(silent=True) or {}
+    text, bound = payload.get("text"), payload.get("max_bound", 3)
+    if not isinstance(text, str):
+        return jsonify({"error": "text must be a universal-calculus declaration"}), 400
+    try:
+        return jsonify(find_for_claim(parse(text), int(bound)))
+    except (UCalcSyntaxError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/divergence")
+def divergence():
+    payload = request.get_json(silent=True) or {}
+    before, after = payload.get("before"), payload.get("after")
+    if not isinstance(before, str) or not isinstance(after, str):
+        return jsonify({"error": "before and after declarations are required"}), 400
+    try:
+        return jsonify(compare_text(before, after))
+    except (UCalcSyntaxError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 422
 
 @app.post("/api/patch")

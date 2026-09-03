@@ -7,6 +7,7 @@
 
 import Leibniz.Characteristica
 import Leibniz.Epistemic
+import Leibniz.Monadologia
 import Leibniz.SpatiumRelativum
 import Leibniz.VisViva
 import Leibniz.LexContinuitatis

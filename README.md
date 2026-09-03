@@ -156,6 +156,10 @@ Advanced physical claims are intentionally exposed as explicit axioms/interfaces
 
 The project now includes a reproducible integration matrix in `docs/architecture/INTEGRATION_MATRIX.md`. API documentation is prepared through [doc-gen4](https://github.com/leanprover/doc-gen4), an optional independent kernel-checking lane is documented for [lean4lean](https://github.com/digama0/lean4lean), and `realtime.py` uses [websockets](https://github.com/python-websockets/websockets) to stream build events rather than polling. These projects are credited and linked in the matrix so the work remains auditable and maintainers receive recognition.
 
+## Phase 3: formalization and proof diagnosis
+
+Phase 3 adds `Leibniz/Monadologia.lean`, a typed monad-state and calculus-ratiocinator derivation layer, together with `counterexample.py` and `divergence.py`. The counterexample engine searches bounded integer models and returns reproducible witnesses when premises hold but a conclusion fails. A `no-witness` result is explicitly inconclusive; it is never treated as a proof. Divergence tracking compares structured revisions and classifies lexical, structural, logical, epistemic, and provenance changes. These features are available through `POST /api/counterexample` and `POST /api/divergence`, and through the dashboard's Phase 3 failure-analysis panel.
+
 ## Universal-calculus declarations
 
 Phase 1 adds `ucalculus.py`, a compact intermediate language for authoring structured claims. See `examples/stability.uc` and `docs/architecture/UNIVERSAL_CALCULUS.md`. Compile a declaration from the command line with `python3 ucalculus.py examples/stability.uc`, or submit it to `POST /api/compile`. The result includes a typed intermediate representation, a reproducibility fingerprint, explicit proof obligations, and a Lean theorem skeleton.
