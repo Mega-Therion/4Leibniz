@@ -143,3 +143,11 @@ lake env lean Leibniz/Calculemus.lean
 
 > *"I am of the opinion that there is something divine in mathematics, and that by means of it the mind is raised to the contemplation of universal harmony."*  
 > — **Gottfried Wilhelm Leibniz**
+
+## Current implementation
+
+The repository now includes Mathlib-backed real-analysis and linear-algebra interfaces, a parameterized Stiefel manifold model, typed epistemic statuses, a GKLS/Lindblad operator layer, Wilson-loop and von Neumann entropy interfaces, a deterministic Calculemus adjudication contract, structured source and open-problem registries, a Flask JSON API, and an ordered browser dashboard at `web/index.html`.
+
+Run the formal verification workflow with `python3 scripts/calculemus.py`. Generate an independently inspectable source and `.olean` manifest with `python3 scripts/proof_receipt.py`. To use the API locally, run `python3 api.py` and open `web/index.html` through a static server or configure the frontend origin for the Flask service. Continuous verification is defined in `.github/workflows/verify.yml`.
+
+Advanced physical claims are intentionally exposed as explicit axioms/interfaces where a complete research-grade derivation requires additional theory; they are therefore visible to reviewers rather than being represented as comments or hard-coded build booleans.

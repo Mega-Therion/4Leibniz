@@ -1,0 +1,22 @@
+name: Calculemus Verification
+on:
+  push:
+  pull_request:
+jobs:
+  lean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean4-action@v1
+        with:
+          lake-package-directory: .
+      - name: Build Lean library
+        run: lake build
+      - name: Reject sorry placeholders
+        run: python3 scripts/check_sorries.py
+      - name: Generate proof receipt
+        run: python3 scripts/proof_receipt.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: proof-receipt
+          path: proof-receipt.json

@@ -7,13 +7,13 @@ build/
 *.ilean
 *.trace
 *.hash
-
 # Python
 __pycache__/
 *.py[cod]
 .venv/
 venv/
-
 # Editor / OS
 .DS_Store
 *.swp
+# Local environment
+.env

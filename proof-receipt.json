@@ -1,0 +1,17 @@
+{
+  "project": "4Leibniz",
+  "source_sha256": "e120ce2e52dd163920c8aff1ff5b4a23ef2aa92ce905802f8f3a8d18943c5f68",
+  "olean_files": [
+    ".lake/build/lib/lean/Leibniz.olean",
+    ".lake/build/lib/lean/Leibniz/Calculemus.olean",
+    ".lake/build/lib/lean/Leibniz/Characteristica.olean",
+    ".lake/build/lib/lean/Leibniz/Harmonia.olean",
+    ".lake/build/lib/lean/Leibniz/LexContinuitatis.olean",
+    ".lake/build/lib/lean/Leibniz/OpenProblems.olean",
+    ".lake/build/lib/lean/Leibniz/Sources.olean",
+    ".lake/build/lib/lean/Leibniz/SpatiumRelativum.olean",
+    ".lake/build/lib/lean/Leibniz/VisViva.olean"
+  ],
+  "lean_toolchain": "leanprover/lean4:v4.34.0-rc2",
+  "sorries": 0
+}

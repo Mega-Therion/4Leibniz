@@ -11,3 +11,5 @@ import Leibniz.VisViva
 import Leibniz.LexContinuitatis
 import Leibniz.Harmonia
 import Leibniz.Calculemus
+import Leibniz.Sources
+import Leibniz.OpenProblems
