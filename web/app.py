@@ -82,12 +82,22 @@ MODULE_META = {
     "Characteristica": {
         "title": "Characteristica Universalis",
         "origin": "De Arte Combinatoria (1666)",
-        "subtitle": "Dyadica: Nihil \u2194 Ens Binary Calculus",
+        "subtitle": "Symbolic Grammar \u00b7 Epistemic Stratification \u00b7 Dyas",
+    },
+    "Dyadica": {
+        "title": "Dyadica (Binary Genesis)",
+        "origin": "De Progressione Dyadica (1679)",
+        "subtitle": "IO/OI Tension \u00b7 Entropy Balance \u00b7 Information Projection",
     },
     "SpatiumRelativum": {
-        "title": "Spatium Relativum & Monadologia",
-        "origin": "La Monadologie (1714) \u00b7 Leibniz-Clarke (1715)",
-        "subtitle": "Relational Spacetime \u00b7 Informational Distance",
+        "title": "Spatium Relativum (Relational Spacetime)",
+        "origin": "Leibniz-Clarke Correspondence (1715)",
+        "subtitle": "Relational Distance \u00b7 Stiefel Manifold V_m(R^N)",
+    },
+    "Monadologia": {
+        "title": "Monadologia (Perceptual Holography)",
+        "origin": "La Monadologie (1714)",
+        "subtitle": "Projection Boundaries \u00b7 Holonomic Entanglement",
     },
     "VisViva": {
         "title": "Vis Viva (Living Force)",
