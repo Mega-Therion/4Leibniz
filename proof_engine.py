@@ -74,7 +74,9 @@ class SemanticPatch:
         raise ValueError(f"unsupported semantic patch operation: {self.operation}")
 
 def search_text(text: str) -> dict:
+    from explanations import explain_result
     claim = parse(text)
     result = search(claim)
     ir = compile_claim(claim)
-    return {"claim": asdict(claim), "ir": asdict(ir), "search": asdict(result)}
+    return {"claim": asdict(claim), "ir": asdict(ir), "search": asdict(result),
+            "explanations": explain_result(result)}

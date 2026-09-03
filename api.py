@@ -57,6 +57,26 @@ def prove_universal_claim():
     except UCalcSyntaxError as exc:
         return jsonify({"error": str(exc)}), 422
 
+@app.post("/api/repl")
+def repl():
+    payload = request.get_json(silent=True) or {}
+    action, text = payload.get("action", "help"), payload.get("text", "")
+    if action == "help":
+        return jsonify({"commands": ["compile", "prove", "explain"], "usage": "Send action plus universal-calculus text."})
+    if not isinstance(text, str) or not text.strip():
+        return jsonify({"error": "text is required"}), 400
+    try:
+        result = search_text(text)
+        if action == "compile":
+            return jsonify({"kind": "compile", "ir": result["ir"]})
+        if action == "prove":
+            return jsonify({"kind": "prove", "search": result["search"], "explanations": result["explanations"]})
+        if action == "explain":
+            return jsonify({"kind": "explain", "explanations": result["explanations"]})
+        return jsonify({"error": "unknown action; use compile, prove, or explain"}), 422
+    except UCalcSyntaxError as exc:
+        return jsonify({"error": str(exc)}), 422
+
 @app.post("/api/patch")
 def patch_universal_claim():
     payload = request.get_json(silent=True) or {}
