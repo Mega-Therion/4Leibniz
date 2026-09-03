@@ -1,5 +1,6 @@
 name: Calculemus Verification
 on:
+  workflow_dispatch:
   push:
   pull_request:
 jobs:
@@ -20,3 +21,30 @@ jobs:
         with:
           name: proof-receipt
           path: proof-receipt.json
+
+  docs:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean4-action@v1
+      - name: Build API documentation with doc-gen4
+        uses: leanprover-community/docgen-action@main
+        with:
+          api-docs: true
+          build-page: false
+          deploy: false
+
+  independent-kernel:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean4-action@v1
+      - name: Fetch Lean-for-Lean external checker
+        run: git clone --depth 1 https://github.com/digama0/lean4lean.git /tmp/lean4lean
+      - name: Build external checker
+        working-directory: /tmp/lean4lean
+        run: lake build lean4lean
+      - name: Check the project artifact graph
+        run: lake env /tmp/lean4lean/.lake/build/bin/lean4lean Leibniz

@@ -151,3 +151,7 @@ The repository now includes Mathlib-backed real-analysis and linear-algebra inte
 Run the formal verification workflow with `python3 scripts/calculemus.py`. Generate an independently inspectable source and `.olean` manifest with `python3 scripts/proof_receipt.py`. To use the API locally, run `python3 api.py` and open `web/index.html` through a static server or configure the frontend origin for the Flask service. Continuous verification is defined in `.github/workflows/verify.yml`.
 
 Advanced physical claims are intentionally exposed as explicit axioms/interfaces where a complete research-grade derivation requires additional theory; they are therefore visible to reviewers rather than being represented as comments or hard-coded build booleans.
+
+## Open-source acceleration layer
+
+The project now includes a reproducible integration matrix in `docs/architecture/INTEGRATION_MATRIX.md`. API documentation is prepared through [doc-gen4](https://github.com/leanprover/doc-gen4), an optional independent kernel-checking lane is documented for [lean4lean](https://github.com/digama0/lean4lean), and `realtime.py` uses [websockets](https://github.com/python-websockets/websockets) to stream build events rather than polling. These projects are credited and linked in the matrix so the work remains auditable and maintainers receive recognition.
