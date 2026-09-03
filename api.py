@@ -4,6 +4,7 @@ import json
 import subprocess
 from pathlib import Path
 from flask import Flask, jsonify, request, send_from_directory
+from ucalculus import SyntaxError as UCalcSyntaxError, compile_text
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -32,6 +33,17 @@ THEOREMS = [
     {"name": "coherence_preservation_invariant", "module": "Harmonia", "status": "derived", "dependencies": ["continuity_band_ordered"]},
     {"name": "calculemus_omnibus_verum", "module": "Calculemus", "status": "proven", "dependencies": ["coherence_preservation_invariant"]},
 ]
+
+@app.post("/api/compile")
+def compile_universal_claim():
+    payload = request.get_json(silent=True) or {}
+    text = payload.get("text")
+    if not isinstance(text, str):
+        return jsonify({"error": "text must be a universal-calculus declaration"}), 400
+    try:
+        return jsonify(compile_text(text))
+    except UCalcSyntaxError as exc:
+        return jsonify({"error": str(exc)}), 422
 
 @app.get("/api/modules")
 def modules():

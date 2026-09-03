@@ -6,6 +6,7 @@
 -/
 
 import Leibniz.Characteristica
+import Leibniz.Epistemic
 import Leibniz.SpatiumRelativum
 import Leibniz.VisViva
 import Leibniz.LexContinuitatis

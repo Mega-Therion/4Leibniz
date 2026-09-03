@@ -155,3 +155,7 @@ Advanced physical claims are intentionally exposed as explicit axioms/interfaces
 ## Open-source acceleration layer
 
 The project now includes a reproducible integration matrix in `docs/architecture/INTEGRATION_MATRIX.md`. API documentation is prepared through [doc-gen4](https://github.com/leanprover/doc-gen4), an optional independent kernel-checking lane is documented for [lean4lean](https://github.com/digama0/lean4lean), and `realtime.py` uses [websockets](https://github.com/python-websockets/websockets) to stream build events rather than polling. These projects are credited and linked in the matrix so the work remains auditable and maintainers receive recognition.
+
+## Universal-calculus declarations
+
+Phase 1 adds `ucalculus.py`, a compact intermediate language for authoring structured claims. See `examples/stability.uc` and `docs/architecture/UNIVERSAL_CALCULUS.md`. Compile a declaration from the command line with `python3 ucalculus.py examples/stability.uc`, or submit it to `POST /api/compile`. The result includes a typed intermediate representation, a reproducibility fingerprint, explicit proof obligations, and a Lean theorem skeleton.
