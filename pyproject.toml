@@ -7,3 +7,6 @@ dependencies = ["flask>=3.0", "websockets>=14.0", "cryptography>=42.0"]
 
 [project.scripts]
 leibniz-ws = "realtime:main"
+
+[tool.vercel]
+entrypoint = "api:app"
