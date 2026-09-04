@@ -11,7 +11,7 @@ from ucalculus import parse
 def timed(fn):
     started = time.perf_counter(); value = fn(); return value, round((time.perf_counter()-started)*1000, 3)
 
-def run() -> dict:
+def run(*, lean_timeout: int = 5) -> dict:
     corpus = json.loads((ROOT/'benchmarks/leibniz_benchmark.json').read_text())
     rows=[]
     for case in corpus['cases']:
@@ -22,8 +22,11 @@ def run() -> dict:
     lean_available=shutil.which('lake') is not None
     lean_ms=None; lean_ok=None
     if lean_available:
-        proc, lean_ms=timed(lambda: subprocess.run(['lake','build'],cwd=ROOT,capture_output=True,text=True,timeout=300))
-        lean_ok=proc.returncode==0
+        try:
+            proc, lean_ms=timed(lambda: subprocess.run(['lake','build'],cwd=ROOT,capture_output=True,text=True,timeout=lean_timeout))
+            lean_ok=proc.returncode==0
+        except subprocess.TimeoutExpired:
+            lean_ms=None; lean_ok=False; lean_available=False
     backends=[{'name':'universal-calculus proof search','status':'available','mean_ms':round(sum(r['proof_search_ms'] for r in rows)/len(rows),3)},
               {'name':'bounded integer model search','status':'available','mean_ms':round(sum(r['bounded_model_ms'] for r in rows)/len(rows),3)},
               {'name':'Lean kernel build','status':'available' if lean_available else 'unavailable','mean_ms':lean_ms,'ok':lean_ok},
