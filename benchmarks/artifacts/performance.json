@@ -1,0 +1,88 @@
+{
+  "corpus": "leibniz-philosophical-benchmark-v1",
+  "backend_results": [
+    {
+      "name": "universal-calculus proof search",
+      "status": "available",
+      "mean_ms": 0.159
+    },
+    {
+      "name": "bounded integer model search",
+      "status": "available",
+      "mean_ms": 2.219
+    },
+    {
+      "name": "Lean kernel build",
+      "status": "available",
+      "mean_ms": 5185.536,
+      "ok": true
+    },
+    {
+      "name": "Z3 SMT",
+      "status": "unavailable",
+      "mean_ms": null,
+      "reason": "not installed in benchmark environment"
+    },
+    {
+      "name": "CVC5 SMT",
+      "status": "unavailable",
+      "mean_ms": null,
+      "reason": "not installed in benchmark environment"
+    }
+  ],
+  "cases": [
+    {
+      "id": "monad-01",
+      "work": "Monadology",
+      "proof_search_ms": 0.492,
+      "bounded_model_ms": 4.274
+    },
+    {
+      "id": "monad-02",
+      "work": "Monadology",
+      "proof_search_ms": 0.128,
+      "bounded_model_ms": 0.093
+    },
+    {
+      "id": "monad-03",
+      "work": "Monadology",
+      "proof_search_ms": 0.093,
+      "bounded_model_ms": 4.116
+    },
+    {
+      "id": "monad-04",
+      "work": "Monadology",
+      "proof_search_ms": 0.112,
+      "bounded_model_ms": 4.668
+    },
+    {
+      "id": "monad-05",
+      "work": "Monadology",
+      "proof_search_ms": 0.129,
+      "bounded_model_ms": 0.104
+    },
+    {
+      "id": "monad-06",
+      "work": "Monadology",
+      "proof_search_ms": 0.079,
+      "bounded_model_ms": 0.071
+    },
+    {
+      "id": "principles-01",
+      "work": "Principles of Nature and Grace",
+      "proof_search_ms": 0.151,
+      "bounded_model_ms": 4.361
+    },
+    {
+      "id": "refutation-01",
+      "work": "Synthetic falsifier",
+      "proof_search_ms": 0.088,
+      "bounded_model_ms": 0.062
+    }
+  ],
+  "methodology": "Wall-clock local timings; compare only within the same environment. Unavailable backends are not imputed.",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "linux"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "corpus": "leibniz-philosophical-benchmark-v1",
+  "cases": [
+    {
+      "id": "monad-01",
+      "work": "Monadology",
+      "expected": "proved",
+      "actual": "proved",
+      "correct": true
+    },
+    {
+      "id": "monad-02",
+      "work": "Monadology",
+      "expected": "open",
+      "actual": "open",
+      "correct": true
+    },
+    {
+      "id": "monad-03",
+      "work": "Monadology",
+      "expected": "proved",
+      "actual": "proved",
+      "correct": true
+    },
+    {
+      "id": "monad-04",
+      "work": "Monadology",
+      "expected": "proved",
+      "actual": "proved",
+      "correct": true
+    },
+    {
+      "id": "monad-05",
+      "work": "Monadology",
+      "expected": "open",
+      "actual": "open",
+      "correct": true
+    },
+    {
+      "id": "monad-06",
+      "work": "Monadology",
+      "expected": "open",
+      "actual": "open",
+      "correct": true
+    },
+    {
+      "id": "principles-01",
+      "work": "Principles of Nature and Grace",
+      "expected": "proved",
+      "actual": "proved",
+      "correct": true
+    },
+    {
+      "id": "refutation-01",
+      "work": "Synthetic falsifier",
+      "expected": "open",
+      "actual": "open",
+      "correct": true
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "correct": 8,
+    "elapsed_ms": 1.375
+  }
+}

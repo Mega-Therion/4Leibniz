@@ -11,6 +11,7 @@ from divergence import compare_text
 from ai_assist import suggest
 from consensus import Peer, Vote, reach_consensus, result_json
 from benchmarks.runner import run as run_benchmark
+from security import SignedProposal, commit_private_premise, generate_keypair, sign_proposal, verify_proposal, receipt_json
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -99,6 +100,38 @@ def consensus():
         return jsonify(result_json(reach_consensus(peers, votes, float(payload.get("threshold", 2/3)))))
     except (KeyError, TypeError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/security/keypair")
+def security_keypair():
+    private, public = generate_keypair()
+    return jsonify({"private_key": private, "public_key": public, "warning": "Store the private key outside the API; this endpoint is for local setup only."})
+
+@app.post("/api/security/sign")
+def security_sign():
+    payload = request.get_json(silent=True) or {}
+    if not isinstance(payload.get("node_id"), str) or not isinstance(payload.get("payload"), dict) or not isinstance(payload.get("private_key"), str):
+        return jsonify({"error": "node_id, payload, and private_key are required"}), 400
+    try:
+        signed = sign_proposal(payload["node_id"], payload["payload"], payload["private_key"])
+        return jsonify({"proposal": signed.__dict__, "verified": verify_proposal(signed)})
+    except (ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/security/verify")
+def security_verify():
+    payload = request.get_json(silent=True) or {}
+    try:
+        proposal = SignedProposal(**payload["proposal"])
+        return jsonify({"verified": verify_proposal(proposal), "digest": proposal.digest})
+    except (KeyError, TypeError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/security/commit")
+def security_commit():
+    payload = request.get_json(silent=True) or {}
+    if not isinstance(payload.get("statement"), str):
+        return jsonify({"error": "statement is required"}), 400
+    return jsonify(receipt_json(commit_private_premise(payload["statement"])))
 
 @app.get("/api/benchmarks")
 def benchmarks():
