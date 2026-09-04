@@ -163,3 +163,7 @@ Phase 3 adds `Leibniz/Monadologia.lean`, a typed monad-state and calculus-ratioc
 ## Universal-calculus declarations
 
 Phase 1 adds `ucalculus.py`, a compact intermediate language for authoring structured claims. See `examples/stability.uc` and `docs/architecture/UNIVERSAL_CALCULUS.md`. Compile a declaration from the command line with `python3 ucalculus.py examples/stability.uc`, or submit it to `POST /api/compile`. The result includes a typed intermediate representation, a reproducibility fingerprint, explicit proof obligations, and a Lean theorem skeleton.
+
+## Phase 4: collaborative calculus and historical evaluation
+
+Phase 4 adds a transport-agnostic weighted consensus layer in `consensus.py`, an optional structured-output AI adapter in `ai_assist.py`, and the source-linked historical regression corpus under `benchmarks/`. Consensus retains dissent and cannot override Lean. AI suggestions are always marked `unverified` until a human or kernel-backed workflow validates them. Run the corpus with `python3 benchmarks/runner.py`; its current eight cases are designed to test transitive closure, open obligations, and control claims from public-domain Leibniz editions. The architecture, provenance policy, and deployment boundary are documented in `docs/PHASE4_DESIGN.md`.

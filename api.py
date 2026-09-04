@@ -8,6 +8,9 @@ from ucalculus import SyntaxError as UCalcSyntaxError, compile_text, parse
 from proof_engine import SemanticPatch, search_text
 from counterexample import find_for_claim
 from divergence import compare_text
+from ai_assist import suggest
+from consensus import Peer, Vote, reach_consensus, result_json
+from benchmarks.runner import run as run_benchmark
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -78,6 +81,28 @@ def repl():
         return jsonify({"error": "unknown action; use compile, prove, or explain"}), 422
     except UCalcSyntaxError as exc:
         return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/ai/suggest")
+def ai_suggest():
+    payload = request.get_json(silent=True) or {}
+    text, model = payload.get("text"), payload.get("model", "gpt-5-mini")
+    if not isinstance(text, str) or not text.strip():
+        return jsonify({"error": "text is required"}), 400
+    return jsonify(suggest(text, model))
+
+@app.post("/api/consensus")
+def consensus():
+    payload = request.get_json(silent=True) or {}
+    peers = tuple(Peer(p["node_id"], int(p.get("weight", 1)), tuple(p.get("capabilities", ["lean", "search"]))) for p in payload.get("peers", []))
+    votes = tuple(Vote(v["node_id"], v.get("proposal_hash", ""), v["status"], v.get("rationale", "")) for v in payload.get("votes", []))
+    try:
+        return jsonify(result_json(reach_consensus(peers, votes, float(payload.get("threshold", 2/3)))))
+    except (KeyError, TypeError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.get("/api/benchmarks")
+def benchmarks():
+    return jsonify(run_benchmark())
 
 @app.post("/api/counterexample")
 def counterexample():
