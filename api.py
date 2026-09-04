@@ -19,6 +19,7 @@ from multiprover import ProofReport, aggregate as aggregate_provers
 from governance import GovernanceVote, evaluate as evaluate_governance
 from durable_log import OrderedLog
 from peer_admission import admit as admit_peer, is_active as peer_is_active, revoke as revoke_peer
+from cross_shard import Shard, atomic_commit, recover_in_doubt
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -140,6 +141,35 @@ def governance_evaluate():
         return jsonify(evaluate_governance(payload.get("proposal_id", ""), payload.get("action", ""), votes, float(payload.get("quorum", 2/3)), bool(payload.get("veto_blocks", True)), int(payload.get("timelock_seconds", 3600))))
     except (TypeError, ValueError, KeyError) as exc:
         return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/shards/atomic-commit")
+def shards_atomic_commit():
+    payload = request.get_json(silent=True) or {}
+    try:
+        shards = {s['shard_id']: Shard(s['shard_id'], s.get('state', {})) for s in payload.get('shards', [])}
+        return jsonify(atomic_commit(payload.get('txid',''), shards, payload.get('writes', {}), payload.get('reachable')))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({'error':str(exc)}), 422
+
+@app.post("/api/shards/recover")
+def shards_recover():
+    payload = request.get_json(silent=True) or {}
+    try:
+        shards = {s['shard_id']: Shard(s['shard_id'], s.get('state', {})) for s in payload.get('shards', [])}
+        for s in payload.get('shards', []):
+            for txid, item in s.get('prepared', {}).items(): shards[s['shard_id']].prepared[txid] = item
+        return jsonify(recover_in_doubt(payload.get('txid',''), shards, payload.get('decision','abort')))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({'error':str(exc)}), 422
+
+@app.post("/api/shards/sync")
+def shards_sync():
+    payload = request.get_json(silent=True) or {}
+    try:
+        shard = Shard(payload['snapshot']['shard_id'])
+        return jsonify(shard.sync(payload['snapshot']))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({'error':str(exc)}), 422
 
 @app.post("/api/log/validate")
 def validate_log():

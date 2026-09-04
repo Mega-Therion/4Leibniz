@@ -1,0 +1,107 @@
+{
+  "cases": [
+    {
+      "txid": "tx-connected",
+      "phase": "committed",
+      "participants": [
+        "alpha",
+        "beta"
+      ],
+      "prepared": [
+        "alpha",
+        "beta"
+      ],
+      "committed": [
+        "alpha",
+        "beta"
+      ],
+      "aborted": [],
+      "reason": "",
+      "receipt": "e88637433445223a426c078a2df74abaf1df9c8888c0f02a43518486b1328339",
+      "case": "tx-connected",
+      "elapsed_seconds": 0.0001466,
+      "states": {
+        "alpha": {
+          "a": 1
+        },
+        "beta": {
+          "b": 1
+        }
+      },
+      "recovery": null
+    },
+    {
+      "txid": "tx-partitioned",
+      "phase": "aborted",
+      "participants": [
+        "alpha",
+        "beta"
+      ],
+      "prepared": [
+        "alpha"
+      ],
+      "committed": [],
+      "aborted": [
+        "alpha"
+      ],
+      "reason": "partition or prepare failure",
+      "receipt": "8351b821c50c0ba6630bc8195a58df8f4c332b4f00133084b7da04aeaf2e2c2e",
+      "case": "tx-partitioned",
+      "elapsed_seconds": 3.6e-05,
+      "states": {
+        "alpha": {
+          "a": 0
+        },
+        "beta": {
+          "b": 0
+        }
+      },
+      "recovery": null
+    },
+    {
+      "txid": "tx-unreachable",
+      "phase": "aborted",
+      "participants": [
+        "alpha",
+        "beta"
+      ],
+      "prepared": [],
+      "committed": [],
+      "aborted": [],
+      "reason": "partition or prepare failure",
+      "receipt": "64a1b5965d4972e9305c7e06559f70749a847d300869877b898e20af653e0df8",
+      "case": "tx-unreachable",
+      "elapsed_seconds": 2.18e-05,
+      "states": {
+        "alpha": {
+          "a": 0
+        },
+        "beta": {
+          "b": 0
+        }
+      },
+      "recovery": null
+    }
+  ],
+  "audit": [
+    {
+      "case": "tx-connected",
+      "invariant": "atomic_commit",
+      "passed": true
+    },
+    {
+      "case": "tx-partitioned",
+      "invariant": "atomic_abort",
+      "passed": true
+    },
+    {
+      "case": "tx-unreachable",
+      "invariant": "atomic_abort",
+      "passed": true
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "passed": 3
+  }
+}
