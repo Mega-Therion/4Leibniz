@@ -1,0 +1,13 @@
+{
+  "url": "wss://four-leibniz-consensus.chyren-sovereign.workers.dev/ws/loadtest",
+  "clients": 8,
+  "messages_per_client": 4,
+  "fault_mode": "none",
+  "elapsed_seconds": 8.4635,
+  "events": 40,
+  "outcomes": {
+    "ready": 8,
+    "proposal": 32
+  },
+  "throughput_events_per_second": 4.73
+}

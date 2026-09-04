@@ -1,0 +1,71 @@
+[
+  {
+    "url": "wss://four-leibniz-consensus.chyren-sovereign.workers.dev/ws/loadtest",
+    "clients": 8,
+    "messages_per_client": 4,
+    "fault_mode": "duplicate",
+    "elapsed_seconds": 4.6043,
+    "events": 40,
+    "outcomes": {
+      "ready": 8,
+      "rejected": 5,
+      "proposal": 27
+    },
+    "throughput_events_per_second": 8.69
+  },
+  {
+    "url": "wss://four-leibniz-consensus.chyren-sovereign.workers.dev/ws/loadtest",
+    "clients": 8,
+    "messages_per_client": 4,
+    "fault_mode": "equivocation",
+    "elapsed_seconds": 6.1157,
+    "events": 40,
+    "outcomes": {
+      "ready": 8,
+      "rejected": 13,
+      "proposal": 19
+    },
+    "throughput_events_per_second": 6.54
+  },
+  {
+    "url": "wss://four-leibniz-consensus.chyren-sovereign.workers.dev/ws/loadtest",
+    "clients": 8,
+    "messages_per_client": 4,
+    "fault_mode": "malformed",
+    "elapsed_seconds": 4.8052,
+    "events": 40,
+    "outcomes": {
+      "ready": 8,
+      "rejected": 4,
+      "proposal": 28
+    },
+    "throughput_events_per_second": 8.32
+  },
+  {
+    "url": "wss://four-leibniz-consensus.chyren-sovereign.workers.dev/ws/loadtest",
+    "clients": 8,
+    "messages_per_client": 4,
+    "fault_mode": "none",
+    "elapsed_seconds": 8.4635,
+    "events": 40,
+    "outcomes": {
+      "ready": 8,
+      "proposal": 32
+    },
+    "throughput_events_per_second": 4.73
+  },
+  {
+    "url": "wss://four-leibniz-consensus.chyren-sovereign.workers.dev/ws/loadtest",
+    "clients": 8,
+    "messages_per_client": 4,
+    "fault_mode": "stale",
+    "elapsed_seconds": 4.768,
+    "events": 40,
+    "outcomes": {
+      "ready": 8,
+      "rejected": 6,
+      "proposal": 26
+    },
+    "throughput_events_per_second": 8.39
+  }
+]

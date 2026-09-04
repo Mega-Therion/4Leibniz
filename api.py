@@ -15,6 +15,8 @@ from security import SignedProposal, ReplayGuard, commit_private_premise, genera
 from bft import BFTPeer, BFTVote, decide as bft_decide
 from zk_pipeline import status as zk_status
 from zk_verify import verify_groth16
+from multiprover import ProofReport, aggregate as aggregate_provers
+from governance import GovernanceVote, evaluate as evaluate_governance
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -118,6 +120,24 @@ def bft_consensus():
 @app.get("/api/zk/status")
 def zk_pipeline_status():
     return jsonify(zk_status())
+
+@app.post("/api/provers/aggregate")
+def aggregate_proof_reports():
+    payload = request.get_json(silent=True) or {}
+    try:
+        reports = [ProofReport(**r) for r in payload.get("reports", [])]
+        return jsonify(aggregate_provers(reports, int(payload.get("required", 2)), bool(payload.get("require_independent", True))))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/governance/evaluate")
+def governance_evaluate():
+    payload = request.get_json(silent=True) or {}
+    try:
+        votes = [GovernanceVote(**v) for v in payload.get("votes", [])]
+        return jsonify(evaluate_governance(payload.get("proposal_id", ""), payload.get("action", ""), votes, float(payload.get("quorum", 2/3)), bool(payload.get("veto_blocks", True)), int(payload.get("timelock_seconds", 3600))))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({"error": str(exc)}), 422
 
 @app.post("/api/zk/verify")
 def zk_verify():
