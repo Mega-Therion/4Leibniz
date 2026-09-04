@@ -12,6 +12,7 @@ from ai_assist import suggest
 from consensus import Peer, Vote, reach_consensus, result_json
 from benchmarks.runner import run as run_benchmark
 from security import SignedProposal, commit_private_premise, generate_keypair, sign_proposal, verify_proposal, receipt_json
+from zk_pipeline import status as zk_status
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -100,6 +101,10 @@ def consensus():
         return jsonify(result_json(reach_consensus(peers, votes, float(payload.get("threshold", 2/3)))))
     except (KeyError, TypeError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 422
+
+@app.get("/api/zk/status")
+def zk_pipeline_status():
+    return jsonify(zk_status())
 
 @app.post("/api/security/keypair")
 def security_keypair():

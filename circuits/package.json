@@ -1,0 +1,16 @@
+{
+  "name": "four-leibniz-zk-circuits",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Phase 6 circom/snarkjs private-premise proof workflow",
+  "scripts": {
+    "compile": "circom private_premise.circom --r1cs --wasm --sym -o build",
+    "setup": "snarkjs groth16 setup build/private_premise.r1cs powersOfTau28_hez_final_14.ptau build/private_premise_0000.zkey",
+    "contribute": "snarkjs zkey contribute build/private_premise_0000.zkey build/private_premise_final.zkey --name=phase6 --entropy=phase6-local-dev",
+    "verify": "snarkjs zkey verify build/private_premise.r1cs powersOfTau28_hez_final_14.ptau build/private_premise_final.zkey",
+    "export-verifier": "snarkjs zkey export verificationkey build/private_premise_final.zkey build/verification_key.json"
+  },
+  "devDependencies": {
+    "snarkjs": "^0.7.5"
+  }
+}

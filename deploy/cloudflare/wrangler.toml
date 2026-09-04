@@ -1,0 +1,15 @@
+name = "four-leibniz-consensus"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+[durable_objects]
+bindings = [
+  { name = "CONSENSUS_ROOM", class_name = "ConsensusRoom" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ConsensusRoom"]
+
+[vars]
+PHASE = "6"
