@@ -20,7 +20,8 @@ from governance import GovernanceVote, evaluate as evaluate_governance
 from durable_log import OrderedLog
 from peer_admission import admit as admit_peer, is_active as peer_is_active, revoke as revoke_peer
 from cross_shard import Shard, atomic_commit, recover_in_doubt
-from replicated_coordinator import DecisionVote, ParticipantAck, validate_decision, AckStore
+from replicated_coordinator import DecisionVote, ParticipantAck, validate_decision, AckStore, ReplicatedDecisionLog
+from replica_membership import issue_member, active as replica_active, verify_vote, elect_coordinator
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -143,6 +144,26 @@ def governance_evaluate():
         return jsonify(evaluate_governance(payload.get("proposal_id", ""), payload.get("action", ""), votes, float(payload.get("quorum", 2/3)), bool(payload.get("veto_blocks", True)), int(payload.get("timelock_seconds", 3600))))
     except (TypeError, ValueError, KeyError) as exc:
         return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/replicas/issue")
+def replicas_issue():
+    payload=request.get_json(silent=True) or {}
+    try: return jsonify(issue_member(payload['replica_id'],payload['private_key'],payload.get('weight',1),payload.get('ttl',86400),payload.get('now')))
+    except (TypeError,ValueError,KeyError) as exc: return jsonify({'error':str(exc)}),422
+
+@app.post("/api/replicas/elect")
+def replicas_elect():
+    payload=request.get_json(silent=True) or {}; return jsonify(elect_coordinator(payload.get('members',[]),payload.get('epoch',0),payload.get('now')))
+
+@app.post("/api/replicas/verify-vote")
+def replicas_verify_vote():
+    payload=request.get_json(silent=True) or {}; return jsonify({'valid':verify_vote(payload.get('vote',{}),payload.get('member',{}),payload.get('now'))})
+
+@app.post("/api/coordinator/recover")
+def coordinator_recover():
+    payload=request.get_json(silent=True) or {}
+    try: return jsonify(ReplicatedDecisionLog.recover(payload['snapshot']).snapshot())
+    except (TypeError,ValueError,KeyError) as exc: return jsonify({'error':str(exc)}),422
 
 @app.post("/api/coordinator/validate")
 def coordinator_validate():

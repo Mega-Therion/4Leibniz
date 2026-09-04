@@ -24,6 +24,11 @@ class ParticipantAck:
     timestamp: int = 0
 class ReplicatedDecisionLog:
     def __init__(self, replica_id): self.replica_id=replica_id; self.log=OrderedLog(); self.votes={}; self.conflicts=[]
+    def snapshot(self):
+        return {'replica_id':self.replica_id,'log':self.log.snapshot(),'votes':[asdict(v) for v in self.votes.values()],'conflicts':list(self.conflicts)}
+    @classmethod
+    def recover(cls, snapshot):
+        instance=cls(snapshot['replica_id']); instance.log=OrderedLog(snapshot['log']['entries']); instance.votes={v['txid']:DecisionVote(**v) for v in snapshot.get('votes',[])}; instance.conflicts=list(snapshot.get('conflicts',[])); return instance
     def record(self, vote):
         if vote.decision not in ('commit','abort'): raise ValueError('invalid decision')
         prior=self.votes.get(vote.txid)
@@ -49,3 +54,6 @@ class AckStore:
         self.acks[key]=ack; return {'accepted':True,'idempotent':prior is not None,'ack':asdict(ack),'receipt':digest(asdict(ack))}
     def for_transaction(self, txid): return [asdict(a) for a in self.acks.values() if a.txid==txid]
     def durable_snapshot(self): return {'acks':[asdict(a) for a in self.acks.values()]}
+    @classmethod
+    def recover(cls, snapshot):
+        instance=cls(); instance.acks={a['idempotency_key']:ParticipantAck(**a) for a in snapshot.get('acks',[])}; return instance
