@@ -166,7 +166,7 @@ Phase 1 adds `ucalculus.py`, a compact intermediate language for authoring struc
 
 ## Phase 6: private-premise proofs and live consensus deployment
 
-Phase 6 adds the Circom source circuit at `circuits/private_premise.circom`, a `circuits/package.json` snarkjs workflow, and `zk_pipeline.py` readiness reporting. The circuit proves a bounded private lower-bound premise without exposing the secret value; the repository intentionally does not claim a verified proof until circom, snarkjs, a pinned ceremony artifact, and an independent verification pass are available. Cloudflare Worker/Durable Object scaffolding lives under `deploy/cloudflare/` for the stateful P2P consensus edge. See `docs/PHASE6_DESIGN.md` for the trust model, deployment topology, and confirmation boundary.
+Phase 6 adds the Circom source circuit at `circuits/private_premise.circom`, a `circuits/package.json` snarkjs workflow, and `zk_pipeline.py` readiness reporting. The dashboard is live at [four-leibniz-chyrho.vercel.app](https://four-leibniz-chyrho.vercel.app), and the consensus edge health endpoint is live at [four-leibniz-consensus.chyren-sovereign.workers.dev/health](https://four-leibniz-consensus.chyren-sovereign.workers.dev/health). The circuit proves a bounded private lower-bound premise without exposing the secret value; the repository intentionally does not claim a verified proof until circom, snarkjs, a pinned ceremony artifact, and an independent verification pass are available. Cloudflare Worker/Durable Object scaffolding lives under `deploy/cloudflare/` for the stateful P2P consensus edge. See `docs/PHASE6_DESIGN.md` for the trust model, deployment topology, and confirmation boundary.
 
 ## Phase 5: signed collaboration and benchmark evaluation
 
