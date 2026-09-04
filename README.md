@@ -164,6 +164,10 @@ Phase 3 adds `Leibniz/Monadologia.lean`, a typed monad-state and calculus-ratioc
 
 Phase 1 adds `ucalculus.py`, a compact intermediate language for authoring structured claims. See `examples/stability.uc` and `docs/architecture/UNIVERSAL_CALCULUS.md`. Compile a declaration from the command line with `python3 ucalculus.py examples/stability.uc`, or submit it to `POST /api/compile`. The result includes a typed intermediate representation, a reproducibility fingerprint, explicit proof obligations, and a Lean theorem skeleton.
 
+## Phase 11: replicated coordinator decisions and Byzantine validation
+
+Phase 11 adds `replicated_coordinator.py` with hash-linked replica decision records, `2f+1` verified quorum validation, transaction-digest binding, equivocation/conflict detection, and durable idempotent participant acknowledgements. The API exposes `/api/coordinator/validate`, `/api/participants/ack`, and `/api/participants/list`. See `docs/PHASE11_DESIGN.md` for the decision and recovery boundaries.
+
 ## Phase 10: cross-shard atomic commit and state synchronization
 
 Phase 10 adds `cross_shard.py` with prepare/commit/abort transaction states, in-doubt recovery, shard snapshots, state hashes, and `/api/shards/atomic-commit`, `/api/shards/recover`, and `/api/shards/sync`. The `partition_benchmark.py` harness audits connected, partially partitioned, and unreachable shard scenarios. See `docs/PHASE10_DESIGN.md` for the protocol and the boundary between a deterministic reference model and a production replicated coordinator.

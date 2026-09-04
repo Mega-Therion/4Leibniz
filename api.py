@@ -20,10 +20,12 @@ from governance import GovernanceVote, evaluate as evaluate_governance
 from durable_log import OrderedLog
 from peer_admission import admit as admit_peer, is_active as peer_is_active, revoke as revoke_peer
 from cross_shard import Shard, atomic_commit, recover_in_doubt
+from replicated_coordinator import DecisionVote, ParticipantAck, validate_decision, AckStore
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
 replay_guard = ReplayGuard()
+ack_store = AckStore()
 
 @app.get("/")
 def dashboard():
@@ -141,6 +143,29 @@ def governance_evaluate():
         return jsonify(evaluate_governance(payload.get("proposal_id", ""), payload.get("action", ""), votes, float(payload.get("quorum", 2/3)), bool(payload.get("veto_blocks", True)), int(payload.get("timelock_seconds", 3600))))
     except (TypeError, ValueError, KeyError) as exc:
         return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/coordinator/validate")
+def coordinator_validate():
+    payload = request.get_json(silent=True) or {}
+    try:
+        votes = [DecisionVote(**v) for v in payload.get('votes', [])]
+        return jsonify(validate_decision(votes, payload.get('txid',''), payload.get('transaction_digest',''), int(payload.get('fault_tolerance',1))))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({'error':str(exc)}), 422
+
+@app.post("/api/participants/ack")
+def participant_ack():
+    payload = request.get_json(silent=True) or {}
+    try:
+        ack = ParticipantAck(**payload['ack'])
+        return jsonify(ack_store.record(ack))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({'error':str(exc)}), 422
+
+@app.post("/api/participants/list")
+def participant_list():
+    payload = request.get_json(silent=True) or {}
+    return jsonify({'acks':ack_store.for_transaction(payload.get('txid',''))})
 
 @app.post("/api/shards/atomic-commit")
 def shards_atomic_commit():
