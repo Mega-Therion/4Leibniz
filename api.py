@@ -17,6 +17,8 @@ from zk_pipeline import status as zk_status
 from zk_verify import verify_groth16
 from multiprover import ProofReport, aggregate as aggregate_provers
 from governance import GovernanceVote, evaluate as evaluate_governance
+from durable_log import OrderedLog
+from peer_admission import admit as admit_peer, is_active as peer_is_active, revoke as revoke_peer
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -138,6 +140,37 @@ def governance_evaluate():
         return jsonify(evaluate_governance(payload.get("proposal_id", ""), payload.get("action", ""), votes, float(payload.get("quorum", 2/3)), bool(payload.get("veto_blocks", True)), int(payload.get("timelock_seconds", 3600))))
     except (TypeError, ValueError, KeyError) as exc:
         return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/log/validate")
+def validate_log():
+    payload = request.get_json(silent=True) or {}
+    try:
+        log = OrderedLog(payload.get("entries", []))
+        if payload.get("append"):
+            item = payload["append"]
+            log.append(item.get("proposal_id", ""), item.get("payload", {}), item.get("sequence"))
+        return jsonify(log.snapshot())
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/peers/admit")
+def admit_peer_route():
+    payload = request.get_json(silent=True) or {}
+    try:
+        proposal = SignedProposal(**payload.get("proposal", {}))
+        return jsonify(admit_peer(proposal, payload.get("capabilities", []), payload.get("weight", 1), payload.get("ttl", 86400), payload.get("now")))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
+@app.post("/api/peers/revoke")
+def revoke_peer_route():
+    payload = request.get_json(silent=True) or {}
+    return jsonify(revoke_peer(payload.get("record", {}), payload.get("reason", "governance decision")))
+
+@app.post("/api/peers/check")
+def check_peer_route():
+    payload = request.get_json(silent=True) or {}
+    return jsonify({"active": peer_is_active(payload.get("record"), payload.get("now"))})
 
 @app.post("/api/zk/verify")
 def zk_verify():

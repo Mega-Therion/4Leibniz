@@ -164,6 +164,10 @@ Phase 3 adds `Leibniz/Monadologia.lean`, a typed monad-state and calculus-ratioc
 
 Phase 1 adds `ucalculus.py`, a compact intermediate language for authoring structured claims. See `examples/stability.uc` and `docs/architecture/UNIVERSAL_CALCULUS.md`. Compile a declaration from the command line with `python3 ucalculus.py examples/stability.uc`, or submit it to `POST /api/compile`. The result includes a typed intermediate representation, a reproducibility fingerprint, explicit proof obligations, and a Lean theorem skeleton.
 
+## Phase 9: durable ordered logs and automated peer admission
+
+Phase 9 adds `durable_log.py` with contiguous sequence numbers, hash-linked entries, snapshots, corruption detection, and recovery; and `peer_admission.py` with signed identity admission, bounded leases, capability metadata, expiry, revocation, and receipts. The Flask API exposes `/api/log/validate`, `/api/peers/admit`, `/api/peers/check`, and `/api/peers/revoke`. See `docs/PHASE9_DESIGN.md` for the Durable Object integration plan and the boundary between tamper-evident ordering and full Byzantine agreement.
+
 ## Phase 8: multi-prover verification and governance
 
 Phase 8 adds `multiprover.py` for independent proof-report aggregation with digest matching, verifier diversity, dissent retention, and explicit receipts. `governance.py` adds weighted proposals, quorum thresholds, veto handling, and timelocks without allowing governance to promote claims beyond kernel evidence. The live WebSocket edge is exercised by `loadtest.py`; bounded normal and fault-injection results are stored under `benchmarks/artifacts/phase8/`. See `docs/PHASE8_DESIGN.md` for protocol boundaries and reproducibility limits.
