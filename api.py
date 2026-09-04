@@ -11,11 +11,14 @@ from divergence import compare_text
 from ai_assist import suggest
 from consensus import Peer, Vote, reach_consensus, result_json
 from benchmarks.runner import run as run_benchmark
-from security import SignedProposal, commit_private_premise, generate_keypair, sign_proposal, verify_proposal, receipt_json
+from security import SignedProposal, ReplayGuard, commit_private_premise, generate_keypair, sign_proposal, verify_proposal, verify_fresh_proposal, receipt_json
+from bft import BFTPeer, BFTVote, decide as bft_decide
 from zk_pipeline import status as zk_status
+from zk_verify import verify_groth16
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
+replay_guard = ReplayGuard()
 
 @app.get("/")
 def dashboard():
@@ -102,9 +105,26 @@ def consensus():
     except (KeyError, TypeError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 422
 
+@app.post("/api/bft/decide")
+def bft_consensus():
+    payload = request.get_json(silent=True) or {}
+    try:
+        peers = [BFTPeer(**p) for p in payload.get("peers", [])]
+        votes = [BFTVote(**v) for v in payload.get("votes", [])]
+        return jsonify(bft_decide(peers, votes, int(payload.get("fault_tolerance", 1)), float(payload.get("threshold", 2/3))))
+    except (TypeError, ValueError, KeyError) as exc:
+        return jsonify({"error": str(exc)}), 422
+
 @app.get("/api/zk/status")
 def zk_pipeline_status():
     return jsonify(zk_status())
+
+@app.post("/api/zk/verify")
+def zk_verify():
+    payload = request.get_json(silent=True) or {}
+    if not isinstance(payload.get("proof"), dict) or not isinstance(payload.get("public_signals"), list):
+        return jsonify({"error": "proof and public_signals are required"}), 400
+    return jsonify(verify_groth16(payload["proof"], payload["public_signals"], payload.get("verification_key")))
 
 @app.post("/api/security/keypair")
 def security_keypair():
@@ -127,7 +147,8 @@ def security_verify():
     payload = request.get_json(silent=True) or {}
     try:
         proposal = SignedProposal(**payload["proposal"])
-        return jsonify({"verified": verify_proposal(proposal), "digest": proposal.digest})
+        verified = verify_fresh_proposal(proposal, replay_guard)
+        return jsonify({"verified": verified, "digest": proposal.digest, "replay_protected": True})
     except (KeyError, TypeError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 422
 

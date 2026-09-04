@@ -17,3 +17,6 @@ venv/
 *.swp
 # Local environment
 .env
+
+# Local Phase 7 circuit toolchain
+circuits/node_modules/

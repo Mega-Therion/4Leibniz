@@ -1,0 +1,8 @@
+{
+  "artifact": "powersOfTau28_hez_final_08.ptau",
+  "source": "https://github.com/nullity00/zkp-mooc-berkeley/blob/answers/powersOfTau28_hez_final_08.ptau",
+  "sha256": "f741f2ddee2875915c24db8aae90d021f51181533f1ee3b58baf64b042e91654",
+  "purpose": "Small demo circuit only; not a production ceremony",
+  "verified_by": "snarkjs groth16 setup and proof verification",
+  "trust_note": "Use a reviewed multi-party ceremony and independent key verification for production privacy claims."
+}
