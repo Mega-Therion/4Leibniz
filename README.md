@@ -21,6 +21,30 @@ $$\Huge\textbf{"Calculemus!"}$$
 
 ---
 
+## 🛰️ THE 4LEIBNIZ VOLUNTEER NETWORK (SETI@home FOR LEIBNIZ)
+
+> *"The archive in Hanover contains over 200,000 folios. Leibniz did not publish his greatest ideas; he left them in drafts, confident that a later century would possess the instruments to calculate them."*
+
+4Leibniz introduces the **Volunteer Compute Protocol (VCP)**—a **SETI@home-style distributed research network** allowing anyone to donate otherwise-idle CPU/GPU power to:
+1. **Transcribe** 17th-century Latin manuscript fragments from the Hanover Nachlass.
+2. **Translate** diplomatic Latin and early German into critical English editions.
+3. **Verify** formal mathematical proofs inside the Lean 4 proof kernel.
+
+### ⚡ Quickstart: Donate Compute in 30 Seconds
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Mega-Therion/4Leibniz.git
+cd 4Leibniz
+
+# 2. Run the volunteer daemon (consumes only idle CPU/GPU, sandbox-safe)
+python3 volunteer/client.py --daemon
+```
+
+*For complete protocol architecture, see [`docs/VOLUNTEER_COMPUTE_SPEC.md`](docs/VOLUNTEER_COMPUTE_SPEC.md).*
+
+---
+
 ## 🏛️ HISTORICAL TERMINOLOGY & LEIBNIZIAN GENEALOGY
 
 Every module, namespace, and theorem in `4Leibniz` strictly employs the classical philosophical, mathematical, and physical terminology formulated by Leibniz across his major treatises:
