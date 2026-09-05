@@ -174,11 +174,26 @@ Every module, namespace, and theorem in `4Leibniz` strictly employs the classica
 
 To verify all Leibnizian formal proofs through the deterministic Lean 4 kernel:
 
+Measured 2026-09-05 by `scripts/measure_kernel.py` on toolchain
+`leanprover/lean4:v4.34.0-rc2`: **10 modules** under `Leibniz/` plus the root
+`Leibniz.lean` (**11 modules total**), containing **34 theorems**, 48 `def`s,
+16 `structure`s, 10 `inductive`s and 4 `abbrev`s.
+
+Run the command yourself rather than trusting these figures; that is the point
+of publishing it.
+
 ```bash
-# Build and check all formal theorems with zero sorries:
+# Build the kernel:
 lake build
 
-# Execute the Calculemus verification oracle:
+# Measure what it actually contains -- module count, theorem count, sorries,
+# and axiom footprint. Every figure quoted below comes from this command;
+# none is transcribed by hand.
+python3 scripts/measure_kernel.py --check
+
+# `Leibniz/Calculemus.lean` is NOT an oracle. It proves that a field set to
+# `true` equals `true`, and audits no dataset. Its VeritasReceipt is a struct
+# literal, not a measurement -- its theoremCount read 18 while the tree held 34.
 lake env lean Leibniz/Calculemus.lean
 ```
 

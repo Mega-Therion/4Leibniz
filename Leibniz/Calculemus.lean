@@ -56,9 +56,22 @@ structure VeritasReceipt where
   metadataCount : Nat
   deriving Repr
 
-def execute_calculemus : VeritasReceipt :=
-  { build := true, theoremCount := 18, sorryCount := 0, metadataCount := 12 }
+/-- **Not a measurement.** These are literals typed by hand, and at least one was
+wrong: `theoremCount` read 18 while the tree contained 34 theorems (measured
+2026-09-05). A record cannot audit the repository it lives in — nothing here
+counts anything, opens a file, or invokes the elaborator.
 
+Retained because `calculemus_omnibus_verum` below is a worked example of a
+theorem that compiles while establishing nothing: it proves that a field set to
+`true` equals `true`. Substituting any other values leaves it provable.
+
+For the real figures run `python3 scripts/measure_kernel.py --check`, which
+elaborates every module and reads the elaborator's own output. Do not cite this
+structure in documentation. -/
+def execute_calculemus : VeritasReceipt :=
+  { build := true, theoremCount := 34, sorryCount := 0, metadataCount := 12 }
+
+/-- Proves `true = true`. Named for the Calculus Ratiocinator; audits nothing. -/
 theorem calculemus_omnibus_verum : execute_calculemus.build = true := by rfl
 
 structure GaugePath (G : Type) (N : ℕ) where
