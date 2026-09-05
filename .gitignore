@@ -20,3 +20,7 @@ venv/
 
 # Local Phase 7 circuit toolchain
 circuits/node_modules/
+
+# Local coordinator state; manifests and raw candidate artifacts remain tracked.
+coordinator/*.sqlite
+coordinator/*.sqlite-*
