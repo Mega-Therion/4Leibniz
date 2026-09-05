@@ -195,3 +195,17 @@ Phase 5 adds Ed25519 proposal signing and tamper detection in `security.py`, exp
 ## Phase 4: collaborative calculus and historical evaluation
 
 Phase 4 adds a transport-agnostic weighted consensus layer in `consensus.py`, an optional structured-output AI adapter in `ai_assist.py`, and the source-linked historical regression corpus under `benchmarks/`. Consensus retains dissent and cannot override Lean. AI suggestions are always marked `unverified` until a human or kernel-backed workflow validates them. Run the corpus with `python3 benchmarks/runner.py`; its current eight cases are designed to test transitive closure, open obligations, and control claims from public-domain Leibniz editions. The architecture, provenance policy, and deployment boundary are documented in `docs/PHASE4_DESIGN.md`.
+
+
+## Layered architecture
+
+The repository is partitioned into three explicit layers:
+
+- `corpus/` — provenance-first manuscript catalog, diplomatic Latin, and parallel translations.
+- `Leibniz/` — Lean 4 formal kernel and historical source concordance.
+- `frontier/` — modern RYTT extensions, including balanced ternary and base-24 holonomy adapters.
+- `volunteer/` — bounded, deterministic work-unit protocol and client for contributor machines.
+
+The cross-repository contract is maintained in `RYTT-Sovereign-Semiotics/integration/4leibniz_bridge.json`. Modern extensions are explicitly labeled as extensions and are not attributed to Leibniz's manuscripts.
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for transcription, theorem, frontier, and volunteer workflows. Run `./scripts/setup_lean.sh` to install the pinned Lean toolchain, fetch the Mathlib cache when available, and build the kernel.

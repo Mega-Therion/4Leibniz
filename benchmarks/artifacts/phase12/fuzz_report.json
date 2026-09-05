@@ -1,0 +1,69 @@
+{
+  "seed": 12,
+  "cases": 200,
+  "accepted_decisions": 6,
+  "rejected_decisions": 194,
+  "recovered_logs": 200,
+  "partition_cases": [
+    {
+      "mask": 0,
+      "reachable_replicas": [],
+      "three_replica_quorum_available": false
+    },
+    {
+      "mask": 1,
+      "reachable_replicas": [
+        0
+      ],
+      "three_replica_quorum_available": false
+    },
+    {
+      "mask": 2,
+      "reachable_replicas": [
+        1
+      ],
+      "three_replica_quorum_available": false
+    },
+    {
+      "mask": 3,
+      "reachable_replicas": [
+        0,
+        1
+      ],
+      "three_replica_quorum_available": false
+    },
+    {
+      "mask": 4,
+      "reachable_replicas": [
+        2
+      ],
+      "three_replica_quorum_available": false
+    },
+    {
+      "mask": 5,
+      "reachable_replicas": [
+        0,
+        2
+      ],
+      "three_replica_quorum_available": false
+    },
+    {
+      "mask": 6,
+      "reachable_replicas": [
+        1,
+        2
+      ],
+      "three_replica_quorum_available": false
+    },
+    {
+      "mask": 7,
+      "reachable_replicas": [
+        0,
+        1,
+        2
+      ],
+      "three_replica_quorum_available": true
+    }
+  ],
+  "failures": []
+}

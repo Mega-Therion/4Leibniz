@@ -1,6 +1,6 @@
 {
   "project": "4Leibniz",
-  "source_sha256": "f7fbe54a1547a11949ff5d015ef1c82b67c63c3e3b8871c751a8e791438787c8",
+  "source_sha256": "fdeab1c26ab222ba36ff65b4a088d2bc9404c346014d6f1e8b312b319c5a73f5",
   "olean_files": [
     ".lake/build/lib/lean/Leibniz.olean",
     ".lake/build/lib/lean/Leibniz/Calculemus.olean",
