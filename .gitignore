@@ -24,3 +24,7 @@ circuits/node_modules/
 # Local coordinator state; manifests and raw candidate artifacts remain tracked.
 coordinator/*.sqlite
 coordinator/*.sqlite-*
+
+# generated job queue; a committed copy carries a stale schema into every clone
+coordinator/*.sqlite
+coordinator/*.sqlite-journal
