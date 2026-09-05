@@ -125,10 +125,26 @@ Every module, namespace, and theorem in `4Leibniz` strictly employs the classica
 * **Historical Origin:** In *Système Nouveau* (1695), Leibniz showed that systems maintain structural coherence through an intrinsic harmony (*Harmonia Praestabilita*). In *De Scientia Universali*, he proposed the *Calculus Ratiocinator*, where all scientific controversies would be resolved deterministically: *"Let us calculate without dispute!"*
 * **Formal Role in `4Leibniz`:** *States* the Anti-Drift claim — open quantum dissipative systems maintain ground-state harmony iff the coherent drive exceeds dissipation ($u \ge \gamma \iff \chi \ge 1/\sqrt{2}$).
 
+  > `[R]` **RETRACTED 2026-09-03 — this claim is false, not merely unproved.** The companion
+  > repository proved that the GKSL steady-state coherence is
+  > $C(x) = 4x/(1+8x^2)$, which is **non-monotonic**: it rises to $1/\sqrt2$ and falls again.
+  > No threshold on a non-monotonic quantity can produce an *iff*, because two different drive
+  > ratios give the identical coherence. $\theta = 1/\sqrt2$ is a **ceiling**, not a gate.
+  > See `Res-Nova/05_lean_formalization/PillarIV_AntiDriftGate.lean`
+  > (`bloch_coherence_le_theta`, `bloch_coherence_eq_theta_iff`) and §VI of
+  > `Res-Nova/FIG_TREE_MONOGRAPH.md`.
+  >
+  > The statement is retained here as a **worked example of a formalisation that compiles while
+  > certifying nothing** — see the note below — and must not be cited as a result of this
+  > project.
+
   > `[O]` **Not proved here.** `Leibniz/Harmonia.lean:30` is sorry-free but takes the threshold
   > as a *hypothesis* over scaled naturals (`h_floor : gamma ≥ 7071`); any integer substitutes
   > for `7071` without breaking the proof, so it certifies nothing about $1/\sqrt{2}$ and nothing
-  > about a Lindblad generator. `Leibniz/Calculemus.lean:39` is not an oracle: it proves that a
+  > about a Lindblad generator. `Leibniz/Harmonia.lean:42`,
+  > `anti_drift_preservation (h : harmonia_stabilis u gamma) : u ≥ gamma := h`, returns its own
+  > hypothesis verbatim — `harmonia_stabilis` is *defined* as `u ≥ gamma`, so the theorem is
+  > `h : P ⊢ P`. It is valid and empty. `Leibniz/Calculemus.lean:39` is not an oracle: it proves that a
   > record of four `true` fields equals a record of four `true` fields, and audits no dataset.
   > These six modules are day-one scaffolding — 214 lines of `Nat` arithmetic. They compile
   > clean, and that is the whole of what they establish.
