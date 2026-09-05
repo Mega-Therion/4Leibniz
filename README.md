@@ -21,28 +21,32 @@ $$\Huge\textbf{"Calculemus!"}$$
 
 ---
 
-## 🏛️ THE 4LEIBNIZ DISTRIBUTED RESEARCH NETWORK
-### *Crowdsourced Transcription, Critical Translation & Formal Verification*
+## 🏛️ VOLUNTEER COMPUTE PROTOCOL (REFERENCE IMPLEMENTATION)
 
-> *"The archive in Hanover contains over 200,000 folios. Leibniz did not publish his greatest ideas; he left them in drafts, confident that a later century would possess the instruments to calculate them."*
+`4Leibniz` includes a local reference implementation of a **Volunteer Compute Protocol (VCP)** designed for future distributed transcription, translation, and proof-checking of the Leibniz *Nachlass*:
 
-To assist scholars, philologists, and mathematical historians working on the vast unpublished Nachlass, 4Leibniz introduces the **Volunteer Compute Protocol (VCP)**—a distributed volunteer computing network allowing anyone to donate idle CPU/GPU resources to:
-1. **Transcribe**: Process handwritten Latin manuscript fragments from the Hanover archive (Handwritten Text Recognition).
-2. **Translate**: Generate candidate parallel English translations and collate critical editions.
-3. **Verify**: Check formal mathematical proofs against the Lean 4 kernel with 0 sorries.
+- **Protocol Specification (`volunteer/protocol.py`)**: Versioned, signable work-unit schema with strict allow-listed job types.
+- **Local Queue & Lease Manager (`coordinator/queue_manager.py`)**: SQLite-backed lease management, response tracking, and multi-response consensus aggregation.
+- **Sandboxed Worker (`volunteer/worker.py`)**: Path-traversal guards restricting file access to the repository root. Rejects implicit machine translation and requires explicit runners for proof search.
+- **Archival Harvester (`coordinator/harvester.py`)**: Fetches public-domain Leibniz volumes and manifests directly from the Internet Archive.
 
-### ⚡ Quickstart: Contribute Idle Compute in 30 Seconds
+> **Note on Current Deployment Status**: This subsystem is currently a **local reference implementation**. There is no active central server, no live distributed network, and no implicit HTR or translation model execution. Running `client.py` interacts purely with your local `coordinator/job_queue.sqlite` database.
+
+### Local Queue Testing
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/Mega-Therion/4Leibniz.git
-cd 4Leibniz
+# 1. Enqueue an archival test unit
+python3 -c "
+from coordinator.queue_manager import QueueManager
+qm = QueueManager('coordinator/job_queue.sqlite')
+qm.enqueue('LH-XXXV-1679-0001', 'htr-transcription', {'text': 'Situs est relatio coexistentium'})
+"
 
-# 2. Run the volunteer worker (sandbox-safe, runs bounded tasks on idle cycles)
-python3 volunteer/client.py --daemon
+# 2. Process the queued unit locally
+python3 volunteer/client.py --daemon --max-jobs 1
 ```
 
-*For technical specifications, see [`docs/VOLUNTEER_COMPUTE_SPEC.md`](docs/VOLUNTEER_COMPUTE_SPEC.md).*
+*For complete protocol architecture and security model, see [`docs/VOLUNTEER_COMPUTE_SPEC.md`](docs/VOLUNTEER_COMPUTE_SPEC.md).*
 
 ---
 
