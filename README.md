@@ -21,27 +21,28 @@ $$\Huge\textbf{"Calculemus!"}$$
 
 ---
 
-## 🛰️ THE 4LEIBNIZ VOLUNTEER NETWORK (SETI@home FOR LEIBNIZ)
+## 🏛️ THE 4LEIBNIZ DISTRIBUTED RESEARCH NETWORK
+### *Crowdsourced Transcription, Critical Translation & Formal Verification*
 
 > *"The archive in Hanover contains over 200,000 folios. Leibniz did not publish his greatest ideas; he left them in drafts, confident that a later century would possess the instruments to calculate them."*
 
-4Leibniz introduces the **Volunteer Compute Protocol (VCP)**—a **SETI@home-style distributed research network** allowing anyone to donate otherwise-idle CPU/GPU power to:
-1. **Transcribe** 17th-century Latin manuscript fragments from the Hanover Nachlass.
-2. **Translate** diplomatic Latin and early German into critical English editions.
-3. **Verify** formal mathematical proofs inside the Lean 4 proof kernel.
+To assist scholars, philologists, and mathematical historians working on the vast unpublished Nachlass, 4Leibniz introduces the **Volunteer Compute Protocol (VCP)**—a distributed volunteer computing network allowing anyone to donate idle CPU/GPU resources to:
+1. **Transcribe**: Process handwritten Latin manuscript fragments from the Hanover archive (Handwritten Text Recognition).
+2. **Translate**: Generate candidate parallel English translations and collate critical editions.
+3. **Verify**: Check formal mathematical proofs against the Lean 4 kernel with 0 sorries.
 
-### ⚡ Quickstart: Donate Compute in 30 Seconds
+### ⚡ Quickstart: Contribute Idle Compute in 30 Seconds
 
 ```bash
 # 1. Clone the repository
 git clone https://github.com/Mega-Therion/4Leibniz.git
 cd 4Leibniz
 
-# 2. Run the volunteer daemon (consumes only idle CPU/GPU, sandbox-safe)
+# 2. Run the volunteer worker (sandbox-safe, runs bounded tasks on idle cycles)
 python3 volunteer/client.py --daemon
 ```
 
-*For complete protocol architecture, see [`docs/VOLUNTEER_COMPUTE_SPEC.md`](docs/VOLUNTEER_COMPUTE_SPEC.md).*
+*For technical specifications, see [`docs/VOLUNTEER_COMPUTE_SPEC.md`](docs/VOLUNTEER_COMPUTE_SPEC.md).*
 
 ---
 

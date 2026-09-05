@@ -1,5 +1,5 @@
 # 📜 4Leibniz Volunteer Compute Protocol (VCP)
-### *A SETI@home Architecture for Distributed Archival Philology and Lean 4 Formal Verification*
+### *A Distributed Volunteer Architecture for Archival Philology and Lean 4 Formal Verification*
 
 ```
                          4LEIBNIZ VOLUNTEER NETWORK
