@@ -1,0 +1,613 @@
+{
+  "schema": "4leibniz.lean-dependencies.v1",
+  "scope": "source-level imports and declaration inventory; elaborated theorem-to-theorem dependencies require Lean environment tracing",
+  "module_count": 10,
+  "declaration_count": 107,
+  "theorem_like_count": 34,
+  "modules": [
+    {
+      "file": "Leibniz/Calculemus.lean",
+      "module": "Leibniz.Calculemus",
+      "imports": [
+        "Mathlib",
+        "Leibniz.Characteristica",
+        "Leibniz.SpatiumRelativum",
+        "Leibniz.VisViva",
+        "Leibniz.LexContinuitatis",
+        "Leibniz.Harmonia"
+      ],
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "Proposition"
+        },
+        {
+          "kind": "inductive",
+          "name": "Verdict"
+        },
+        {
+          "kind": "structure",
+          "name": "Adjudication"
+        },
+        {
+          "kind": "def",
+          "name": "adjudicate"
+        },
+        {
+          "kind": "def",
+          "name": "oracle"
+        },
+        {
+          "kind": "structure",
+          "name": "VeritasReceipt"
+        },
+        {
+          "kind": "def",
+          "name": "execute_calculemus"
+        },
+        {
+          "kind": "theorem",
+          "name": "calculemus_omnibus_verum"
+        },
+        {
+          "kind": "structure",
+          "name": "GaugePath"
+        },
+        {
+          "kind": "def",
+          "name": "holonomy"
+        },
+        {
+          "kind": "def",
+          "name": "vonNeumannEntropy"
+        }
+      ],
+      "theorem_like_count": 1
+    },
+    {
+      "file": "Leibniz/Characteristica.lean",
+      "module": "Leibniz.Characteristica",
+      "imports": [
+        "Mathlib"
+      ],
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "EpistemicStatus"
+        },
+        {
+          "kind": "def",
+          "name": "Proven"
+        },
+        {
+          "kind": "def",
+          "name": "Derived"
+        },
+        {
+          "kind": "def",
+          "name": "Axiomatic"
+        },
+        {
+          "kind": "def",
+          "name": "Conjectured"
+        },
+        {
+          "kind": "def",
+          "name": "Open"
+        },
+        {
+          "kind": "structure",
+          "name": "EpistemicRecord"
+        },
+        {
+          "kind": "inductive",
+          "name": "Dyas"
+        },
+        {
+          "kind": "def",
+          "name": "tensio"
+        },
+        {
+          "kind": "theorem",
+          "name": "tensio_symm"
+        },
+        {
+          "kind": "theorem",
+          "name": "tensio_self"
+        },
+        {
+          "kind": "theorem",
+          "name": "tensio_max"
+        },
+        {
+          "kind": "def",
+          "name": "metadata"
+        }
+      ],
+      "theorem_like_count": 3
+    },
+    {
+      "file": "Leibniz/Epistemic.lean",
+      "module": "Leibniz.Epistemic",
+      "imports": [
+        "Mathlib"
+      ],
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "Status"
+        },
+        {
+          "kind": "def",
+          "name": "rank"
+        },
+        {
+          "kind": "def",
+          "name": "le"
+        },
+        {
+          "kind": "def",
+          "name": "join"
+        },
+        {
+          "kind": "def",
+          "name": "meet"
+        },
+        {
+          "kind": "theorem",
+          "name": "le_refl"
+        },
+        {
+          "kind": "theorem",
+          "name": "le_trans"
+        },
+        {
+          "kind": "theorem",
+          "name": "join_upper_left"
+        },
+        {
+          "kind": "theorem",
+          "name": "join_upper_right"
+        },
+        {
+          "kind": "theorem",
+          "name": "meet_lower_left"
+        },
+        {
+          "kind": "theorem",
+          "name": "meet_lower_right"
+        },
+        {
+          "kind": "inductive",
+          "name": "EvidenceKind"
+        },
+        {
+          "kind": "structure",
+          "name": "Assumption"
+        },
+        {
+          "kind": "structure",
+          "name": "AssumptionContext"
+        },
+        {
+          "kind": "def",
+          "name": "ids"
+        },
+        {
+          "kind": "def",
+          "name": "contains"
+        },
+        {
+          "kind": "def",
+          "name": "add"
+        },
+        {
+          "kind": "inductive",
+          "name": "Evidence"
+        },
+        {
+          "kind": "structure",
+          "name": "SourceRef"
+        },
+        {
+          "kind": "structure",
+          "name": "ArgumentBundle"
+        },
+        {
+          "kind": "abbrev",
+          "name": "ProvenArgument"
+        },
+        {
+          "kind": "abbrev",
+          "name": "DerivedArgument"
+        },
+        {
+          "kind": "theorem",
+          "name": "ProvenArgument.proof"
+        },
+        {
+          "kind": "def",
+          "name": "ProvenArgument.weaken"
+        },
+        {
+          "kind": "def",
+          "name": "statusOf"
+        }
+      ],
+      "theorem_like_count": 7
+    },
+    {
+      "file": "Leibniz/Harmonia.lean",
+      "module": "Leibniz.Harmonia",
+      "imports": [
+        "Mathlib",
+        "Leibniz.LexContinuitatis"
+      ],
+      "declarations": [
+        {
+          "kind": "abbrev",
+          "name": "Qubit"
+        },
+        {
+          "kind": "abbrev",
+          "name": "Operator"
+        },
+        {
+          "kind": "structure",
+          "name": "DensityMatrix"
+        },
+        {
+          "kind": "structure",
+          "name": "LindbladSystem"
+        },
+        {
+          "kind": "def",
+          "name": "commutator"
+        },
+        {
+          "kind": "def",
+          "name": "anticommutator"
+        },
+        {
+          "kind": "def",
+          "name": "harmonia_stabilis"
+        },
+        {
+          "kind": "theorem",
+          "name": "anti_drift_preservation"
+        },
+        {
+          "kind": "theorem",
+          "name": "coherence_preservation_invariant"
+        }
+      ],
+      "theorem_like_count": 2
+    },
+    {
+      "file": "Leibniz/LexContinuitatis.lean",
+      "module": "Leibniz.LexContinuitatis",
+      "imports": [
+        "Mathlib"
+      ],
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "theta"
+        },
+        {
+          "kind": "def",
+          "name": "chiFloor"
+        },
+        {
+          "kind": "def",
+          "name": "chiCeil"
+        },
+        {
+          "kind": "def",
+          "name": "chiMidArithmetic"
+        },
+        {
+          "kind": "def",
+          "name": "chiMidGeometric"
+        },
+        {
+          "kind": "theorem",
+          "name": "theta_pos"
+        },
+        {
+          "kind": "theorem",
+          "name": "theta_lt_two"
+        },
+        {
+          "kind": "theorem",
+          "name": "chiFloor_pos"
+        },
+        {
+          "kind": "theorem",
+          "name": "chiCeil_pos"
+        },
+        {
+          "kind": "theorem",
+          "name": "chi_floor_lt_mid"
+        },
+        {
+          "kind": "theorem",
+          "name": "chi_mid_lt_ceil"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuity_band_ordered"
+        },
+        {
+          "kind": "theorem",
+          "name": "within_continuity_envelope"
+        },
+        {
+          "kind": "theorem",
+          "name": "ceiling_squared"
+        },
+        {
+          "kind": "def",
+          "name": "chi_floor_scaled"
+        },
+        {
+          "kind": "def",
+          "name": "chi_mid_scaled"
+        },
+        {
+          "kind": "def",
+          "name": "chi_ceil_scaled"
+        },
+        {
+          "kind": "theorem",
+          "name": "scaled_band_ordered"
+        },
+        {
+          "kind": "theorem",
+          "name": "scaled_within_continuity_envelope"
+        }
+      ],
+      "theorem_like_count": 11
+    },
+    {
+      "file": "Leibniz/Monadologia.lean",
+      "module": "Leibniz.Monadologia",
+      "imports": [
+        "Mathlib"
+      ],
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "MonadState"
+        },
+        {
+          "kind": "def",
+          "name": "Harmonized"
+        },
+        {
+          "kind": "inductive",
+          "name": "HarmonyChain"
+        },
+        {
+          "kind": "theorem",
+          "name": "harmony_reflexive"
+        },
+        {
+          "kind": "theorem",
+          "name": "harmony_chain_has_unity"
+        },
+        {
+          "kind": "inductive",
+          "name": "Formula"
+        },
+        {
+          "kind": "inductive",
+          "name": "Derivation"
+        },
+        {
+          "kind": "def",
+          "name": "Derivation.size"
+        },
+        {
+          "kind": "theorem",
+          "name": "sufficient_reason_chain"
+        }
+      ],
+      "theorem_like_count": 3
+    },
+    {
+      "file": "Leibniz/OpenProblems.lean",
+      "module": "Leibniz.OpenProblems",
+      "imports": [
+        "Mathlib"
+      ],
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "OpenProblem"
+        },
+        {
+          "kind": "def",
+          "name": "registry"
+        }
+      ],
+      "theorem_like_count": 0
+    },
+    {
+      "file": "Leibniz/Sources.lean",
+      "module": "Leibniz.Sources",
+      "imports": [
+        "Mathlib"
+      ],
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "HistoricalSource"
+        },
+        {
+          "kind": "def",
+          "name": "concordance"
+        },
+        {
+          "kind": "def",
+          "name": "sourceFor"
+        }
+      ],
+      "theorem_like_count": 0
+    },
+    {
+      "file": "Leibniz/SpatiumRelativum.lean",
+      "module": "Leibniz.SpatiumRelativum",
+      "imports": [
+        "Mathlib",
+        "Leibniz.Characteristica"
+      ],
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "Monas"
+        },
+        {
+          "kind": "def",
+          "name": "distantia_relativa"
+        },
+        {
+          "kind": "theorem",
+          "name": "distantia_symm"
+        },
+        {
+          "kind": "theorem",
+          "name": "distantia_self"
+        },
+        {
+          "kind": "def",
+          "name": "Stiefel"
+        },
+        {
+          "kind": "def",
+          "name": "tangentSpace"
+        },
+        {
+          "kind": "def",
+          "name": "geodesic"
+        },
+        {
+          "kind": "structure",
+          "name": "GlobalFieldState"
+        },
+        {
+          "kind": "structure",
+          "name": "Holonomia"
+        }
+      ],
+      "theorem_like_count": 2
+    },
+    {
+      "file": "Leibniz/VisViva.lean",
+      "module": "Leibniz.VisViva",
+      "imports": [
+        "Mathlib"
+      ],
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "vis_viva"
+        },
+        {
+          "kind": "theorem",
+          "name": "vis_viva_nonneg"
+        },
+        {
+          "kind": "theorem",
+          "name": "vis_viva_positive"
+        },
+        {
+          "kind": "theorem",
+          "name": "log_domain"
+        },
+        {
+          "kind": "theorem",
+          "name": "mu_bounded"
+        },
+        {
+          "kind": "theorem",
+          "name": "mu_strictMono"
+        },
+        {
+          "kind": "def",
+          "name": "acceleratio_limitis"
+        }
+      ],
+      "theorem_like_count": 5
+    }
+  ],
+  "import_graph": [
+    {
+      "module": "Leibniz.Calculemus",
+      "imports": [
+        "Mathlib",
+        "Leibniz.Characteristica",
+        "Leibniz.SpatiumRelativum",
+        "Leibniz.VisViva",
+        "Leibniz.LexContinuitatis",
+        "Leibniz.Harmonia"
+      ]
+    },
+    {
+      "module": "Leibniz.Characteristica",
+      "imports": [
+        "Mathlib"
+      ]
+    },
+    {
+      "module": "Leibniz.Epistemic",
+      "imports": [
+        "Mathlib"
+      ]
+    },
+    {
+      "module": "Leibniz.Harmonia",
+      "imports": [
+        "Mathlib",
+        "Leibniz.LexContinuitatis"
+      ]
+    },
+    {
+      "module": "Leibniz.LexContinuitatis",
+      "imports": [
+        "Mathlib"
+      ]
+    },
+    {
+      "module": "Leibniz.Monadologia",
+      "imports": [
+        "Mathlib"
+      ]
+    },
+    {
+      "module": "Leibniz.OpenProblems",
+      "imports": [
+        "Mathlib"
+      ]
+    },
+    {
+      "module": "Leibniz.Sources",
+      "imports": [
+        "Mathlib"
+      ]
+    },
+    {
+      "module": "Leibniz.SpatiumRelativum",
+      "imports": [
+        "Mathlib",
+        "Leibniz.Characteristica"
+      ]
+    },
+    {
+      "module": "Leibniz.VisViva",
+      "imports": [
+        "Mathlib"
+      ]
+    }
+  ]
+}
