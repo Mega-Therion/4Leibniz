@@ -1,0 +1,826 @@
+{
+  "range": [
+    23,
+    760
+  ],
+  "line_count": 738,
+  "blank_lines": 414,
+  "blank_ratio": 0.561,
+  "replacement_characters": 0,
+  "non_ascii_characters": 150,
+  "suspicious_token_count": 145,
+  "suspicious_token_examples": [
+    "i(>tj.",
+    "0-*^*",
+    "■3<r",
+    "^",
+    "100",
+    "k>",
+    "(000",
+    "1100",
+    "y<\\rJ",
+    "[I",
+    "*«*[",
+    "auz}",
+    "\\",
+    ">",
+    "^uJLp^fJ^r",
+    "7^1",
+    "i^t",
+    "^JUJ*",
+    "\\P?",
+    ">ooo",
+    "(0111",
+    ">.",
+    "'■",
+    "{.A*,",
+    "Ml^o^",
+    "♦",
+    "•♦•♦»",
+    "a^",
+    "<*",
+    "^4*",
+    "\\uJ*f",
+    "■",
+    "r^A-p^x",
+    "T;^",
+    "4<",
+    "<u.",
+    "}",
+    ">1^UU",
+    "*■",
+    "k/..^,"
+  ],
+  "binary_rows": [
+    {
+      "line": 49,
+      "binary": "000",
+      "claimed_decimal": 1,
+      "computed_decimal": 0,
+      "consistent": false
+    }
+  ],
+  "translation_binary_rows": [
+    {
+      "line": 45,
+      "binary": "100",
+      "computed_decimal": 4
+    },
+    {
+      "line": 49,
+      "binary": "0001",
+      "computed_decimal": 1
+    },
+    {
+      "line": 58,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 83,
+      "binary": "0111",
+      "computed_decimal": 7
+    },
+    {
+      "line": 198,
+      "binary": "111",
+      "computed_decimal": 7
+    },
+    {
+      "line": 532,
+      "binary": "110",
+      "computed_decimal": 6
+    },
+    {
+      "line": 758,
+      "binary": "100",
+      "computed_decimal": 4
+    },
+    {
+      "line": 769,
+      "binary": "100",
+      "computed_decimal": 4
+    },
+    {
+      "line": 770,
+      "binary": "101",
+      "computed_decimal": 5
+    },
+    {
+      "line": 771,
+      "binary": "110",
+      "computed_decimal": 6
+    },
+    {
+      "line": 772,
+      "binary": "111",
+      "computed_decimal": 7
+    },
+    {
+      "line": 773,
+      "binary": "1000",
+      "computed_decimal": 8
+    },
+    {
+      "line": 775,
+      "binary": "1001",
+      "computed_decimal": 9
+    },
+    {
+      "line": 777,
+      "binary": "1010",
+      "computed_decimal": 10
+    },
+    {
+      "line": 778,
+      "binary": "1011",
+      "computed_decimal": 11
+    },
+    {
+      "line": 779,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 780,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 781,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 782,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 783,
+      "binary": "10000",
+      "computed_decimal": 16
+    },
+    {
+      "line": 785,
+      "binary": "10001",
+      "computed_decimal": 17
+    },
+    {
+      "line": 787,
+      "binary": "10010",
+      "computed_decimal": 18
+    },
+    {
+      "line": 788,
+      "binary": "10011",
+      "computed_decimal": 19
+    },
+    {
+      "line": 789,
+      "binary": "10100",
+      "computed_decimal": 20
+    },
+    {
+      "line": 790,
+      "binary": "10101",
+      "computed_decimal": 21
+    },
+    {
+      "line": 791,
+      "binary": "10110",
+      "computed_decimal": 22
+    },
+    {
+      "line": 792,
+      "binary": "10111",
+      "computed_decimal": 23
+    },
+    {
+      "line": 793,
+      "binary": "11000",
+      "computed_decimal": 24
+    },
+    {
+      "line": 794,
+      "binary": "11001",
+      "computed_decimal": 25
+    },
+    {
+      "line": 795,
+      "binary": "11010",
+      "computed_decimal": 26
+    },
+    {
+      "line": 796,
+      "binary": "11011",
+      "computed_decimal": 27
+    },
+    {
+      "line": 797,
+      "binary": "11100",
+      "computed_decimal": 28
+    },
+    {
+      "line": 798,
+      "binary": "11101",
+      "computed_decimal": 29
+    },
+    {
+      "line": 799,
+      "binary": "11110",
+      "computed_decimal": 30
+    },
+    {
+      "line": 800,
+      "binary": "11111",
+      "computed_decimal": 31
+    },
+    {
+      "line": 801,
+      "binary": "100000",
+      "computed_decimal": 32
+    },
+    {
+      "line": 803,
+      "binary": "100001",
+      "computed_decimal": 33
+    },
+    {
+      "line": 805,
+      "binary": "1010",
+      "computed_decimal": 10
+    },
+    {
+      "line": 807,
+      "binary": "1011",
+      "computed_decimal": 11
+    },
+    {
+      "line": 809,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 811,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 813,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 815,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 817,
+      "binary": "11000",
+      "computed_decimal": 24
+    },
+    {
+      "line": 818,
+      "binary": "1001",
+      "computed_decimal": 9
+    },
+    {
+      "line": 820,
+      "binary": "1010",
+      "computed_decimal": 10
+    },
+    {
+      "line": 822,
+      "binary": "1011",
+      "computed_decimal": 11
+    },
+    {
+      "line": 824,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 826,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 828,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 830,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 832,
+      "binary": "0000",
+      "computed_decimal": 0
+    },
+    {
+      "line": 834,
+      "binary": "1001",
+      "computed_decimal": 9
+    },
+    {
+      "line": 836,
+      "binary": "1010",
+      "computed_decimal": 10
+    },
+    {
+      "line": 838,
+      "binary": "1011",
+      "computed_decimal": 11
+    },
+    {
+      "line": 840,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 842,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 844,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 846,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 848,
+      "binary": "11000",
+      "computed_decimal": 24
+    },
+    {
+      "line": 849,
+      "binary": "1001",
+      "computed_decimal": 9
+    },
+    {
+      "line": 851,
+      "binary": "1010",
+      "computed_decimal": 10
+    },
+    {
+      "line": 853,
+      "binary": "1011",
+      "computed_decimal": 11
+    },
+    {
+      "line": 855,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 857,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 859,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 861,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 863,
+      "binary": "1000000",
+      "computed_decimal": 64
+    },
+    {
+      "line": 864,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 866,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 868,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 870,
+      "binary": "100",
+      "computed_decimal": 4
+    },
+    {
+      "line": 872,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 874,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 876,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 878,
+      "binary": "11000",
+      "computed_decimal": 24
+    },
+    {
+      "line": 880,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 882,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 886,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 888,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 890,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 892,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 894,
+      "binary": "110000",
+      "computed_decimal": 48
+    },
+    {
+      "line": 896,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 898,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 900,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 902,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 904,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 906,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 910,
+      "binary": "11000",
+      "computed_decimal": 24
+    },
+    {
+      "line": 912,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 914,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 916,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 918,
+      "binary": "100",
+      "computed_decimal": 4
+    },
+    {
+      "line": 920,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 922,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 924,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 926,
+      "binary": "1100000",
+      "computed_decimal": 96
+    },
+    {
+      "line": 928,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 930,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 932,
+      "binary": "1111",
+      "computed_decimal": 15
+    },
+    {
+      "line": 934,
+      "binary": "1100",
+      "computed_decimal": 12
+    },
+    {
+      "line": 953,
+      "binary": "1010111",
+      "computed_decimal": 87
+    },
+    {
+      "line": 954,
+      "binary": "1011000",
+      "computed_decimal": 88
+    },
+    {
+      "line": 956,
+      "binary": "1011000",
+      "computed_decimal": 88
+    },
+    {
+      "line": 961,
+      "binary": "1000",
+      "computed_decimal": 8
+    },
+    {
+      "line": 1035,
+      "binary": "101101101",
+      "computed_decimal": 365
+    },
+    {
+      "line": 1038,
+      "binary": "100000000",
+      "computed_decimal": 256
+    },
+    {
+      "line": 1042,
+      "binary": "1000000",
+      "computed_decimal": 64
+    },
+    {
+      "line": 1046,
+      "binary": "100000",
+      "computed_decimal": 32
+    },
+    {
+      "line": 1050,
+      "binary": "1000",
+      "computed_decimal": 8
+    },
+    {
+      "line": 1054,
+      "binary": "100",
+      "computed_decimal": 4
+    },
+    {
+      "line": 1072,
+      "binary": "101101101",
+      "computed_decimal": 365
+    },
+    {
+      "line": 1072,
+      "binary": "1010",
+      "computed_decimal": 10
+    },
+    {
+      "line": 1073,
+      "binary": "100100",
+      "computed_decimal": 36
+    },
+    {
+      "line": 1075,
+      "binary": "101",
+      "computed_decimal": 5
+    },
+    {
+      "line": 1078,
+      "binary": "110",
+      "computed_decimal": 6
+    },
+    {
+      "line": 1259,
+      "binary": "10110",
+      "computed_decimal": 22
+    },
+    {
+      "line": 1261,
+      "binary": "11011",
+      "computed_decimal": 27
+    },
+    {
+      "line": 1263,
+      "binary": "1000001",
+      "computed_decimal": 65
+    },
+    {
+      "line": 1263,
+      "binary": "110001",
+      "computed_decimal": 49
+    },
+    {
+      "line": 1270,
+      "binary": "10110110",
+      "computed_decimal": 182
+    },
+    {
+      "line": 1272,
+      "binary": "11100101",
+      "computed_decimal": 229
+    },
+    {
+      "line": 1274,
+      "binary": "1001100",
+      "computed_decimal": 76
+    },
+    {
+      "line": 1276,
+      "binary": "1010111",
+      "computed_decimal": 87
+    },
+    {
+      "line": 1278,
+      "binary": "11011011",
+      "computed_decimal": 219
+    },
+    {
+      "line": 1280,
+      "binary": "1100011001",
+      "computed_decimal": 793
+    },
+    {
+      "line": 1320,
+      "binary": "10110111",
+      "computed_decimal": 183
+    },
+    {
+      "line": 1328,
+      "binary": "1001101",
+      "computed_decimal": 77
+    },
+    {
+      "line": 1336,
+      "binary": "1010101",
+      "computed_decimal": 85
+    },
+    {
+      "line": 1344,
+      "binary": "1110011",
+      "computed_decimal": 115
+    },
+    {
+      "line": 1404,
+      "binary": "1000000",
+      "computed_decimal": 64
+    },
+    {
+      "line": 1409,
+      "binary": "110101",
+      "computed_decimal": 53
+    },
+    {
+      "line": 1411,
+      "binary": "1000000",
+      "computed_decimal": 64
+    },
+    {
+      "line": 1413,
+      "binary": "001011",
+      "computed_decimal": 11
+    },
+    {
+      "line": 1415,
+      "binary": "110101",
+      "computed_decimal": 53
+    },
+    {
+      "line": 1417,
+      "binary": "1000000",
+      "computed_decimal": 64
+    },
+    {
+      "line": 1442,
+      "binary": "1011101",
+      "computed_decimal": 93
+    },
+    {
+      "line": 1443,
+      "binary": "1110",
+      "computed_decimal": 14
+    },
+    {
+      "line": 1445,
+      "binary": "10111010",
+      "computed_decimal": 186
+    },
+    {
+      "line": 1446,
+      "binary": "1011101",
+      "computed_decimal": 93
+    },
+    {
+      "line": 1447,
+      "binary": "1011101",
+      "computed_decimal": 93
+    },
+    {
+      "line": 1448,
+      "binary": "10100010110",
+      "computed_decimal": 1302
+    },
+    {
+      "line": 1472,
+      "binary": "101101101",
+      "computed_decimal": 365
+    },
+    {
+      "line": 1474,
+      "binary": "1010100100",
+      "computed_decimal": 676
+    },
+    {
+      "line": 1478,
+      "binary": "101101101",
+      "computed_decimal": 365
+    },
+    {
+      "line": 1480,
+      "binary": "1010100100",
+      "computed_decimal": 676
+    },
+    {
+      "line": 1483,
+      "binary": "001",
+      "computed_decimal": 1
+    },
+    {
+      "line": 1484,
+      "binary": "1101",
+      "computed_decimal": 13
+    },
+    {
+      "line": 1485,
+      "binary": "10010",
+      "computed_decimal": 18
+    },
+    {
+      "line": 1495,
+      "binary": "111",
+      "computed_decimal": 7
+    },
+    {
+      "line": 1501,
+      "binary": "1010",
+      "computed_decimal": 10
+    }
+  ],
+  "source_sha256": "33cb3d29656ef9f7105d426e82d2e41ad6051d1cf7274ac393410b33e0c8f599"
+}
