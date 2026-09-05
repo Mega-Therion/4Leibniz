@@ -1,0 +1,43 @@
+{
+  "schema": "4leibniz.corpus.manuscript.v1",
+  "policy": "Every transcription must cite a stable archive or edition locator; unverified text is never presented as ground truth.",
+  "records": [
+    {
+      "id": "analysis-situs-1679",
+      "title": "Analysis situs",
+      "date": "1679",
+      "language": "la",
+      "shelfmark": "LH XXXV, 1, 9",
+      "rank": 1,
+      "status": "source-identified-transcription-needed",
+      "primary_locator": "Leibniz-Archiv Hannover, LH XXXV, 1, 9",
+      "critical_edition": "Gerhardt, Die mathematischen Schriften, vol. 5 (1849), relevant Analysis situs materials",
+      "notes": "Acquire or scan the archive folios before publishing a diplomatic transcription."
+    },
+    {
+      "id": "initia-rerum-mathematicarum-metaphysica-1715",
+      "title": "Initia rerum mathematicarum metaphysica",
+      "date": "1715",
+      "language": "la",
+      "shelfmark": "LH XXXV, 1, 15",
+      "rank": 1,
+      "status": "source-identified-transcription-needed",
+      "primary_locator": "Leibniz-Archiv Hannover, LH XXXV, 1, 15",
+      "critical_edition": "Akademie-Ausgabe, series VII, mathematical writings, where applicable",
+      "notes": "Edition pagination must be recorded alongside folio and image identifiers."
+    },
+    {
+      "id": "de-progressione-dyadica-1679",
+      "title": "De progressione dyadica",
+      "date": "1679",
+      "language": "la",
+      "shelfmark": "LH XXXV, 3, 2",
+      "rank": 2,
+      "status": "source-identified-transcription-needed",
+      "primary_locator": "Leibniz-Archiv Hannover, LH XXXV, 3, 2",
+      "critical_edition": "Gerhardt, Die mathematischen Schriften, vol. 5 (1849), binary arithmetic materials",
+      "notes": "Keep manuscript witness, diplomatic text, normalized text, and translation as separate artifacts."
+    }
+  ]
+}
+

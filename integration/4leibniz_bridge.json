@@ -1,0 +1,11 @@
+{
+  "schema": "rytt.4leibniz.bridge.v1",
+  "kernel_repository": "Mega-Therion/4Leibniz",
+  "frontier_repository": "Mega-Therion/RYTT-Sovereign-Semiotics",
+  "historical_layer": "corpus",
+  "formal_layer": "Leibniz",
+  "modern_layer": "frontier",
+  "source_theorems": ["Leibniz.Characteristica.tensio_symm", "Leibniz.Characteristica.tensio_self", "Leibniz.SpatiumRelativum.distantia_symm"],
+  "modern_extensions": {"truth_values": [-1, 0, 1], "holonomy_base": 24, "stiefel_coset": "SO(5)/SO(3)"},
+  "policy": "This contract identifies extensions of the formal kernel; it does not attribute modern RYTT structures to Leibniz's manuscripts."
+}

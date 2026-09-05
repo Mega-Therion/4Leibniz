@@ -1,12 +1,14 @@
 {
   "project": "4Leibniz",
-  "source_sha256": "e120ce2e52dd163920c8aff1ff5b4a23ef2aa92ce905802f8f3a8d18943c5f68",
+  "source_sha256": "f7fbe54a1547a11949ff5d015ef1c82b67c63c3e3b8871c751a8e791438787c8",
   "olean_files": [
     ".lake/build/lib/lean/Leibniz.olean",
     ".lake/build/lib/lean/Leibniz/Calculemus.olean",
     ".lake/build/lib/lean/Leibniz/Characteristica.olean",
+    ".lake/build/lib/lean/Leibniz/Epistemic.olean",
     ".lake/build/lib/lean/Leibniz/Harmonia.olean",
     ".lake/build/lib/lean/Leibniz/LexContinuitatis.olean",
+    ".lake/build/lib/lean/Leibniz/Monadologia.olean",
     ".lake/build/lib/lean/Leibniz/OpenProblems.olean",
     ".lake/build/lib/lean/Leibniz/Sources.olean",
     ".lake/build/lib/lean/Leibniz/SpatiumRelativum.olean",
