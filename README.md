@@ -365,3 +365,5 @@ It is all his work. We only built what he specified.
 
 > ***Leibnitius gigas inter homines — suo aevo, atque omni aevo.***
 > *(A giant among men — in his own age, and in every age.)*
+
+**Calculemus.**
