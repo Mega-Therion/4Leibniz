@@ -182,7 +182,6 @@ Every module, namespace, and theorem in `4Leibniz` strictly employs the classica
     ├── Calculemus.lean            # External claim verification oracle
     └── Generated/                 # machine-written theorems (calculemus.py)
 ```
-```
 
 ---
 
@@ -280,7 +279,7 @@ the in-copyright Hochstetter/Greve/Gumin facsimile edition), so it stays
 
 ## 📄 LICENSE
 
-Code: MIT (see `LICENSE`). Project transcriptions and translations: CC0 1.0.
+Code: MIT (see `LICENSE`). Corpus transcriptions, translations, and witness-image rights: see `CORPUS_LICENSE.md` (project transcriptions and translations are CC0 1.0).
 Witness page images: public domain (1863 Gerhardt scan, via Internet Archive).
 
 ## 🜂 EPILOGUE
@@ -330,7 +329,7 @@ Phase 7 adds `bft.py` for two-thirds weighted quorum decisions with `3f+1` parti
 
 ## Phase 6: private-premise proofs and live consensus deployment
 
-Phase 6 adds the Circom source circuit at `circuits/private_premise.circom`, a `circuits/package.json` snarkjs workflow, and `zk_pipeline.py` readiness reporting. The dashboard is live at [four-leibniz-chyrho.vercel.app](https://four-leibniz-chyrho.vercel.app), and the consensus edge health endpoint is live at [four-leibniz-consensus.chyren-sovereign.workers.dev/health](https://four-leibniz-consensus.chyren-sovereign.workers.dev/health). The circuit proves a bounded private lower-bound premise without exposing the secret value; the repository intentionally does not claim a verified proof until circom, snarkjs, a pinned ceremony artifact, and an independent verification pass are available. Cloudflare Worker/Durable Object scaffolding lives under `deploy/cloudflare/` for the stateful P2P consensus edge. See `docs/PHASE6_DESIGN.md` for the trust model, deployment topology, and confirmation boundary.
+Phase 6 adds the Circom source circuit at `circuits/private_premise.circom`, a `circuits/package.json` snarkjs workflow, and `zk_pipeline.py` readiness reporting. The dashboard is live at [four-leibniz.vercel.app](https://four-leibniz.vercel.app), and the consensus edge health endpoint is live at [four-leibniz-consensus.chyren-sovereign.workers.dev/health](https://four-leibniz-consensus.chyren-sovereign.workers.dev/health). The circuit proves a bounded private lower-bound premise without exposing the secret value; the repository intentionally does not claim a verified proof until circom, snarkjs, a pinned ceremony artifact, and an independent verification pass are available. Cloudflare Worker/Durable Object scaffolding lives under `deploy/cloudflare/` for the stateful P2P consensus edge. See `docs/PHASE6_DESIGN.md` for the trust model, deployment topology, and confirmation boundary.
 
 ## Phase 5: signed collaboration and benchmark evaluation
 
