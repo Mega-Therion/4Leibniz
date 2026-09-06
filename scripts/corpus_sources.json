@@ -1,0 +1,46 @@
+{
+  "initia-rerum-mathematicarum-metaphysica-1715": {
+    "archive_item": "leibnizensmathe07leibgoog",
+    "pdf_filename": "gerhardt_math_schr_bd7.pdf",
+    "leaf_range": [28, 40],
+    "printed_page_range": [17, 29],
+    "leaf_offset": -11,
+    "title": "Initia rerum mathematicarum metaphysica",
+    "language": "la",
+    "shelfmark": "LH XXXV, 1, 15",
+    "edition_locator": "Gerhardt, Math. Schr. Bd. 7 (1863), pp. 17-29"
+  },
+  "characteristica-geometrica-1679": {
+    "archive_item": "leibnizensmathe07leibgoog",
+    "pdf_filename": "gerhardt_math_schr_bd7.pdf",
+    "leaf_range": [157, 184],
+    "printed_page_range": [141, 168],
+    "leaf_offset": -16,
+    "title": "Characteristica Geometrica",
+    "language": "la",
+    "shelfmark": "LH XXXV I 9",
+    "edition_locator": "Gerhardt, Math. Schr. Bd. 7 (1863), pp. 141-168"
+  },
+  "calculus-situs-1679": {
+    "archive_item": "leibnizensmathe07leibgoog",
+    "pdf_filename": "gerhardt_math_schr_bd7.pdf",
+    "leaf_range": [188, 194],
+    "printed_page_range": [172, 178],
+    "leaf_offset": -16,
+    "title": "Analysis geometrica propria / Calculus situs",
+    "language": "la",
+    "shelfmark": "LH XXXV I 10",
+    "edition_locator": "Gerhardt, Math. Schr. Bd. 7 (1863), pp. 172-178"
+  },
+  "analysis-situs-1679": {
+    "archive_item": "leibnizensmathe07leibgoog",
+    "pdf_filename": "gerhardt_math_schr_bd7.pdf",
+    "leaf_range": [194, 200],
+    "printed_page_range": [178, 184],
+    "leaf_offset": -16,
+    "title": "Analysis situs",
+    "language": "la",
+    "shelfmark": "LH XXXV, 1, 9",
+    "edition_locator": "Gerhardt, Math. Schr. Bd. 7 (1863), pp. 178-184"
+  }
+}

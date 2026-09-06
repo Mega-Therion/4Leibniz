@@ -1,0 +1,65 @@
+{
+  "schema": "4leibniz.corpus.tasks.v1",
+  "tasks": [
+    {
+      "catalog_id": "analysis-situs-1679",
+      "task_type": "editorial-collation",
+      "status": "queued",
+      "notes": "Collation of emended Latin against original manuscript folios (LH XXXV, 1, 9)."
+    },
+    {
+      "catalog_id": "analysis-situs-1679",
+      "task_type": "translation",
+      "status": "queued",
+      "notes": "Review and refine parallel English translation."
+    },
+    {
+      "catalog_id": "initia-rerum-mathematicarum-metaphysica-1715",
+      "task_type": "editorial-collation",
+      "status": "queued",
+      "notes": "Editorial collation of OCR-assisted normalized text against scan and Akademie-Ausgabe."
+    },
+    {
+      "catalog_id": "initia-rerum-mathematicarum-metaphysica-1715",
+      "task_type": "translation",
+      "status": "queued",
+      "notes": "Parallel English translation aligned by printed page."
+    },
+    {
+      "catalog_id": "de-progressione-dyadica-1679",
+      "task_type": "editorial-collation",
+      "status": "queued",
+      "notes": "Acquisition and collation of non-copyrighted diplomatic transcription or public-domain witness."
+    },
+    {
+      "catalog_id": "de-progressione-dyadica-1679",
+      "task_type": "translation",
+      "status": "queued",
+      "notes": "Parallel English translation of binary arithmetic manuscript."
+    },
+    {
+      "catalog_id": "characteristica-geometrica-1679",
+      "task_type": "editorial-collation",
+      "status": "queued",
+      "notes": "Editorial collation of OCR-assisted normalized text against scan (GM VII 141-168)."
+    },
+    {
+      "catalog_id": "characteristica-geometrica-1679",
+      "task_type": "translation",
+      "status": "queued",
+      "notes": "Parallel English translation aligned by printed page."
+    },
+    {
+      "catalog_id": "calculus-situs-1679",
+      "task_type": "editorial-collation",
+      "status": "queued",
+      "notes": "Editorial collation of OCR-assisted normalized text against scan (GM VII 172-178)."
+    },
+    {
+      "catalog_id": "calculus-situs-1679",
+      "task_type": "translation",
+      "status": "queued",
+      "notes": "Parallel English translation aligned by printed page."
+    }
+  ]
+}

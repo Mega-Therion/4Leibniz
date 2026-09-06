@@ -9,10 +9,10 @@
       "language": "la",
       "shelfmark": "LH XXXV, 1, 9",
       "rank": 1,
-      "status": "source-identified-transcription-needed",
+      "status": "transcription-ocr-assisted-review-needed",
       "primary_locator": "Leibniz-Archiv Hannover, LH XXXV, 1, 9",
-      "critical_edition": "Gerhardt, Die mathematischen Schriften, vol. 5 (1849), relevant Analysis situs materials",
-      "notes": "Acquire or scan the archive folios before publishing a diplomatic transcription."
+      "critical_edition": "Gerhardt, Die mathematischen Schriften, vol. 7 (Berlin: A. Asher, 1863), pp. 178-184; scan: archive.org/details/leibnizensmathe07leibgoog",
+      "notes": "Published in Gerhardt, Math. Schr. Bd. 7 (1863), pp. 178-184. Ingested from Internet Archive scan; collation against original LH XXXV, 1, 9 manuscript folios pending."
     },
     {
       "id": "initia-rerum-mathematicarum-metaphysica-1715",
@@ -21,10 +21,10 @@
       "language": "la",
       "shelfmark": "LH XXXV, 1, 15",
       "rank": 1,
-      "status": "source-identified-transcription-needed",
+      "status": "transcription-ocr-assisted-review-needed",
       "primary_locator": "Leibniz-Archiv Hannover, LH XXXV, 1, 15",
-      "critical_edition": "Akademie-Ausgabe, series VII, mathematical writings, where applicable",
-      "notes": "Edition pagination must be recorded alongside folio and image identifiers."
+      "critical_edition": "Akademie-Ausgabe, series VII, mathematical writings; Gerhardt, Die mathematischen Schriften, vol. 7 (Berlin: A. Asher, 1863), pp. 17-29; scan: archive.org/details/leibnizensmathe07leibgoog",
+      "notes": "Edition pagination (Gerhardt GM VII 17-29) recorded alongside manuscript locator. Ingested from Internet Archive scan."
     },
     {
       "id": "de-progressione-dyadica-1679",
@@ -35,9 +35,32 @@
       "rank": 2,
       "status": "source-identified-transcription-needed",
       "primary_locator": "Leibniz-Archiv Hannover, LH XXXV, 3, 2",
-      "critical_edition": "Gerhardt, Die mathematischen Schriften, vol. 5 (1849), binary arithmetic materials",
-      "notes": "Keep manuscript witness, diplomatic text, normalized text, and translation as separate artifacts."
+      "critical_edition": "Hochstetter et al., Herrn von Leibniz' Rechnung mit Null und Eins (1966); Akademie-Ausgabe editions. (Not published in Gerhardt Math. Schr.; public-domain binary paper is 1703 Explication de l'Arithmétique Binaire). Needs bibliographic verification.",
+      "notes": "The 1679 manuscript LH XXXV, 3, 2 was first published in the 20th century (Hochstetter et al., 1966 / Akademie-Ausgabe) and is not in Gerhardt's Math. Schr. Status remains source-identified-transcription-needed pending acquisition of non-copyrighted witness or manual transcription."
+    },
+    {
+      "id": "characteristica-geometrica-1679",
+      "title": "Characteristica Geometrica",
+      "date": "1679",
+      "language": "la",
+      "shelfmark": "LH XXXV I 9",
+      "rank": 1,
+      "status": "transcription-ocr-assisted-review-needed",
+      "primary_locator": "Leibniz-Archiv Hannover, LH XXXV I 9",
+      "critical_edition": "Gerhardt, Die mathematischen Schriften, vol. 7 (Berlin: A. Asher, 1863), pp. 141-168; scan: archive.org/details/leibnizensmathe07leibgoog",
+      "notes": "Published in Gerhardt, Math. Schr. Bd. 7 (1863), pp. 141-168. Ingested from Internet Archive scan."
+    },
+    {
+      "id": "calculus-situs-1679",
+      "title": "Analysis geometrica propria / Calculus situs",
+      "date": "1679",
+      "language": "la",
+      "shelfmark": "LH XXXV I 10",
+      "rank": 2,
+      "status": "transcription-ocr-assisted-review-needed",
+      "primary_locator": "Leibniz-Archiv Hannover, LH XXXV I 10",
+      "critical_edition": "Gerhardt, Die mathematischen Schriften, vol. 7 (Berlin: A. Asher, 1863), pp. 172-178; scan: archive.org/details/leibnizensmathe07leibgoog",
+      "notes": "Published in Gerhardt, Math. Schr. Bd. 7 (1863), pp. 172-178. Ingested from Internet Archive scan."
     }
   ]
 }
-

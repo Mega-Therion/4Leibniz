@@ -11,6 +11,8 @@ jobs:
       - uses: leanprover/lean4-action@v1
         with:
           lake-package-directory: .
+      - name: Fetch pre-built Mathlib binaries
+        run: lake exe cache get
       - name: Build Lean library
         run: lake build
       - name: Reject sorry placeholders
@@ -22,12 +24,35 @@ jobs:
           name: proof-receipt
           path: proof-receipt.json
 
+  machine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run the Calculemus machine (dry-run; kernel check happens in the lean job)
+        run: |
+          python3 calculemus.py examples/*.uc --dry-run --registry /tmp/ci-ledger.jsonl
+          python3 - <<'PY'
+          import json
+          verdicts = [json.loads(l)["verdict"] for l in open("/tmp/ci-ledger.jsonl")]
+          assert "kernel-proven" not in verdicts, "dry-run must never claim kernel-proven"
+          print("ledger verdicts:", verdicts)
+          PY
+      - name: Machine unit tests (kernel tests skip; no Lean here)
+        run: |
+          pip install flask websockets cryptography
+          python3 -m pytest tests/test_calculemus.py tests/test_ucalculus.py -q
+
   docs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: leanprover/lean4-action@v1
+      - name: Fetch pre-built Mathlib binaries
+        run: lake exe cache get
       - name: Build API documentation with doc-gen4
         uses: leanprover-community/docgen-action@main
         with:
