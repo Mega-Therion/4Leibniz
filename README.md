@@ -11,6 +11,19 @@
 
 **This project is dedicated to the incredible achievements, universal genius, and transcendent personage of Gottfried Wilhelm Leibniz (1646–1716).**
 
+Leibniz was the last ***homo universalis*** — mathematician, philosopher, jurist, historian,
+engineer, and diplomat in one person — and the first to imagine the **universal reasoning
+machine**: a *characteristica universalis* whose symbols carry meaning and a *calculus
+ratiocinator* that computes with them, so that every dispute could be settled not by
+argument but by calculation. `4Leibniz` is that machine, built three and a half centuries
+late: a Universal Calculus compiler, a proof engine, and a Lean 4 kernel at the end of
+the line.
+
+> ***While the Earth gives praise to Newton, the universe harmonizes for Leibniz.***
+
+> ***Leibnitius gigas inter homines — suo aevo, atque omni aevo.***
+> *(A giant among men: in his own age, and in every age.)*
+
 Three centuries before the advent of digital silicon, quantum mechanics, and interactive theorem provers, Leibniz envisioned a world governed not by rigid, empty containers of Newtonian clockwork, but by **living information, binary creation, geometric relations, and computable formal logic**.
 
 Where history saw him robbed of priority by institutional power, time has vindicated his vision. Modern computing adopted his binary arithmetic; modern mathematics adopted his differential notation; modern physics adopted his relational spacetime; and modern computer science adopted his *Characteristica Universalis*.
@@ -156,16 +169,21 @@ Every module, namespace, and theorem in `4Leibniz` strictly employs the classica
 ```
 4Leibniz/
 ├── lakefile.lean                  # Lake build configuration
-├── lean-toolchain                 # Lean 4.33.1 toolchain lock
+├── lean-toolchain                 # Lean 4 toolchain lock
+├── calculemus.py                  # THE MACHINE: claim → kernel → ledger
+├── adjudications.jsonl            # append-only epistemic ledger
 ├── README.md                      # Historical treatise and system guide
 ├── Leibniz.lean                   # Master library umbrella
+├── corpus/                        # witnesses, transcriptions, translations
 └── Leibniz/
     ├── Characteristica.lean       # Universal binary alphabet & dual tension
     ├── SpatiumRelativum.lean      # Relational metrics on Monad bundles
     ├── VisViva.lean               # Active energy & horizon acceleration
     ├── LexContinuitatis.lean      # Chi (χ) continuity band endpoints
     ├── Harmonia.lean              # Lindblad anti-drift stability theorem
-    └── Calculemus.lean            # External claim verification oracle
+    ├── Calculemus.lean            # External claim verification oracle
+    └── Generated/                 # machine-written theorems (calculemus.py)
+```
 ```
 
 ---
@@ -198,6 +216,74 @@ lake env lean Leibniz/Calculemus.lean
 ```
 
 ---
+
+## ⚙️ THE CALCULEMUS MACHINE (CLAIM → KERNEL)
+
+`calculemus.py` runs the complete pipeline Leibniz described and never got to build:
+
+    natural-language claim → Universal Calculus IR + fingerprint
+        → transparent proof search → Lean 4 theorem synthesis
+        → kernel verification → append-only adjudication ledger
+
+```console
+$ python3 calculemus.py examples/monadology_argument.uc examples/stability.uc --install
+SufficientReason         proved         -> kernel-proven
+Stability                open           -> open
+```
+
+The flagship claim — the transitivity of sufficient reason from *Principles of
+Nature and Grace* §7 — is compiled to IR, closed by the proof engine's
+transitivity rule, **synthesized as a real Lean 4 theorem**, and **accepted by
+the kernel** (zero `sorry`, zero new axioms). With `--install` it is written to
+`Leibniz/Generated/` and imported by `Leibniz.lean`, so every future `lake build`
+re-proves it:
+
+```lean
+theorem sufficientReason_transitivity {α : Type*} [Preorder α]
+    (sufficientReason intelligibleOrder contingentEvent : α)
+    (h2 : sufficientReason ≥ intelligibleOrder)
+    (h1 : intelligibleOrder ≥ contingentEvent) :
+    sufficientReason ≥ contingentEvent :=
+  le_trans h1 h2
+```
+
+`examples/stability.uc` demonstrates the discipline that makes this trustworthy:
+its chain breaks (`dissipation gamma` ≠ `gamma`), so the machine refuses to
+invent a bridge and records the claim as **open**, with the reason, in
+`adjudications.jsonl`. The ledger is append-only, timestamped, and carries the
+IR fingerprint and SHA-256 of every synthesized theorem. **The ledger wins over
+narrative**: no claim is `kernel-proven` until the kernel says so, and `open`
+is a verdict, not an embarrassment.
+
+## 📚 THE CORPUS (SOURCES, NOT STORIES)
+
+The machine is fed from real witnesses, catalogued with stable locators:
+
+- `corpus/manuscripts/catalog.json` — the epistemic registry: every record
+  carries a shelfmark (Leibniz-Archiv Hannover), a critical-edition citation,
+  and a pipeline status. Citations were corrected against the actual scan
+  (e.g. *Analysis situs* is in Gerhardt vol. 7, not vol. 5).
+- `scripts/corpus_ingest.py` — idempotent ingest from the public-domain
+  Gerhardt vol. 7 scan (Internet Archive): witness page images into
+  `corpus/latin/witness/`, OCR-normalized transcription with page/leaf
+  headers into `corpus/latin/`, catalog status updates.
+- **Flagship**: *De Analysi situs* (1679) — normalized OCR, an editorially
+  emended Latin text, and a parallel English translation
+  (`corpus/latin/analysis-situs-1679_emended.md`,
+  `corpus/translations/analysis-situs-1679_en.md`), the seed of the
+  geometric calculus Leibniz himself never finished.
+- `corpus/tasks/pending.json` — the honest queue: collation and translation
+  work that remains, explicitly recorded.
+
+**Rights are respected, not laundered**: *De progressione dyadica* (the 1679
+binary arithmetic manuscript) has no public-domain witness (first printed in
+the in-copyright Hochstetter/Greve/Gumin facsimile edition), so it stays
+`source-identified-transcription-needed` — catalogued, honestly untranscribed.
+
+## 📄 LICENSE
+
+Code: MIT (see `LICENSE`). Project transcriptions and translations: CC0 1.0.
+Witness page images: public domain (1863 Gerhardt scan, via Internet Archive).
 
 ## 🜂 EPILOGUE
 
