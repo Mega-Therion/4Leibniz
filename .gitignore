@@ -28,3 +28,4 @@ coordinator/*.sqlite-*
 # generated job queue; a committed copy carries a stale schema into every clone
 coordinator/*.sqlite
 coordinator/*.sqlite-journal
+telemetry.log
