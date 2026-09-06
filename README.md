@@ -19,7 +19,7 @@ argument but by calculation. `4Leibniz` is that machine, built three and a half 
 late: a Universal Calculus compiler, a proof engine, and a Lean 4 kernel at the end of
 the line.
 
-> ***While the Earth gives praise to Newton, the universe harmonizes for Leibniz.***
+> ***While the Earth gives praise 2Newton, the universe harmonizes 4Leibniz.***
 
 > ***Leibnitius gigas inter homines — suo aevo, atque omni aevo.***
 > *(A giant among men: in his own age, and in every age.)*
