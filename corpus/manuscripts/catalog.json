@@ -35,8 +35,8 @@
       "rank": 2,
       "status": "source-identified-transcription-needed",
       "primary_locator": "Leibniz-Archiv Hannover, LH XXXV, 3, 2",
-      "critical_edition": "Hochstetter et al., Herrn von Leibniz' Rechnung mit Null und Eins (1966); Akademie-Ausgabe editions. (Not published in Gerhardt Math. Schr.; public-domain binary paper is 1703 Explication de l'Arithmétique Binaire). Needs bibliographic verification.",
-      "notes": "The 1679 manuscript LH XXXV, 3, 2 was first published in the 20th century (Hochstetter et al., 1966 / Akademie-Ausgabe) and is not in Gerhardt's Math. Schr. Status remains source-identified-transcription-needed pending acquisition of non-copyrighted witness or manual transcription."
+      "critical_edition": "Editio princeps: Erich Hochstetter, Hermann-Josef Greve, Heinz Gumin (eds.), Herrn von Leibniz' Rechnung mit Null und Eins (Siemens AG, Berlin & Muenchen, 1966; 2nd ed. 1969; 3rd ed. 1979, ISBN 3-8009-1279-1). Not published in Gerhardt Math. Schr.; the public-domain printed binary paper is the 1703 Explication de l'Arithmetique Binaire.",
+      "notes": "Rights cleared 2026-09 (see corpus/manuscripts/rights/de-progressione-dyadica-rights-2026-09.md): the 1679 text is public domain worldwide (author d. 1716; 70y p.m.a. lapsed 1786); the scientific-edition protection (§ 70 UrhG) and editio-princeps right (§ 71 UrhG) of the 1966 Siemens edition both lapsed 1991-12-31. Digitized sources: BibNum (Yves Serra, 'Le manuscrit De Progressione Dyadica de Leibniz', 2010, DOI 10.4000/bibnum.553 — facsimile + French translation, CC BY-SA 4.0) and GWLB scan-on-demand (public-domain digital copies freely usable with credit: 'Gottfried Wilhelm Leibniz Bibliothek – Niedersaechsische Landesbibliothek, LH XXXV, 3, 2'). Status remains source-identified-transcription-needed until the witness is acquired and a diplomatic transcription is made."
     },
     {
       "id": "characteristica-geometrica-1679",
