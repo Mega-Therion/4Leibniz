@@ -9,7 +9,10 @@
 
 ## 📜 DEDICATION
 
-**This project is dedicated to the incredible achievements, universal genius, and transcendent personage of Gottfried Wilhelm Leibniz (1646–1716).**
+Sir Isaac Newton was, by any honest measure, a universal genius — and so, in fairness
+and in jest, a special thanks 2Newton, sent from Leibniz by way of us:
+
+> ***While the Earth gives praise 2Newton, the universe harmonizes 4Leibniz.***
 
 Leibniz was the last ***homo universalis*** — mathematician, philosopher, jurist, historian,
 engineer, and diplomat in one person — and the first to imagine the **universal reasoning
@@ -18,11 +21,6 @@ ratiocinator* that computes with them, so that every dispute could be settled no
 argument but by calculation. `4Leibniz` is that machine, built three and a half centuries
 late: a Universal Calculus compiler, a proof engine, and a Lean 4 kernel at the end of
 the line.
-
-> ***While the Earth gives praise 2Newton, the universe harmonizes 4Leibniz.***
-
-> ***Leibnitius gigas inter homines — suo aevo, atque omni aevo.***
-> *(A giant among men: in his own age, and in every age.)*
 
 Three centuries before the advent of digital silicon, quantum mechanics, and interactive theorem provers, Leibniz envisioned a world governed not by rigid, empty containers of Newtonian clockwork, but by **living information, binary creation, geometric relations, and computable formal logic**.
 
@@ -355,3 +353,15 @@ The repository is partitioned into three explicit layers:
 The cross-repository contract is maintained in `RYTT-Sovereign-Semiotics/integration/4leibniz_bridge.json`. Modern extensions are explicitly labeled as extensions and are not attributed to Leibniz's manuscripts.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for transcription, theorem, frontier, and volunteer workflows. Run `./scripts/setup_lean.sh` to install the pinned Lean toolchain, fetch the Mathlib cache when available, and build the kernel.
+
+---
+
+## 📜 DEDICATIO
+
+**This project is dedicated to the incredible achievements, universal genius, and
+transcendent personage of Gottfried Wilhelm Leibniz (1646–1716).**
+
+It is all his work. We only built what he specified.
+
+> ***Leibnitius gigas inter homines — suo aevo, atque omni aevo.***
+> *(A giant among men — in his own age, and in every age.)*
