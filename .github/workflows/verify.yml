@@ -46,7 +46,15 @@ jobs:
           python3 -m pytest tests/test_calculemus.py tests/test_ucalculus.py -q
 
   docs:
-    if: github.event_name == 'push'
+    # Disabled 2026-09-06: leanprover-community/docgen-action's project-metadata
+    # step hard-requires lakefile.toml ("Could not find `lakefile.toml`") and has
+    # no lakefile.lean fallback. This project's real Lake config is lakefile.lean
+    # (the `lean` job builds from it successfully) -- migrating the build format
+    # just to satisfy a docs-preview job that doesn't even publish anything
+    # (build-page: false, deploy: false) is not worth the risk. Re-enable once
+    # docgen-action supports lakefile.lean, or if this project moves to
+    # lakefile.toml for its own reasons.
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
