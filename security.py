@@ -5,7 +5,7 @@ freshness window and one-time nonce use. These controls do not establish proof t
 """
 from __future__ import annotations
 from dataclasses import asdict, dataclass
-import base64, hashlib, json, os, time
+import base64, hashlib, json, os, sqlite3, time
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
 
@@ -24,14 +24,39 @@ class SignedProposal:
     nonce: str = ""
 
 class ReplayGuard:
-    def __init__(self, max_age_seconds: int = 300):
+    """Tracks seen (node_id, nonce) pairs within a freshness window.
+
+    Default storage is an in-process dict, which is lost on restart -- flagged
+    as B-05 in the 2026-09-07 release assessment. Passing `db_path` switches
+    to a SQLite-backed table so the window survives a process restart on a
+    single node. That is still not the multi-node, transactional store a
+    clustered deployment needs (see docs/PRODUCTION_READINESS.md, Phase 3);
+    it closes the "state vanishes on redeploy" gap for a single instance.
+    """
+    def __init__(self, max_age_seconds: int = 300, db_path: str | None = None):
         self.max_age_seconds = max_age_seconds
         self._seen: dict[str, int] = {}
+        self._db: sqlite3.Connection | None = None
+        if db_path:
+            self._db = sqlite3.connect(db_path, check_same_thread=False)
+            self._db.execute('CREATE TABLE IF NOT EXISTS replay_seen (key TEXT PRIMARY KEY, seen_at INTEGER NOT NULL)')
+            self._db.commit()
+
     def accept(self, node_id: str, nonce: str, timestamp: int, now: int | None = None) -> bool:
         now = int(time.time()) if now is None else int(now)
-        self._seen = {k: v for k, v in self._seen.items() if now - v <= self.max_age_seconds}
         key = f'{node_id}:{nonce}'
-        if not nonce or abs(now - int(timestamp)) > self.max_age_seconds or key in self._seen:
+        if not nonce or abs(now - int(timestamp)) > self.max_age_seconds:
+            return False
+        if self._db is not None:
+            self._db.execute('DELETE FROM replay_seen WHERE ? - seen_at > ?', (now, self.max_age_seconds))
+            if self._db.execute('SELECT 1 FROM replay_seen WHERE key = ?', (key,)).fetchone() is not None:
+                self._db.commit()
+                return False
+            self._db.execute('INSERT INTO replay_seen (key, seen_at) VALUES (?, ?)', (key, now))
+            self._db.commit()
+            return True
+        self._seen = {k: v for k, v in self._seen.items() if now - v <= self.max_age_seconds}
+        if key in self._seen:
             return False
         self._seen[key] = now
         return True
