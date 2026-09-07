@@ -296,6 +296,32 @@ Run the formal verification workflow with `python3 scripts/calculemus.py`. Gener
 
 Advanced physical claims are intentionally exposed as explicit axioms/interfaces where a complete research-grade derivation requires additional theory; they are therefore visible to reviewers rather than being represented as comments or hard-coded build booleans.
 
+### Release posture: research preview, not a hardened public service
+
+An independent production-readiness assessment (2026-09-07) is tracked in
+[`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md). The verdict:
+4Leibniz has a credible formal core and a useful epistemic design, but the
+Flask API, single-file dashboard, and ZK/consensus lanes are a research
+prototype, not a multi-tenant production service. Treat any public
+deployment as a **research preview** — read-only exploration and
+authenticated local development — until the phases in that document close.
+
+Mutation and process-spawning API routes require a bearer token and refuse
+every request when it is unset:
+
+```
+export LEIBNIZ_API_TOKEN=<a long random value>
+python3 api.py
+```
+
+`/api/build` and `/api/security/keypair` stay disabled even with a token
+configured, unless you also set `LEIBNIZ_ENABLE_BUILD_ENDPOINT=1` or
+`LEIBNIZ_ENABLE_KEYPAIR_ENDPOINT=1` — both are local-dev-only escape hatches,
+not something a public deployment should ever set. Generate a keypair without
+putting it on the wire with `python3 scripts/generate_keypair.py` instead.
+Set `LEIBNIZ_STATE_DB=/path/to/replay.sqlite3` to make replay-guard state
+survive a process restart instead of resetting on every deploy.
+
 ## Open-source acceleration layer
 
 The project now includes a reproducible integration matrix in `docs/architecture/INTEGRATION_MATRIX.md`. API documentation is prepared through [doc-gen4](https://github.com/leanprover/doc-gen4), an optional independent kernel-checking lane is documented for [lean4lean](https://github.com/digama0/lean4lean), and `realtime.py` uses [websockets](https://github.com/python-websockets/websockets) to stream build events rather than polling. These projects are credited and linked in the matrix so the work remains auditable and maintainers receive recognition.

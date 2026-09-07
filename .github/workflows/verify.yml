@@ -31,6 +31,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install ZK circuit tooling (so npx resolves snarkjs from node_modules, not the network)
+        run: npm --prefix circuits ci
       - name: Run the Calculemus machine (dry-run; kernel check happens in the lean job)
         run: |
           python3 calculemus.py examples/*.uc --dry-run --registry /tmp/ci-ledger.jsonl
@@ -40,10 +45,14 @@ jobs:
           assert "kernel-proven" not in verdicts, "dry-run must never claim kernel-proven"
           print("ledger verdicts:", verdicts)
           PY
-      - name: Machine unit tests (kernel tests skip; no Lean here)
+      - name: Full Python test suite (B-07 -- previously only two files ran in CI)
         run: |
           pip install flask websockets cryptography pytest
-          python3 -m pytest tests/test_calculemus.py tests/test_ucalculus.py -q
+          LEIBNIZ_API_TOKEN=ci-test-token python3 -m pytest tests/ -q
+      - name: Dependency audit (B-13/security lane)
+        run: |
+          pip install pip-audit
+          pip-audit -r <(pip freeze) --skip-editable || echo "pip-audit found findings; see log above (not yet a blocking gate)"
 
   docs:
     # Disabled 2026-09-06: leanprover-community/docgen-action's project-metadata

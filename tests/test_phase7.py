@@ -1,6 +1,7 @@
 import json, sys, unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parents[1]))
+from conftest import AUTH_HEADERS
 from bft import BFTPeer, BFTVote, decide
 from security import ReplayGuard, generate_keypair, sign_proposal, verify_fresh_proposal
 from api import app
@@ -34,7 +35,7 @@ class Phase7Tests(unittest.TestCase):
         if not (build/'proof.json').exists(): self.skipTest('demo proof artifacts not generated')
         c = app.test_client()
         proof=json.loads((build/'proof.json').read_text()); public=json.loads((build/'public.json').read_text())
-        response=c.post('/api/zk/verify', json={'proof':proof,'public_signals':public})
+        response=c.post('/api/zk/verify', json={'proof':proof,'public_signals':public}, headers=AUTH_HEADERS)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.json['verified'])
 
