@@ -84,7 +84,17 @@ HEADER = """\
   philosophy - that division of labor is the whole point of Calculemus.
 -/
 
-import Mathlib
+-- Narrow import (2026-09-08). The generated theorems need `Preorder` and
+-- `le_trans`, both of which live in `Mathlib.Order.Basic`. Importing all of
+-- Mathlib pulled the entire library into every kernel check: measured 29.6 s
+-- with this import against minutes for the full one, per verification, and the
+-- cost is paid on every `kernel_verify` call.
+--
+-- That cost is invisible in CI, which runs on a runner with no Lean toolchain,
+-- so `@unittest.skipUnless(shutil.which("lake"))` skips the kernel test and the
+-- suite reports "49 tests in 33s". On any developer machine that *does* have
+-- `lake` installed, the same `pytest tests/` blocks for minutes with no output.
+import Mathlib.Order.Basic
 
 namespace Leibniz.Generated
 
