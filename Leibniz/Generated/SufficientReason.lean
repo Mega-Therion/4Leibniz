@@ -13,7 +13,7 @@
   philosophy - that division of labor is the whole point of Calculemus.
 -/
 
-import Mathlib
+import Mathlib.Order.Basic
 
 namespace Leibniz.Generated
 
