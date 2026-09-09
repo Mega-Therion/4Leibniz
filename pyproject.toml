@@ -5,6 +5,14 @@ description = "Real-time verification gateway for 4Leibniz"
 requires-python = ">=3.10"
 dependencies = ["flask>=3.0", "websockets>=14.0", "cryptography>=42.0"]
 
+[project.optional-dependencies]
+# The HTR pipeline (htr/) needs Pillow for line crops. opencv is only required
+# for page segmentation, and torch/transformers only for real transcription --
+# htr.engine raises HTRModelUnavailable rather than degrading when they are
+# absent, so the audit path is testable without them.
+htr = ["pillow>=10.0"]
+htr-full = ["pillow>=10.0", "opencv-python-headless>=4.9", "torch>=2.0", "transformers>=4.40"]
+
 [project.scripts]
 leibniz-ws = "realtime:main"
 

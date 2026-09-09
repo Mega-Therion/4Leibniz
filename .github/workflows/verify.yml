@@ -48,6 +48,8 @@ jobs:
       - name: Full Python test suite (B-07 -- previously only two files ran in CI)
         run: |
           pip install flask websockets cryptography pytest
+          # Pillow: tests/test_htr_provenance.py exercises htr/ line-crop handling.
+          pip install pillow
           LEIBNIZ_API_TOKEN=ci-test-token python3 -m pytest tests/ -q
       - name: Dependency audit (B-13/security lane)
         run: |
