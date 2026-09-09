@@ -137,12 +137,35 @@ def repl():
     except UCalcSyntaxError as exc:
         return jsonify({"error": str(exc)}), 422
 
+# Models a caller may request. `model` arrives in the request body, so without
+# an allow-list an unauthenticated caller could name an arbitrarily expensive
+# model and have this server pay for it (finding F-02).
+ALLOWED_SUGGEST_MODELS = frozenset({"gpt-5-mini", "gpt-5", "gpt-4o-mini", "gpt-4o"})
+DEFAULT_SUGGEST_MODEL = "gpt-5-mini"
+
 @app.post("/api/ai/suggest")
+@require_auth
 def ai_suggest():
+    """Suggest Lean-checkable premises. Authenticated: this route spends money.
+
+    It was previously public, classified with the read-only/stateless routes.
+    It is neither: `suggest()` calls the provider completions API with
+    max_completion_tokens=1200 whenever OPENAI_API_KEY and OPENAI_API_BASE are
+    set, so an unauthenticated caller could drain the account. It degrades to a
+    deterministic fallback when no key is configured, which is exactly why it
+    looks harmless in development and in any audit run without credentials --
+    safe in the environment it is assessed in, unsafe in the one it runs in.
+    """
     payload = request.get_json(silent=True) or {}
-    text, model = payload.get("text"), payload.get("model", "gpt-5-mini")
+    text = payload.get("text")
+    model = payload.get("model", DEFAULT_SUGGEST_MODEL)
     if not isinstance(text, str) or not text.strip():
         return jsonify({"error": "text is required"}), 400
+    if not isinstance(model, str) or model not in ALLOWED_SUGGEST_MODELS:
+        return jsonify({
+            "error": "unsupported model",
+            "allowed": sorted(ALLOWED_SUGGEST_MODELS),
+        }), 400
     return jsonify(suggest(text, model))
 
 @app.post("/api/consensus")
