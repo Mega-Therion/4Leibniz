@@ -133,3 +133,72 @@ with no output** until the import was narrowed (PR #5, 749s → 30s).
 
 **A broader instance of the same problem:** 11 of the `Leibniz/*.lean` modules
 carry a bare `import Mathlib`. PR #5 narrowed the generated file only.
+
+---
+
+### F-03 — the volunteer consensus is Sybil-open; the signing layer exists but is never used
+
+`coordinator/queue_manager.py` and `volunteer/` are on `main` today, so this is
+live code, not a proposal.
+
+The pipeline's stated safety property is that a transcription is promoted only
+when *"at least three independent responses agree exactly."* The
+`minimum_workers` guard counts **rows**, and rows are keyed by a
+**caller-supplied `worker_id` string** with no authentication anywhere in the
+recording path.
+
+Reproduced against the code as committed:
+
+```
+one worker    -> {'status': 'pending-review', 'responses': 1,
+                  'reason': 'minimum independent workers not reached'}
+
+same actor, three self-chosen worker_ids:
+              -> {'status': 'canonical', 'responses': 3,
+                  'agreement': 1.0, 'text': 'FORGED TEXT'}
+```
+
+Arbitrary text reaches `canonical` at full agreement. `record_response` takes
+`worker_id` as a parameter and does no verification; `volunteer/client.py` passes
+whatever `--worker-id` the operator typed.
+
+**The sharpest part: the fix is already written and simply not wired in.**
+`volunteer/protocol.py` opens with *"Versioned, **signed** work units"* and
+provides Ed25519 `sign_work_unit` / `verify_work_unit`. Neither is called by
+`client.py` or by `queue_manager.py`. The signing layer exists, is documented,
+and sits entirely outside the path it was built to protect.
+
+**Minimum fix:** have `client.py` sign each response with a worker key, have
+`record_response` verify against an admitted-key registry (`peer_admission.py`
+already implements signed identity admission), and count **distinct verified
+keys** rather than rows. Until then, `minimum_workers=3` measures how many
+strings were supplied, not how many parties agreed.
+
+**Severity note.** For a project whose thesis is machine-checkable evidence, a
+promotion path to `canonical` that any single party can drive is more serious
+than its CVSS shape suggests: it corrupts the corpus rather than the host.
+
+---
+
+## What the pipeline gets right, tested adversarially
+
+`volunteer/worker.py` was probed with seven hostile inputs and held on all of
+them, while allowing legitimate work:
+
+| attempt | result |
+|---|---|
+| legitimate `.lean` inside root | allowed |
+| `../outside.lean` | blocked — *proof path escapes worker root* |
+| absolute `/etc/passwd` | blocked |
+| `../../../../etc/hosts` | blocked |
+| `sub/../../outside.lean` | blocked |
+| kind `run-shell` | blocked — *unsupported work-unit kind* |
+| kind `exec` with a payload | blocked |
+
+The documented claim *"the daemon never runs arbitrary code"* is **verified, not
+merely asserted**: translation and bounded-proof-search return `expert-review`
+without executing anything, the work-unit kind is allow-listed, and
+`_file_digest` resolves symlinks before comparing against the worker root.
+
+This is the standard the consensus layer should be held to, and it is set inside
+the same subsystem.
