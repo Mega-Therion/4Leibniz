@@ -12,6 +12,7 @@ import Leibniz.SpatiumRelativum
 import Leibniz.VisViva
 import Leibniz.LexContinuitatis
 import Leibniz.Harmonia
+import Leibniz.Kraus
 import Leibniz.Calculemus
 import Leibniz.Sources
 import Leibniz.OpenProblems
