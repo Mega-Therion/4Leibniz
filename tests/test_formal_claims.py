@@ -194,8 +194,10 @@ class TestDeterminismAndStableIds:
         for expected in [
             "Leibniz.Calculemus.holonomy_path_ordered",
             "Leibniz.Calculemus.entropy_nonnegative",
-            "Leibniz.Harmonia.lindblad_trace_preserving",
             "Leibniz.VisViva.ghost_force_positive",
+            # Leibniz.Harmonia.lindblad_trace_preserving was promoted from
+            # axiom to theorem on 2026-09-12 (Phase 0) and is no longer a
+            # bare axiom; it is catalogued as proved.
         ]:
             assert expected in ids, f"expected axiom {expected} in catalog"
 
