@@ -1,0 +1,110 @@
+{
+  "schema_version": "v1",
+  "generator": {
+    "name": "fixture-producer",
+    "version": "0.0.0"
+  },
+  "generated_at": "2026-01-01T00:00:00+00:00",
+  "source": {
+    "repository": "Mega-Therion/4Leibniz",
+    "commit": "0123456789abcdef0123456789abcdef01234567",
+    "lean_toolchain": "leanprover/lean4:v4.34.0-rc2"
+  },
+  "verification_record": {
+    "lean_available": true,
+    "lake_build_exit_code": 0,
+    "sorries": 0,
+    "notes": "Fixture catalog for contract tests; one claim per controlled status."
+  },
+  "claims": [
+    {
+      "schema_version": "v1",
+      "claim_id": "Leibniz.Fixture.conditional_claim",
+      "title": "conditional_claim",
+      "module": "Leibniz.Fixture",
+      "declaration": "Leibniz.Fixture.conditional_claim",
+      "status": "conditional",
+      "formal_statement": "axiom conditional_claim : True",
+      "proof_source": {
+        "repository": "Mega-Therion/4Leibniz",
+        "commit": "0123456789abcdef0123456789abcdef01234567",
+        "path": "Leibniz/Fixture.lean"
+      },
+      "source_refs": [
+        {
+          "type": "file",
+          "ref": "Leibniz/Fixture.lean"
+        }
+      ],
+      "human_summary": "Assumed without proof; no verification is claimed."
+    },
+    {
+      "schema_version": "v1",
+      "claim_id": "Leibniz.Fixture.informal_claim",
+      "title": "informal_claim",
+      "module": "Leibniz.Fixture",
+      "declaration": "Leibniz.Fixture.informal_claim",
+      "status": "informal",
+      "proof_source": {
+        "repository": "Mega-Therion/4Leibniz",
+        "commit": "0123456789abcdef0123456789abcdef01234567",
+        "path": "docs/informal.md"
+      },
+      "source_refs": [
+        {
+          "type": "file",
+          "ref": "docs/informal.md"
+        }
+      ],
+      "human_summary": "An informal claim that has not been formalized in Lean. No formal verification is claimed."
+    },
+    {
+      "schema_version": "v1",
+      "claim_id": "Leibniz.Fixture.proved_claim",
+      "title": "proved_claim",
+      "module": "Leibniz.Fixture",
+      "declaration": "Leibniz.Fixture.proved_claim",
+      "status": "proved",
+      "formal_statement": "theorem proved_claim : True := trivial",
+      "proof_source": {
+        "repository": "Mega-Therion/4Leibniz",
+        "commit": "0123456789abcdef0123456789abcdef01234567",
+        "path": "Leibniz/Fixture.lean"
+      },
+      "source_refs": [
+        {
+          "type": "file",
+          "ref": "Leibniz/Fixture.lean",
+          "line": 1
+        }
+      ],
+      "verification": {
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "toolchain": "leanprover/lean4:v4.34.0-rc2",
+        "axioms": [],
+        "sorries": 0
+      },
+      "human_summary": "Checked by the pinned toolchain with no axiom dependencies. No informal reading is asserted."
+    },
+    {
+      "schema_version": "v1",
+      "claim_id": "Leibniz.OpenProblems.fixture-open",
+      "title": "Fixture open problem",
+      "module": "Leibniz.OpenProblems",
+      "declaration": "Leibniz.OpenProblems.registry[fixture-open]",
+      "status": "open_problem",
+      "proof_source": {
+        "repository": "Mega-Therion/4Leibniz",
+        "commit": "0123456789abcdef0123456789abcdef01234567",
+        "path": "Leibniz/OpenProblems.lean"
+      },
+      "source_refs": [
+        {
+          "type": "file",
+          "ref": "Leibniz/OpenProblems.lean"
+        }
+      ],
+      "human_summary": "Recorded as open. Not proved. Closure requirement: fixture closure."
+    }
+  ]
+}

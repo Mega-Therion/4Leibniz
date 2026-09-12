@@ -19,6 +19,18 @@ jobs:
         run: python3 scripts/check_sorries.py
       - name: Generate proof receipt
         run: python3 scripts/proof_receipt.py
+      - name: Generate and check formal-claims artifact (issue #11)
+        run: |
+          python3 scripts/generate_formal_claims.py --emit /tmp/formal-claims.json
+          python3 - <<'PY'
+          import json
+          fresh = json.load(open('/tmp/formal-claims.json'))
+          committed = json.load(open('artifacts/v1/formal-claims.json'))
+          assert fresh['claims'] == committed['claims'], (
+              'committed artifacts/v1/formal-claims.json is stale — regenerate with '
+              'scripts/generate_formal_claims.py and refresh consumer snapshots')
+          print('committed artifact matches regeneration:', len(committed['claims']), 'claims')
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: proof-receipt
@@ -47,7 +59,7 @@ jobs:
           PY
       - name: Full Python test suite (B-07 -- previously only two files ran in CI)
         run: |
-          pip install flask websockets cryptography pytest
+          pip install flask websockets cryptography pytest jsonschema
           # Pillow: tests/test_htr_provenance.py exercises htr/ line-crop handling.
           pip install pillow
           LEIBNIZ_API_TOKEN=ci-test-token python3 -m pytest tests/ -q

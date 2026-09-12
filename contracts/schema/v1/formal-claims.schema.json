@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Mega-Therion/4Leibniz/raw/main/contracts/schema/v1/formal-claims.schema.json",
+  "title": "4Leibniz Formal Claims Catalog v1",
+  "description": "Proof-grounded, commit-pinned catalog of formal claims produced by 4Leibniz. 4Leibniz is the canonical producer; 4leibniz-web and leibniz-oracle consume this artifact read-only and must never independently label a claim 'proved'. A claim may carry status 'proved' only when the pinned Lean toolchain successfully checked it with zero 'sorry' and the recorded axiom dependencies are the three standard Lean axioms. Anything else must be a non-proved status; the generator must refuse to emit 'proved' when a check fails, the toolchain is unavailable, or a dependency is unresolved.",
+  "type": "object",
+  "required": ["schema_version", "generator", "generated_at", "source", "verification_record", "claims"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "v1" },
+    "generator": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC. Deterministic by default: derived from the pinned commit's author date, overridable via --generated-at or SOURCE_DATE_EPOCH."
+    },
+    "source": {
+      "type": "object",
+      "required": ["repository", "commit", "lean_toolchain"],
+      "additionalProperties": false,
+      "properties": {
+        "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "lean_toolchain": { "type": "string", "minLength": 1 }
+      }
+    },
+    "verification_record": {
+      "type": "object",
+      "required": ["lean_available", "lake_build_exit_code", "sorries", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "lean_available": { "type": "boolean" },
+        "lake_build_exit_code": { "type": ["integer", "null"] },
+        "sorries": { "type": "integer", "minimum": 0 },
+        "notes": { "type": "string" }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    }
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": ["schema_version", "claim_id", "title", "module", "declaration", "status", "proof_source", "source_refs", "human_summary"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "v1" },
+        "claim_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable identifier. For theorems and axioms this is the fully-qualified Lean declaration name; for open-problem registry entries it is 'Leibniz.OpenProblems.<registry id>'."
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "module": { "type": "string", "minLength": 1 },
+        "declaration": { "type": "string", "minLength": 1 },
+        "status": {
+          "enum": ["proved", "conditional", "informal", "open_problem"],
+          "description": "Controlled vocabulary. proved: pinned Lean toolchain checked the declaration, zero sorry, standard axioms only. conditional: the claim holds only under explicitly recorded assumptions (a bare Lean axiom, or a checked theorem that depends on non-standard axioms). informal: not formalized in Lean; no formal verification is claimed. open_problem: recorded in Leibniz.OpenProblems as open or conjectured; explicitly not proved."
+        },
+        "formal_statement": {
+          "type": "string",
+          "description": "Verbatim extracted Lean statement (source text up to the ':='). Reproduced for consumers; it is data, not a claim."
+        },
+        "conditional_on": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Required when status is conditional. Each item names an assumption the claim depends on (e.g. a bare Lean axiom declaration)."
+        },
+        "proof_source": { "$ref": "#/$defs/proof_source" },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/source_ref" }
+        },
+        "verification": { "$ref": "#/$defs/verification" },
+        "human_summary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Must not assert more than the declaration proves."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "proved" } }, "required": ["status"] },
+          "then": {
+            "required": ["verification"],
+            "properties": {
+              "verification": {
+                "required": ["checked_by", "toolchain", "axioms", "sorries"],
+                "properties": { "sorries": { "const": 0 } }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "conditional" } }, "required": ["status"] },
+          "then": { "required": ["conditional_on"] }
+        }
+      ]
+    },
+    "proof_source": {
+      "type": "object",
+      "required": ["repository", "commit", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "path": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "required": ["type", "ref"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["file", "citation", "bridge", "machine"] },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "file: repository-relative path. citation: bibliographic string. bridge: RYTT bridge theorem name. machine: generator/producer identifier."
+        },
+        "line": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["checked_by", "toolchain", "axioms", "sorries"],
+      "additionalProperties": false,
+      "properties": {
+        "checked_by": { "type": "string", "minLength": 1 },
+        "toolchain": { "type": "string", "minLength": 1 },
+        "axioms": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Axioms the checked declaration depends on, as reported by #print axioms."
+        },
+        "sorries": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
