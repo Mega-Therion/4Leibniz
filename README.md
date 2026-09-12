@@ -12,6 +12,8 @@ Downstream consumer applications—including `4leibniz-web` (scholarly archive) 
 
 ## Active Workstreams
 
+- **Open problem `chiral-floor` — CLOSED 2026-09-12**: the continuity floor `chiFloor = 1/√2` is derived from first principles as the equipartition bound of the vis viva (`Leibniz.VisViva.chiral_dominance_ge_floor`, `Leibniz.LexContinuitatis.chiFloor_is_dyadic_floor`): the stronger member of any dyad carries at least half the total living force, with equality exactly at equipartition. `chiFloor_lt_chiCeil` was promoted from a bare axiom to a theorem in the same pass.
+
 - **Issue #11**: Publish a proof-grounded formal-claim export for `4leibniz-web` and `leibniz-oracle` (`artifacts/v1/formal-claims.json`).
 - **Issue #10**: Consume RYTT via `integration/4leibniz_bridge.json` — symbolic notation and interchange layer without forking the grammar.
 

@@ -361,8 +361,12 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
                     f"{'; '.join(assumptions)}. It is proved only conditionally on them."),
             })
 
-    # Open problems from the Leibniz.OpenProblems registry.
+    # Open problems from the Leibniz.OpenProblems registry. Entries marked
+    # closed/resolved are excluded: they are no longer open, and the closure
+    # is recorded in the registry itself and in the repo README.
     for p in open_problems:
+        if p["status"].strip().lower() in ("closed", "resolved"):
+            continue
         claims.append({
             "schema_version": SCHEMA_VERSION,
             "claim_id": f"Leibniz.OpenProblems.{p['id']}",
