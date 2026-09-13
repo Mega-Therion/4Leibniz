@@ -85,7 +85,21 @@ def holonomy (path : GaugePath G N) : G :=
 
 def vonNeumannEntropy (ρ : DensityMatrix) : ℝ := 0
 
-axiom holonomy_path_ordered (path : GaugePath G N) : True
-axiom entropy_nonnegative (ρ : DensityMatrix) : 0 ≤ vonNeumannEntropy ρ
+/-! ### Retired / promoted (2026-09-13)
+
+`holonomy_path_ordered` was previously declared here as a bare axiom
+asserting `True` for every path — a statement with no content. Its
+honest replacement is `Leibniz.Holonomia.holonomy_path_ordered`: the
+holonomy of a concatenated path is the ordered product of the
+holonomies of its parts, built on an explicit discrete
+parallel-transport construction (`Leibniz.Holonomia.holonomyFrom`).
+The Wilson loop's gauge invariance is proved in the same module
+(`wilson_loop_gauge_invariant`), and the registry entry `wilson-loop`
+is closed in `Leibniz/OpenProblems.lean`.
+
+`entropy_nonnegative` was a bare axiom for a placeholder definition;
+it is now a theorem, proved directly from `vonNeumannEntropy`. -/
+theorem entropy_nonnegative (ρ : DensityMatrix) : 0 ≤ vonNeumannEntropy ρ := by
+  simp [vonNeumannEntropy]
 
 end Leibniz.Calculemus

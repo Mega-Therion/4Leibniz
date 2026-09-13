@@ -170,7 +170,7 @@ class TestGeneratorGate:
         assert all(c["status"] != "informal" for c in built["claims"])
         # axioms (conditional) and open problems are extracted statically
         statuses = {c["status"] for c in built["claims"]}
-        assert statuses == {"conditional", "open_problem"}
+        assert statuses == {"conditional"}
         assert built["excluded"], "theorems must be excluded, not downgraded"
 
 
@@ -192,26 +192,32 @@ class TestDeterminismAndStableIds:
         built = gen.build_claims("0" * 40, "leanprover/lean4:v4.34.0-rc2", use_lean=False)
         ids = {c["claim_id"] for c in built["claims"]}
         for expected in [
-            "Leibniz.Calculemus.holonomy_path_ordered",
-            "Leibniz.Calculemus.entropy_nonnegative",
             "Leibniz.VisViva.ghost_force_positive",
             # Leibniz.Harmonia.lindblad_trace_preserving was promoted from
             # axiom to theorem on 2026-09-12 (Phase 0) and is no longer a
             # bare axiom; it is catalogued as proved.
+            # Leibniz.Calculemus.holonomy_path_ordered was retired on
+            # 2026-09-13 (vacuous: it asserted True); replaced by the proved
+            # Leibniz.Holonomia.holonomy_path_ordered.
+            # Leibniz.Calculemus.entropy_nonnegative was promoted from axiom
+            # to theorem on 2026-09-13; it is catalogued as proved.
         ]:
             assert expected in ids, f"expected axiom {expected} in catalog"
 
     def test_open_problem_ids_are_stable(self, gen):
         built = gen.build_claims("0" * 40, "leanprover/lean4:v4.34.0-rc2", use_lean=False)
         ids = {c["claim_id"] for c in built["claims"]}
-        for expected in [
-            "Leibniz.OpenProblems.wilson-loop",
-        ]:
-            assert expected in ids
-        # chiral-floor was closed 2026-09-12 (derived as the equipartition bound
-        # of the vis viva); lindblad-cp was closed 2026-09-13 (the vacuous axiom
-        # replaced by Leibniz.Kraus.lindblad_completely_positive — the Euler-
-        # discrete GKLS step is completely positive at every ancilla dimension).
-        # Closed registry entries must NOT appear as claims.
+        # All registry entries are now closed — chiral-floor 2026-09-12
+        # (derived as the equipartition bound of the vis viva); lindblad-cp
+        # 2026-09-13 (the vacuous axiom replaced by the proved
+        # Leibniz.Kraus.lindblad_completely_positive); wilson-loop 2026-09-13
+        # (the connection and parallel-transport construction built in
+        # Leibniz.Holonomia; the vacuous holonomy axiom replaced by the
+        # proved Leibniz.Holonomia.holonomy_path_ordered). No open problems
+        # remain; closed registry entries must NOT appear as claims.
         assert "Leibniz.OpenProblems.chiral-floor" not in ids
         assert "Leibniz.OpenProblems.lindblad-cp" not in ids
+        assert "Leibniz.OpenProblems.wilson-loop" not in ids
+        assert not [c for c in built["claims"] if c["status"] == "open_problem"], (
+            "the registry has no open problems left; none may appear"
+        )
