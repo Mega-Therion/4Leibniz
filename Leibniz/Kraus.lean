@@ -160,4 +160,104 @@ theorem krausMapExt_trace_preserving_product_state {n m : ℕ}
     trace (krausMapExt K (A ⊗ₖ ρ)) = trace A * trace ρ := by
   rw [krausMapExt_product_state, Matrix.trace_kronecker, krausMap_trace_preserving K hK]
 
+/-! ### Phase 2a: the Euler-discrete Lindblad step as a Kraus map
+
+The bridge from the GKLS generator to the Kraus machinery of Phase 1:
+with `W = iH + ½ Σ Lᵢ*Lᵢ` and step size `h ≥ 0`, the Euler-discrete
+Lindblad step is the Kraus family `K₀ = 1 − h•W`, `Kᵢ₊₁ = √h • Lᵢ`.
+Its action is EXACTLY `ρ + h • 𝓛(ρ) + h² • (W ρ W*)`, where `𝓛` is the
+GKLS generator: the flow's first-order term is the generator itself,
+and the second-order residual is again a Kraus-form completely-positive
+contribution, so the discrete step is completely positive for every
+step size.
+-/
+
+/-- The GKLS generator for a finite jump-operator family:
+`𝓛(ρ) = −i [H, ρ] + Σᵢ (Lᵢ ρ Lᵢ* − ½ {Lᵢ* Lᵢ, ρ})`. -/
+noncomputable def lindbladRhsFam {k : ℕ} (H : Harmonia.Operator)
+    (L : Fin k → Harmonia.Operator) (ρ : Harmonia.Operator) :
+    Harmonia.Operator :=
+  (-Complex.I) • Harmonia.commutator H ρ + ∑ i, Harmonia.dissipator (L i) ρ
+
+/-- The Euler-discrete Lindblad step as a Kraus family over `Fin (k+1)`:
+the contractive branch `K₀ = 1 − h•(iH + ½ Σ Lᵢ*Lᵢ)` followed by the
+jump branches `Kᵢ₊₁ = √h • Lᵢ`. -/
+noncomputable def eulerLindbladStep {k : ℕ} (H : Harmonia.Operator)
+    (L : Fin k → Harmonia.Operator) (h : ℝ) : Fin (k + 1) → Harmonia.Operator :=
+  Fin.cons (1 - (h : ℂ) • (Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i))
+    (fun i => (Real.sqrt h : ℂ) • L i)
+
+/-- The Euler-discrete Lindblad step is exactly the GKLS flow to first
+order: `krausMap (eulerLindbladStep H L h) ρ = ρ + h • 𝓛(ρ) + h² • (W ρ W*)`,
+with `W = iH + ½ Σ Lᵢ*Lᵢ`. -/
+theorem eulerLindbladStep_eq {k : ℕ} (H : Harmonia.Operator) (hH : H.IsHermitian)
+    (L : Fin k → Harmonia.Operator) (h : ℝ) (hh : 0 ≤ h) (ρ : Harmonia.Operator) :
+    krausMap (eulerLindbladStep H L h) ρ
+      = ρ + (h : ℂ) • lindbladRhsFam H L ρ
+        + ((h : ℂ) * (h : ℂ)) • ((Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i) * ρ
+            * (-Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i)) := by
+  have hG : star (∑ i, star (L i) * L i) = ∑ i, star (L i) * L i := by
+    simp [star_sum, star_mul, star_star]
+  have hstarW : star (Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i)
+      = -Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i := by
+    have hstarI : star (Complex.I : ℂ) = -Complex.I := by
+      rw [Complex.star_def]; exact Complex.conj_I
+    have h1 : star (Complex.I • H) = -Complex.I • H := by
+      rw [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_smul,
+        ← Matrix.star_eq_conjTranspose, hH.star_eq, hstarI]
+    have h2 : star ((1 / 2 : ℂ) • ∑ i, star (L i) * L i)
+        = (1 / 2 : ℂ) • ∑ i, star (L i) * L i := by
+      rw [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_smul,
+        ← Matrix.star_eq_conjTranspose, hG, star_div₀, star_one, star_ofNat]
+    rw [star_add, h1, h2]
+  have hstarK : star (1 - (h : ℂ) • (Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i))
+      = 1 - (h : ℂ) • (-Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i) := by
+    rw [star_sub, star_one, Matrix.star_eq_conjTranspose, Matrix.conjTranspose_smul,
+      Complex.star_def, Complex.conj_ofReal,
+      ← Matrix.star_eq_conjTranspose, hstarW]
+  have hjump : ∀ i : Fin k,
+      ((Real.sqrt h : ℂ) • L i) * ρ * star ((Real.sqrt h : ℂ) • L i)
+        = (h : ℂ) • (L i * ρ * star (L i)) := by
+    intro i
+    rw [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_smul,
+      ← Matrix.star_eq_conjTranspose, Complex.star_def, Complex.conj_ofReal]
+    simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    rw [← Complex.ofReal_mul, Real.mul_self_sqrt hh]
+  have hsplit : krausMap (eulerLindbladStep H L h) ρ
+      = (1 - (h : ℂ) • (Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i)) * ρ
+          * star (1 - (h : ℂ) • (Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i))
+        + ∑ i, ((Real.sqrt h : ℂ) • L i) * ρ * star ((Real.sqrt h : ℂ) • L i) := by
+    rw [krausMap, eulerLindbladStep, Fin.sum_univ_succ]
+    simp only [Fin.cons_zero, Fin.cons_succ]
+  have key : ∀ a b : Harmonia.Operator,
+      (1 - a) * ρ * (1 - b) = ρ - ρ * b - a * ρ + a * ρ * b := by
+    intro a b
+    noncomm_ring
+  have hexp : (1 - (h : ℂ) • (Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i)) * ρ
+      * (1 - (h : ℂ) • (-Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i))
+      = ρ - (h : ℂ) • ((Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i) * ρ
+          + ρ * (-Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i))
+        + ((h : ℂ) * (h : ℂ)) • ((Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i) * ρ
+            * (-Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i)) := by
+    rw [key]
+    simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    rw [smul_add]
+    abel_nf
+  have hWsplit : (Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i) * ρ
+      + ρ * (-Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i)
+      = Complex.I • (H * ρ) + -Complex.I • (ρ * H)
+        + ∑ i, (1 / 2 : ℂ) • Harmonia.anticommutator (star (L i) * L i) ρ := by
+    simp only [add_mul, mul_add, smul_add, smul_mul_assoc, mul_smul_comm,
+      Finset.smul_sum, Finset.sum_mul, Finset.mul_sum, Finset.sum_add_distrib,
+      Harmonia.anticommutator]
+    abel_nf
+  have hsign : Complex.I • (H * ρ) = -(-Complex.I • (H * ρ)) := by
+    rw [neg_smul, neg_neg]
+  rw [hsplit, hstarK, Finset.sum_congr rfl (fun i _ => hjump i), hexp, hWsplit, hsign]
+  simp only [smul_add, smul_sub, smul_neg, Finset.smul_sum, Finset.sum_sub_distrib,
+    smul_smul, lindbladRhsFam, Harmonia.commutator, Harmonia.dissipator,
+    Harmonia.anticommutator]
+  abel_nf
+
 end Leibniz.Kraus
+
