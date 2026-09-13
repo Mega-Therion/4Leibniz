@@ -259,5 +259,62 @@ theorem eulerLindbladStep_eq {k : ℕ} (H : Harmonia.Operator) (hH : H.IsHermiti
     Harmonia.anticommutator]
   abel_nf
 
+/-! ### The lindblad-cp closure (2026-09-13): the honest statement
+
+The registry's `lindblad_completely_positive` was vacuous as stated
+(`∀ n : ℕ, 0 < n → True` asserts nothing). The axiom is retired in
+`Leibniz.Harmonia` and replaced here by its honest Kraus-route form:
+every Euler-discrete Lindblad step of a GKLS system with Hermitian
+Hamiltonian is completely positive, at every ancilla dimension. The
+route: Kraus maps are completely positive (Phase 1), the Euler step is
+exactly the GKLS flow to first order (Phase 2a), and both paradigm
+channels — dephasing and amplitude damping — were pushed through this
+bridge in `Leibniz.Dissipatio` (Phase 2b). The companion lemmas give
+the trace side: the generator preserves the trace, and the discrete
+step preserves it exactly to first order with an explicit Kraus-form
+second-order residual. -/
+
+/-- The GKLS generator of a finite jump family preserves the trace. -/
+theorem lindbladRhsFam_trace_zero {k : ℕ} (H : Harmonia.Operator)
+    (L : Fin k → Harmonia.Operator) (ρ : Harmonia.Operator) :
+    trace (lindbladRhsFam H L ρ) = 0 := by
+  have hc : trace ((-Complex.I : ℂ) • Harmonia.commutator H ρ) = 0 := by
+    rw [Matrix.trace_smul, Harmonia.trace_commutator, smul_zero]
+  have hd : trace (∑ i, Harmonia.dissipator (L i) ρ) = 0 := by
+    rw [Matrix.trace_sum]
+    simp [Harmonia.trace_dissipator]
+  rw [lindbladRhsFam, Matrix.trace_add, hc, hd, add_zero]
+
+/-- The trace of the Euler-discrete Lindblad step is the trace of `ρ`
+plus an explicit second-order correction in Kraus form: trace
+preservation holds exactly to first order. -/
+theorem eulerLindbladStep_trace {k : ℕ} (H : Harmonia.Operator) (hH : H.IsHermitian)
+    (L : Fin k → Harmonia.Operator) (h : ℝ) (hh : 0 ≤ h) (ρ : Harmonia.Operator) :
+    trace (krausMap (eulerLindbladStep H L h) ρ)
+      = trace ρ
+        + ((h : ℂ) * (h : ℂ)) * trace ((Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i) * ρ
+            * (-Complex.I • H + (1 / 2 : ℂ) • ∑ i, star (L i) * L i)) := by
+  have h1 : trace ((h : ℂ) • lindbladRhsFam H L ρ) = 0 := by
+    rw [Matrix.trace_smul, lindbladRhsFam_trace_zero, smul_zero]
+  have h2 : ∀ (c : ℂ) (M : Harmonia.Operator), trace (c • M) = c * trace M := by
+    intro c M
+    rw [Matrix.trace_smul, smul_eq_mul]
+  rw [eulerLindbladStep_eq H hH L h hh ρ]
+  simp only [Matrix.trace_add, h1, h2, add_zero]
+
+/-- **The honest lindblad-cp statement, proved.** Every Euler-discrete
+Lindblad step of a GKLS system with Hermitian Hamiltonian is
+completely positive: for every ancilla dimension `m`, the step tensored
+with the identity on the ancilla sends positive semidefinite states to
+positive semidefinite states. This replaces the retired vacuous axiom. -/
+theorem lindblad_completely_positive (system : Harmonia.LindbladSystem)
+    (hH : system.hamiltonian.IsHermitian) (h : ℝ) (hh : 0 ≤ h) {m : ℕ}
+    {ρ' : Matrix (Fin m × Fin 2) (Fin m × Fin 2) ℂ}
+    (hρ' : PositiveSemidefinite ρ') :
+    PositiveSemidefinite
+      (krausMapExt (eulerLindbladStep system.hamiltonian
+        (fun i => system.jumpOperators[i]) h) ρ') :=
+  krausMap_completely_positive _ hρ'
+
 end Leibniz.Kraus
 

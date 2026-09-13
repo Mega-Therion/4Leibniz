@@ -41,8 +41,16 @@ def harmonia_stabilis (u gamma : ℝ) : Prop := u ≥ gamma
 
 theorem anti_drift_preservation (u gamma : ℝ) (h : harmonia_stabilis u gamma) : u ≥ gamma := h
 
-axiom lindblad_completely_positive (system : LindbladSystem) :
-  ∀ n : ℕ, 0 < n → True
+/-! ### Retired (2026-09-13): the vacuous complete-positivity axiom
+
+`lindblad_completely_positive` was previously declared here as a bare
+axiom asserting `∀ n : ℕ, 0 < n → True` — a statement with no content.
+Its honest replacement is `Leibniz.Kraus.lindblad_completely_positive`:
+every Euler-discrete Lindblad step of a GKLS system with Hermitian
+Hamiltonian is completely positive at every ancilla dimension, proved
+through the Kraus route (Phase 1), the Euler bridge (Phase 2a), and
+instantiated at dephasing and amplitude damping (Phase 2b). The
+registry entry `lindblad-cp` is closed in `Leibniz/OpenProblems.lean`. -/
 
 /-! ### Phase 0 (2026-09-12): the trace-preservation axiom, proved
 

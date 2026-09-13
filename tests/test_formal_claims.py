@@ -205,10 +205,13 @@ class TestDeterminismAndStableIds:
         built = gen.build_claims("0" * 40, "leanprover/lean4:v4.34.0-rc2", use_lean=False)
         ids = {c["claim_id"] for c in built["claims"]}
         for expected in [
-            "Leibniz.OpenProblems.lindblad-cp",
             "Leibniz.OpenProblems.wilson-loop",
         ]:
             assert expected in ids
         # chiral-floor was closed 2026-09-12 (derived as the equipartition bound
-        # of the vis viva); closed registry entries must NOT appear as claims.
+        # of the vis viva); lindblad-cp was closed 2026-09-13 (the vacuous axiom
+        # replaced by Leibniz.Kraus.lindblad_completely_positive — the Euler-
+        # discrete GKLS step is completely positive at every ancilla dimension).
+        # Closed registry entries must NOT appear as claims.
         assert "Leibniz.OpenProblems.chiral-floor" not in ids
+        assert "Leibniz.OpenProblems.lindblad-cp" not in ids
