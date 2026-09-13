@@ -13,6 +13,7 @@ import Leibniz.VisViva
 import Leibniz.LexContinuitatis
 import Leibniz.Harmonia
 import Leibniz.Kraus
+import Leibniz.Dissipatio
 import Leibniz.Calculemus
 import Leibniz.Sources
 import Leibniz.OpenProblems
