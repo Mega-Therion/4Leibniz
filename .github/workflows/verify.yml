@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history: generate_formal_claims.py pins the last commit that
+          # touched Leibniz/, and a depth-1 shallow clone makes a path-limited
+          # `git log` return the checked-out commit instead -- which silently
+          # reintroduces the bug this job exists to catch.
+          fetch-depth: 0
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: .

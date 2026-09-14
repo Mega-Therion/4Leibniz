@@ -180,6 +180,19 @@ def git_metadata() -> tuple[str, str]:
     def run(args: list[str]) -> str:
         return subprocess.run(["git", "-C", str(ROOT), *args],
                               capture_output=True, text=True, check=True).stdout.strip()
+    # A shallow clone cannot answer "which commit last touched Leibniz/": a
+    # path-limited `git log` silently returns the checked-out commit instead.
+    # That is exactly the mis-pin this function exists to avoid, so refuse
+    # rather than emit a catalog that can never be reproduced.
+    # (actions/checkout defaults to fetch-depth: 1 -- verify.yml sets 0.)
+    if run(["rev-parse", "--is-shallow-repository"]) == "true":
+        raise RuntimeError(
+            "refusing to pin a proof-source commit in a SHALLOW clone: a "
+            "path-limited `git log` would return the checked-out commit, not "
+            "the last commit touching Leibniz/, producing a catalog that can "
+            "never be reproduced. Check out with full history "
+            "(actions/checkout: fetch-depth: 0)."
+        )
     rel = LEIBNIZ.relative_to(ROOT).as_posix()
     commit = run(["log", "-1", "--format=%H", "HEAD", "--", rel])
     if len(commit) != 40:
