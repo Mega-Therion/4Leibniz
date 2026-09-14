@@ -47,12 +47,17 @@ theorem tensio_self (d : Dyas) : tensio d d = 0 := by
 theorem tensio_max (d₁ d₂ : Dyas) : tensio d₁ d₂ ≤ 1 := by
   cases d₁ <;> cases d₂ <;> decide
 
+theorem tensio_eq_zero_iff (d₁ d₂ : Dyas) : tensio d₁ d₂ = 0 ↔ d₁ = d₂ := by
+  cases d₁ <;> cases d₂ <;> simp [tensio]
+
 /-- Machine-readable metadata for the foundational results. -/
 def metadata : List EpistemicRecord := [
   { name := "tensio_symm", status := .proven,
     statement := "The dyadic tension is symmetric", dependencies := [], source := some "De Arte Combinatoria (1666)" },
   { name := "tensio_self", status := .proven,
-    statement := "A dyad has zero self-tension", dependencies := [], source := some "Explication de l'Arithmétique Binaire" }
+    statement := "A dyad has zero self-tension", dependencies := [], source := some "Explication de l'Arithmétique Binaire" },
+  { name := "tensio_eq_zero_iff", status := .proven,
+    statement := "Zero dyadic tension exactly characterizes equality", dependencies := [] }
 ]
 
 end Leibniz.Characteristica
