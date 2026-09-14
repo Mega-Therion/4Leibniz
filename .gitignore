@@ -29,3 +29,7 @@ coordinator/*.sqlite-*
 coordinator/*.sqlite
 coordinator/*.sqlite-journal
 telemetry.log
+
+# CI-only: the freshly generated catalog, uploaded as a build artifact so a
+# staleness failure is fixable by download instead of a multi-hour local rerun.
+formal-claims-fresh.json
