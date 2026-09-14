@@ -160,13 +160,35 @@ def parse_generated_header(path: Path) -> dict:
 
 
 def git_metadata() -> tuple[str, str]:
+    """Pin the commit that last changed the PROOF SOURCES, not HEAD.
+
+    This used to be `rev-parse HEAD`, which made the committed artifact
+    impossible to reproduce and left CI permanently red:
+
+      1. generator runs at commit A (the last Lean change) and stamps A into
+         every claim's proof_source.commit;
+      2. the artifact is committed, producing commit B;
+      3. CI regenerates at B, stamps B, asserts fresh == committed;
+      4. A != B, so it fails -- and committing the "fix" produces commit C,
+         which fails identically. The check could never pass.
+
+    Pinning the last commit to touch Leibniz/ makes the catalog what this
+    module's docstring already promises: a pure function of the checkout. A
+    catalog-refresh commit changes no proof, so it must not change the catalog.
+    A real proof change does, and is still caught.
+    """
     def run(args: list[str]) -> str:
         return subprocess.run(["git", "-C", str(ROOT), *args],
                               capture_output=True, text=True, check=True).stdout.strip()
-    commit = run(["rev-parse", "HEAD"])
+    rel = LEIBNIZ.relative_to(ROOT).as_posix()
+    commit = run(["log", "-1", "--format=%H", "HEAD", "--", rel])
+    if len(commit) != 40:
+        # No commit touches the sources yet (fresh tree); fall back to HEAD so
+        # the generator still pins something real rather than emitting nothing.
+        commit = run(["rev-parse", "HEAD"])
     if len(commit) != 40:
         raise RuntimeError(f"could not pin a 40-char commit (got: {commit!r})")
-    author_date = run(["show", "-s", "--format=%aI", "HEAD"])
+    author_date = run(["show", "-s", "--format=%aI", commit])
     return commit, author_date
 
 
