@@ -28,19 +28,34 @@ jobs:
       - name: Generate and check formal-claims artifact (issue #11)
         run: |
           python3 scripts/generate_formal_claims.py --emit /tmp/formal-claims.json
+          # Keep the freshly generated catalog where the upload step can find it,
+          # BEFORE the assertion below can abort the job. Regenerating locally
+          # takes hours (every module re-elaborates); CI does it in minutes, so
+          # on a staleness failure the correct file should be downloadable rather
+          # than recomputed by hand.
+          cp /tmp/formal-claims.json formal-claims-fresh.json
           python3 - <<'PY'
           import json
           fresh = json.load(open('/tmp/formal-claims.json'))
           committed = json.load(open('artifacts/v1/formal-claims.json'))
           assert fresh['claims'] == committed['claims'], (
-              'committed artifacts/v1/formal-claims.json is stale — regenerate with '
-              'scripts/generate_formal_claims.py and refresh consumer snapshots')
+              'committed artifacts/v1/formal-claims.json is stale. Download the '
+              '"proof-receipt" artifact from this run and copy formal-claims-fresh.json '
+              'over artifacts/v1/formal-claims.json, then refresh consumer snapshots '
+              '(4leibniz-web content/formal-claims-v1.json). Regenerating locally works '
+              'but re-elaborates every module and takes hours.')
           print('committed artifact matches regeneration:', len(committed['claims']), 'claims')
           PY
+      # if: always() matters -- without it this is skipped exactly when the
+      # staleness assertion fails, i.e. the one run whose output you need.
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: proof-receipt
-          path: proof-receipt.json
+          path: |
+            proof-receipt.json
+            formal-claims-fresh.json
+          if-no-files-found: warn
 
   machine:
     runs-on: ubuntu-latest
