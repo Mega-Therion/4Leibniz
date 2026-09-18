@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import atexit
 import functools
 import json
 import os
 import subprocess
 from pathlib import Path
+
 from flask import Flask, jsonify, request, send_from_directory
+from posthog import Posthog
+from werkzeug.exceptions import HTTPException
 from ucalculus import SyntaxError as UCalcSyntaxError, compile_text, parse
 from proof_engine import SemanticPatch, search_text
 from counterexample import find_for_claim
@@ -28,6 +32,27 @@ from replica_membership import issue_member, active as replica_active, verify_vo
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
 
+POSTHOG_PROJECT_TOKEN = os.environ.get("POSTHOG_PROJECT_TOKEN")
+POSTHOG_HOST = os.environ.get("POSTHOG_HOST")
+posthog_client: Posthog | None = None
+
+if POSTHOG_PROJECT_TOKEN and POSTHOG_HOST:
+    posthog_client = Posthog(
+        POSTHOG_PROJECT_TOKEN,
+        host=POSTHOG_HOST,
+        enable_exception_autocapture=True,
+    )
+    atexit.register(posthog_client.shutdown)
+elif app.debug or os.environ.get("FLASK_DEBUG") == "1":
+    missing_variable = (
+        "POSTHOG_PROJECT_TOKEN" if not POSTHOG_PROJECT_TOKEN else "POSTHOG_HOST"
+    )
+    raise RuntimeError(
+        f"{missing_variable} variable required by PostHog is missing or un-configured, "
+        f"this causes events to be silently missed. This error stops appearing once "
+        f"{missing_variable} is configured"
+    )
+
 # --- Minimum-viable access control ------------------------------------------
 # This is a stopgap for the research-preview posture, not the identity-aware
 # gateway with RBAC/ABAC that a production release needs (see
@@ -48,6 +73,23 @@ app.config["MAX_CONTENT_LENGTH"] = 1_000_000
 @app.errorhandler(413)
 def _payload_too_large(_exc):
     return jsonify({"error": "request body exceeds the 1 MiB limit"}), 413
+
+
+@app.errorhandler(Exception)
+def _capture_unhandled_exception(exc):
+    if isinstance(exc, HTTPException):
+        return exc
+
+    if posthog_client is not None:
+        posthog_client.capture_exception(exc)
+
+    return jsonify({"error": "internal server error"}), 500
+
+
+def capture_event(event: str, properties: dict[str, object]) -> None:
+    if posthog_client is not None:
+        posthog_client.capture(event, properties=properties)
+
 
 def require_auth(fn):
     """Gate a mutation/dangerous route behind a bearer token.
@@ -102,7 +144,9 @@ def compile_universal_claim():
     if not isinstance(text, str):
         return jsonify({"error": "text must be a universal-calculus declaration"}), 400
     try:
-        return jsonify(compile_text(text))
+        result = compile_text(text)
+        capture_event("universal_claim_compiled", {"text_length": len(text)})
+        return jsonify(result)
     except UCalcSyntaxError as exc:
         return jsonify({"error": str(exc)}), 422
 
@@ -113,7 +157,9 @@ def prove_universal_claim():
     if not isinstance(text, str):
         return jsonify({"error": "text must be a universal-calculus declaration"}), 400
     try:
-        return jsonify(search_text(text))
+        result = search_text(text)
+        capture_event("universal_claim_proven", {"text_length": len(text)})
+        return jsonify(result)
     except UCalcSyntaxError as exc:
         return jsonify({"error": str(exc)}), 422
 
@@ -128,10 +174,13 @@ def repl():
     try:
         result = search_text(text)
         if action == "compile":
+            capture_event("repl_command_completed", {"command": "compile", "text_length": len(text)})
             return jsonify({"kind": "compile", "ir": result["ir"]})
         if action == "prove":
+            capture_event("repl_command_completed", {"command": "prove", "text_length": len(text)})
             return jsonify({"kind": "prove", "search": result["search"], "explanations": result["explanations"]})
         if action == "explain":
+            capture_event("repl_command_completed", {"command": "explain", "text_length": len(text)})
             return jsonify({"kind": "explain", "explanations": result["explanations"]})
         return jsonify({"error": "unknown action; use compile, prove, or explain"}), 422
     except UCalcSyntaxError as exc:
@@ -166,7 +215,9 @@ def ai_suggest():
             "error": "unsupported model",
             "allowed": sorted(ALLOWED_SUGGEST_MODELS),
         }), 400
-    return jsonify(suggest(text, model))
+    result = suggest(text, model)
+    capture_event("ai_suggestion_completed", {"model": model, "text_length": len(text)})
+    return jsonify(result)
 
 @app.post("/api/consensus")
 def consensus():
@@ -174,7 +225,9 @@ def consensus():
     peers = tuple(Peer(p["node_id"], int(p.get("weight", 1)), tuple(p.get("capabilities", ["lean", "search"]))) for p in payload.get("peers", []))
     votes = tuple(Vote(v["node_id"], v.get("proposal_hash", ""), v["status"], v.get("rationale", "")) for v in payload.get("votes", []))
     try:
-        return jsonify(result_json(reach_consensus(peers, votes, float(payload.get("threshold", 2/3)))))
+        result = result_json(reach_consensus(peers, votes, float(payload.get("threshold", 2/3))))
+        capture_event("consensus_evaluated", {"peer_count": len(peers), "vote_count": len(votes)})
+        return jsonify(result)
     except (KeyError, TypeError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 422
 
@@ -184,7 +237,9 @@ def bft_consensus():
     try:
         peers = [BFTPeer(**p) for p in payload.get("peers", [])]
         votes = [BFTVote(**v) for v in payload.get("votes", [])]
-        return jsonify(bft_decide(peers, votes, int(payload.get("fault_tolerance", 1)), float(payload.get("threshold", 2/3))))
+        result = bft_decide(peers, votes, int(payload.get("fault_tolerance", 1)), float(payload.get("threshold", 2/3)))
+        capture_event("bft_consensus_decided", {"peer_count": len(peers), "vote_count": len(votes)})
+        return jsonify(result)
     except (TypeError, ValueError, KeyError) as exc:
         return jsonify({"error": str(exc)}), 422
 
@@ -197,7 +252,11 @@ def aggregate_proof_reports():
     payload = request.get_json(silent=True) or {}
     try:
         reports = [ProofReport(**r) for r in payload.get("reports", [])]
-        return jsonify(aggregate_provers(reports, int(payload.get("required", 2)), bool(payload.get("require_independent", True))))
+        required_count = int(payload.get("required", 2))
+        require_independent = bool(payload.get("require_independent", True))
+        result = aggregate_provers(reports, required_count, require_independent)
+        capture_event("proof_reports_aggregated", {"report_count": len(reports), "required_count": required_count, "require_independent": require_independent})
+        return jsonify(result)
     except (TypeError, ValueError, KeyError) as exc:
         return jsonify({"error": str(exc)}), 422
 
@@ -207,7 +266,9 @@ def governance_evaluate():
     payload = request.get_json(silent=True) or {}
     try:
         votes = [GovernanceVote(**v) for v in payload.get("votes", [])]
-        return jsonify(evaluate_governance(payload.get("proposal_id", ""), payload.get("action", ""), votes, float(payload.get("quorum", 2/3)), bool(payload.get("veto_blocks", True)), int(payload.get("timelock_seconds", 3600))))
+        result = evaluate_governance(payload.get("proposal_id", ""), payload.get("action", ""), votes, float(payload.get("quorum", 2/3)), bool(payload.get("veto_blocks", True)), int(payload.get("timelock_seconds", 3600)))
+        capture_event("governance_proposal_evaluated", {"vote_count": len(votes)})
+        return jsonify(result)
     except (TypeError, ValueError, KeyError) as exc:
         return jsonify({"error": str(exc)}), 422
 
@@ -331,7 +392,9 @@ def zk_verify():
     payload = request.get_json(silent=True) or {}
     if not isinstance(payload.get("proof"), dict) or not isinstance(payload.get("public_signals"), list):
         return jsonify({"error": "proof and public_signals are required"}), 400
-    return jsonify(verify_groth16(payload["proof"], payload["public_signals"], payload.get("verification_key")))
+    result = verify_groth16(payload["proof"], payload["public_signals"], payload.get("verification_key"))
+    capture_event("zero_knowledge_proof_verified", {"public_signal_count": len(payload["public_signals"])})
+    return jsonify(result)
 
 @app.post("/api/security/keypair")
 @require_auth
@@ -386,7 +449,10 @@ def counterexample():
     if not isinstance(text, str):
         return jsonify({"error": "text must be a universal-calculus declaration"}), 400
     try:
-        return jsonify(find_for_claim(parse(text), int(bound)))
+        max_bound = int(bound)
+        result = find_for_claim(parse(text), max_bound)
+        capture_event("counterexample_search_completed", {"max_bound": max_bound, "text_length": len(text)})
+        return jsonify(result)
     except (UCalcSyntaxError, ValueError, TypeError) as exc:
         return jsonify({"error": str(exc)}), 422
 
@@ -397,7 +463,9 @@ def divergence():
     if not isinstance(before, str) or not isinstance(after, str):
         return jsonify({"error": "before and after declarations are required"}), 400
     try:
-        return jsonify(compare_text(before, after))
+        result = compare_text(before, after)
+        capture_event("claim_divergence_compared", {"before_text_length": len(before), "after_text_length": len(after)})
+        return jsonify(result)
     except (UCalcSyntaxError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 422
 
@@ -457,6 +525,7 @@ def adjudicate():
         verdict = "conflict"
     else:
         verdict = "undecidable"
+    capture_event("proposition_adjudicated", {"verdict": verdict})
     return jsonify({"left": left, "right": right, "verdict": verdict,
                     "kernel_checked": True,
                     "explanation": "Verdict produced by the deterministic Calculemus adjudication contract."})
