@@ -1,5 +1,9 @@
 # 4Leibniz
 
+[![Lean 4 Verification](https://github.com/Mega-Therion/4Leibniz/actions/workflows/verify.yml/badge.svg)](https://github.com/Mega-Therion/4Leibniz/actions/workflows/verify.yml)
+[![Zero-Sorry Certified](https://img.shields.io/badge/Lean_4-zero--sorry-brightgreen.svg)](scripts/check_sorries.py)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21539453.svg)](https://doi.org/10.5281/zenodo.21539453)
+
 <p align="left">
   <a href="https://huggingface.co/datasets/ChyRho/4leibniz"><img src="https://img.shields.io/badge/Hugging%20Face-ChyRho%2F4leibniz-FFD21E?style=flat-square&logo=huggingface&logoColor=black" alt="Hugging Face Dataset"></a>
   <a href="https://orcid.org/0009-0001-1303-7190"><img src="https://img.shields.io/badge/ORCID-0009--0001--1303--7190-A6CE39?style=flat-square&logo=orcid&logoColor=white" alt="ORCID"></a>
@@ -17,6 +21,15 @@ Formal Relational Information Geometry & Automated Verification in Lean 4 — De
 `4Leibniz` is the canonical mathematical and formal proof source of truth across the Chyren constellation. It provides formalizations of relational information geometry, epistemic logic, and classical philosophical foundations in Lean 4.
 
 Downstream consumer applications—including `4leibniz-web` (scholarly archive) and `leibniz-oracle` (interactive mobile guide)—consume versioned proof artifacts emitted by this repository. Neither consumer maintains an independent theorem database or has authority to assert that a theorem is proved.
+
+## AI Safety & Scalable Oversight Utility
+
+Modern reinforcement learning from human/evaluator feedback (RLHF/RLAIF) introduces severe vulnerabilities to *sycophancy* and *vacuous theorem satisfaction*, where language models satisfy logical goals trivially (e.g., conditioning on $P \wedge \neg P$) or mirror false authoritative prompts.
+
+`4Leibniz` serves as an ungameable, deterministic verification ground truth for automated reasoning:
+- **Zero-Sorry Kernel Elaboration**: Every formal derivation is checked down to foundational proof terms via the Lean 4 kernel, eliminating unelaborated claims.
+- **Non-Vacuous Antecedent Enforcement**: Automated test suites check theorem hypotheses for non-trivial model witnesses, preventing models from exploiting the principle of explosion ($P \implies Q$ when $P \equiv \bot$).
+- **Machine-Verifiable Proof Receipts**: CI builds emit structured `proof-receipt.json` artifacts, providing tamper-evident telemetry for neuro-symbolic and process-reward oversight benchmarks.
 
 ## Active Workstreams
 
