@@ -1,0 +1,27 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "POSTHOG_PROJECT_TOKEN",
+      "description": "PostHog project token for analytics (optional — app runs without it)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "POSTHOG_HOST",
+      "description": "PostHog host URL, e.g. https://us.i.posthog.com (optional — app runs without it)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "OPENAI_API_KEY",
+      "description": "OpenAI API key for AI premise suggestions (optional — falls back to deterministic mode)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "OPENAI_API_BASE",
+      "description": "OpenAI API base URL (optional — needed only if OPENAI_API_KEY is set)",
+      "requiredAtBoot": false
+    }
+  ]
+}
