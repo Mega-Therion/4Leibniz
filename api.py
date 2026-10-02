@@ -43,15 +43,8 @@ if POSTHOG_PROJECT_TOKEN and POSTHOG_HOST:
         enable_exception_autocapture=True,
     )
     atexit.register(posthog_client.shutdown)
-elif app.debug or os.environ.get("FLASK_DEBUG") == "1":
-    missing_variable = (
-        "POSTHOG_PROJECT_TOKEN" if not POSTHOG_PROJECT_TOKEN else "POSTHOG_HOST"
-    )
-    raise RuntimeError(
-        f"{missing_variable} variable required by PostHog is missing or un-configured, "
-        f"this causes events to be silently missed. This error stops appearing once "
-        f"{missing_variable} is configured"
-    )
+# Without both variables PostHog stays off: RY's 2026-09-26 decision is no PostHog anywhere, so the absence of a
+# key is the intended state and must not stop the app, in debug mode or otherwise.
 
 # --- Minimum-viable access control ------------------------------------------
 # This is a stopgap for the research-preview posture, not the identity-aware
