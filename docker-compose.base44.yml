@@ -1,0 +1,23 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.base44
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - FLASK_APP=api:app
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - /run/base44/app.env
+    command: ["sh", "-ec", "uv sync --frozen && exec uv run flask run --host 0.0.0.0 --port 3000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    restart: on-failure

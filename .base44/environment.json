@@ -1,0 +1,17 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "OPENAI_API_KEY",
+      "description": "OpenAI API key for AI premise suggestions (optional \u2014 falls back to deterministic mode)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "OPENAI_API_BASE",
+      "description": "OpenAI API base URL (optional \u2014 needed only if OPENAI_API_KEY is set)",
+      "requiredAtBoot": false
+    }
+  ]
+}
