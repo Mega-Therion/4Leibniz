@@ -8,7 +8,10 @@ import subprocess
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
-from posthog import Posthog
+try:  # PostHog is off by decision (2026-09-26); the SDK is optional and the app runs without it
+    from posthog import Posthog
+except ImportError:
+    Posthog = None
 from werkzeug.exceptions import HTTPException
 from ucalculus import SyntaxError as UCalcSyntaxError, compile_text, parse
 from proof_engine import SemanticPatch, search_text
@@ -34,9 +37,9 @@ app = Flask(__name__)
 
 POSTHOG_PROJECT_TOKEN = os.environ.get("POSTHOG_PROJECT_TOKEN")
 POSTHOG_HOST = os.environ.get("POSTHOG_HOST")
-posthog_client: Posthog | None = None
+posthog_client: "Posthog | None" = None
 
-if POSTHOG_PROJECT_TOKEN and POSTHOG_HOST:
+if Posthog is not None and POSTHOG_PROJECT_TOKEN and POSTHOG_HOST:
     posthog_client = Posthog(
         POSTHOG_PROJECT_TOKEN,
         host=POSTHOG_HOST,
