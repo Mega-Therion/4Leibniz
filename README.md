@@ -1,7 +1,7 @@
 # 4Leibniz
 
 [![Lean 4 Verification](https://github.com/Mega-Therion/4Leibniz/actions/workflows/verify.yml/badge.svg)](https://github.com/Mega-Therion/4Leibniz/actions/workflows/verify.yml)
-[![Zero-Sorry Certified](https://img.shields.io/badge/Lean_4-zero--sorry-brightgreen.svg)](scripts/check_sorries.py)
+[![Lean 4: zero sorry](https://img.shields.io/badge/Lean_4-zero--sorry-brightgreen.svg)](scripts/check_sorries.py)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21539453.svg)](https://doi.org/10.5281/zenodo.21539453)
 
 <p align="left">
@@ -24,9 +24,9 @@ Downstream consumer applications—including `4leibniz-web` (scholarly archive) 
 
 ## AI Safety & Scalable Oversight Utility
 
-Modern reinforcement learning from human/evaluator feedback (RLHF/RLAIF) introduces severe vulnerabilities to *sycophancy* and *vacuous theorem satisfaction*, where language models satisfy logical goals trivially (e.g., conditioning on $P \wedge \neg P$) or mirror false authoritative prompts.
+Modern reinforcement learning from human/evaluator feedback (RLHF/RLAIF) is vulnerable to *sycophancy* and *vacuous theorem satisfaction*, where language models satisfy logical goals trivially (e.g., conditioning on $P \wedge \neg P$) or mirror false authoritative prompts.
 
-`4Leibniz` serves as an ungameable, deterministic verification ground truth for automated reasoning:
+`4Leibniz` serves as a deterministic verification check for automated reasoning. The kernel rules out unelaborated and `sorry`-backed claims; on its own it cannot rule out a true-but-vacuous or mis-specified statement, which is what the antecedent checks below are for:
 - **Zero-Sorry Kernel Elaboration**: Every formal derivation is checked down to foundational proof terms via the Lean 4 kernel, eliminating unelaborated claims.
 - **Non-Vacuous Antecedent Enforcement**: Automated test suites check theorem hypotheses for non-trivial model witnesses, preventing models from exploiting the principle of explosion ($P \implies Q$ when $P \equiv \bot$).
 - **Machine-Verifiable Proof Receipts**: CI builds emit structured `proof-receipt.json` artifacts, providing tamper-evident telemetry for neuro-symbolic and process-reward oversight benchmarks.
