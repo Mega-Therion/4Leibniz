@@ -67,3 +67,7 @@ lake build
 # Run Python verification suite
 pytest tests/
 ```
+
+## How this was built
+
+R.W. Yett directs the work. Much of the code and prose was written with AI coding assistants; those commits carry `Co-Authored-By` trailers. A Lean check shows that a declaration compiles. It does not grade the physics or the prose.
