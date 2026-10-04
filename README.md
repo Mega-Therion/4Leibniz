@@ -20,7 +20,7 @@ Formal Relational Information Geometry & Automated Verification in Lean 4 — De
 
 `4Leibniz` is the canonical mathematical and formal proof source of truth across the Chyren constellation. It provides formalizations of relational information geometry, epistemic logic, and classical philosophical foundations in Lean 4.
 
-Downstream consumer applications—including `4leibniz-web` (scholarly archive) and `leibniz-oracle` (interactive mobile guide)—consume versioned proof artifacts emitted by this repository. Neither consumer maintains an independent theorem database or has authority to assert that a theorem is proved.
+Two consumer applications live alongside the Lean library: [`apps/web`](apps/web/) (scholarly archive, formerly the `4leibniz-web` repository) and [`apps/oracle`](apps/oracle/) (interactive mobile guide, formerly `leibniz-oracle`), merged here on 2026-10-03. Both consume the versioned proof artifacts emitted by the Lean build. Neither maintains an independent theorem database or has authority to assert that a theorem is proved.
 
 ## AI Safety & Scalable Oversight Utility
 
@@ -35,7 +35,7 @@ Modern reinforcement learning from human/evaluator feedback (RLHF/RLAIF) is vuln
 
 - **Open problem `chiral-floor` — CLOSED 2026-09-12**: the continuity floor `chiFloor = 1/√2` is derived from first principles as the equipartition bound of the vis viva (`Leibniz.VisViva.chiral_dominance_ge_floor`, `Leibniz.LexContinuitatis.chiFloor_is_dyadic_floor`): the stronger member of any dyad carries at least half the total living force, with equality exactly at equipartition. `chiFloor_lt_chiCeil` was promoted from a bare axiom to a theorem in the same pass.
 
-- **Issue #11**: Publish a proof-grounded formal-claim export for `4leibniz-web` and `leibniz-oracle` (`artifacts/v1/formal-claims.json`).
+- **Issue #11**: Publish a proof-grounded formal-claim export for `apps/web` and `apps/oracle` (`artifacts/v1/formal-claims.json`).
 - **Issue #10**: Consume RYTT via `integration/4leibniz_bridge.json` — symbolic notation and interchange layer without forking the grammar.
 
 ## Architecture
@@ -43,8 +43,8 @@ Modern reinforcement learning from human/evaluator feedback (RLHF/RLAIF) is vuln
 ```
 Lean Source (Leibniz/*.lean) ──► Pinned Lake Check ──► Export Generator ──► artifacts/v1/formal-claims.json
                                                            │
-                                                           ├──► 4leibniz-web (scholarly display)
-                                                           └──► leibniz-oracle (guided learning)
+                                                           ├──► apps/web (scholarly display)
+                                                           └──► apps/oracle (guided learning)
 ```
 
 ## Epistemic Standard

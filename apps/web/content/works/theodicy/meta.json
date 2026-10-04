@@ -1,0 +1,30 @@
+{
+  "slug": "theodicy",
+  "title": "Theodicy",
+  "altTitle": "Essais de Théodicée sur la bonté de Dieu, la liberté de l'homme et l'origine du mal",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1710",
+  "dateStart": 1710,
+  "dateEnd": 1710,
+  "translator": "E. M. Huggard",
+  "summary": "The only book Leibniz published in his lifetime: a sustained answer to Pierre Bayle on the justice of God. A Preliminary Dissertation reconciles faith with reason; three parts of numbered articles defend divine goodness against the objections drawn from human freedom and the origin of evil; a final Summary reduces the controversy to eight formal objections with answers; and two appendices treat Hobbes on freedom and necessity and William King on the origin of evil. The most complete public statement of Leibniz's optimism — and the most complete test of it.",
+  "sourceNote": "Seed text: Project Gutenberg eBook #17147 — the E. M. Huggard English translation of the Essais de Théodicée (1710), as distributed by Project Gutenberg in the US public domain. This edition includes all of Leibniz's text as printed there: the Original Preface, the Preliminary Dissertation, the three Parts (articles 1–417), the Summary of the Controversy, and both appendices (§R1–§R12 on Hobbes; §O1–§O27 on King). The editor's introduction and the book's index are excluded.",
+  "editorialNote": "All 552 sections carry stable anchors (§Preface, §D1–§D87, §1–§417, §S1–§S8, §R1–§R12, §O1–§O27). Three transcription anomalies in the Gutenberg source were repaired editorially: article 237 (number dropped in the source, beginning at the 'Second Syllogism'), article 328 (printed as a run-on inside the preceding paragraph), and article 417's trailing 'APPENDICES' catalog heading — all re-anchored against the print edition's numbering. Page markers, emphasis underscores, and typographic noise were normalized during extraction. The translator omitted the original edition's fourth appendix (the Causa Dei Asserta, a Latin scholastic summary of the treatise) and that omission is preserved here. The French original (1710) awaits alignment before side-by-side reading can be enabled for this work.",
+  "featured": true,
+  "published": true,
+  "themes": [
+    "optimism-theodicy",
+    "freedom-and-necessity",
+    "metaphysics"
+  ],
+  "relatedConcepts": [
+    "optimism-and-theodicy",
+    "sufficient-reason",
+    "principle-of-the-best",
+    "freedom-and-necessity",
+    "pre-established-harmony"
+  ],
+  "entities": []
+}

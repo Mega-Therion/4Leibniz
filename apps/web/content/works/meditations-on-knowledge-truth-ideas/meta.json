@@ -1,0 +1,23 @@
+{
+  "slug": "meditations-on-knowledge-truth-ideas",
+  "title": "Thoughts on Knowledge, Truth, and Ideas",
+  "language": "en",
+  "originalLanguage": "la",
+  "status": "translated",
+  "dateLabel": "1684",
+  "dateStart": 1684,
+  "dateEnd": 1684,
+  "translator": "George Martin Duncan",
+  "summary": "Knowledge graded from obscure to intuitive, and truth defined in a single line: the predicate is contained in the subject.",
+  "sourceNote": "Seed text: G. M. Duncan, The Philosophical Works of Leibnitz (New Haven, 1908), translated from the Latin; OCR transcription from the archive.org scan (worksofleibniz00leibuoft), US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; a correction pass against the print edition is scheduled. Section anchors are stable.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [
+    "sufficient-reason"
+  ],
+  "entities": []
+}

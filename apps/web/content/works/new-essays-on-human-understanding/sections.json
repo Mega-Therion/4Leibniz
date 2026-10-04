@@ -1,0 +1,349 @@
+{
+  "sections": [
+    {
+      "label": "Preface",
+      "title": "Preface",
+      "anchor": "preface"
+    },
+    {
+      "label": "I.1",
+      "title": "No Innate Speculative Principles",
+      "anchor": "i1"
+    },
+    {
+      "label": "I.2",
+      "title": "No Innate Practical Principles",
+      "anchor": "i2"
+    },
+    {
+      "label": "I.3",
+      "title": "Other Considerations Concerning Innate Principles",
+      "anchor": "i3"
+    },
+    {
+      "label": "II.1",
+      "title": "Of Ideas in General",
+      "anchor": "ii1"
+    },
+    {
+      "label": "II.2",
+      "title": "Of Simple Ideas",
+      "anchor": "ii2"
+    },
+    {
+      "label": "II.3",
+      "title": "Of Ideas Which Come to Us by One Sense Only",
+      "anchor": "ii3"
+    },
+    {
+      "label": "II.4",
+      "title": "Of Solidity",
+      "anchor": "ii4"
+    },
+    {
+      "label": "II.5",
+      "title": "Of Simple Ideas Which Come by Different Senses",
+      "anchor": "ii5"
+    },
+    {
+      "label": "II.6",
+      "title": "Of Simple Ideas Which Come by Reflection",
+      "anchor": "ii6"
+    },
+    {
+      "label": "II.7",
+      "title": "Of Ideas Which Come by Sensation and Reflection",
+      "anchor": "ii7"
+    },
+    {
+      "label": "II.8",
+      "title": "Other Considerations upon Simple Ideas",
+      "anchor": "ii8"
+    },
+    {
+      "label": "II.9",
+      "title": "Of Perception",
+      "anchor": "ii9"
+    },
+    {
+      "label": "II.10",
+      "title": "Of Retention",
+      "anchor": "ii10"
+    },
+    {
+      "label": "II.11",
+      "title": "Of Discerning, and Other Operations of the Mind",
+      "anchor": "ii11"
+    },
+    {
+      "label": "II.12",
+      "title": "Of Complex Ideas",
+      "anchor": "ii12"
+    },
+    {
+      "label": "II.13",
+      "title": "Of Simple Modes, and First of Those of Space",
+      "anchor": "ii13"
+    },
+    {
+      "label": "II.14",
+      "title": "Of Duration and Its Simple Modes",
+      "anchor": "ii14"
+    },
+    {
+      "label": "II.15",
+      "title": "Of Duration and Expansion Considered Together",
+      "anchor": "ii15"
+    },
+    {
+      "label": "II.16",
+      "title": "Of Number",
+      "anchor": "ii16"
+    },
+    {
+      "label": "II.17",
+      "title": "Of Infinity",
+      "anchor": "ii17"
+    },
+    {
+      "label": "II.18",
+      "title": "Of Other Simple Modes",
+      "anchor": "ii18"
+    },
+    {
+      "label": "II.19",
+      "title": "Of the Modes of Thinking",
+      "anchor": "ii19"
+    },
+    {
+      "label": "II.20",
+      "title": "Of Modes of Pleasure and Pain",
+      "anchor": "ii20"
+    },
+    {
+      "label": "II.21",
+      "title": "Of Power and Freedom",
+      "anchor": "ii21"
+    },
+    {
+      "label": "II.22",
+      "title": "Of Mixed Modes",
+      "anchor": "ii22"
+    },
+    {
+      "label": "II.23",
+      "title": "Of Our Complex Ideas of Substances",
+      "anchor": "ii23"
+    },
+    {
+      "label": "II.24",
+      "title": "Of Collective Ideas of Substances",
+      "anchor": "ii24"
+    },
+    {
+      "label": "II.25",
+      "title": "Of Relation",
+      "anchor": "ii25"
+    },
+    {
+      "label": "II.26",
+      "title": "Of Cause and Effect and Some Other Relations",
+      "anchor": "ii26"
+    },
+    {
+      "label": "II.27",
+      "title": "What Identity or Diversity Is",
+      "anchor": "ii27"
+    },
+    {
+      "label": "II.28",
+      "title": "Of Some Other Relations, Especially Moral Relations",
+      "anchor": "ii28"
+    },
+    {
+      "label": "II.29",
+      "title": "Of Clear and Obscure, Distinct and Confused Ideas",
+      "anchor": "ii29"
+    },
+    {
+      "label": "II.30",
+      "title": "Of Real and Fantastical Ideas",
+      "anchor": "ii30"
+    },
+    {
+      "label": "II.31",
+      "title": "Of Adequate and Inadequate Ideas",
+      "anchor": "ii31"
+    },
+    {
+      "label": "II.32",
+      "title": "Of True and False Ideas",
+      "anchor": "ii32"
+    },
+    {
+      "label": "II.33",
+      "title": "Of the Association of Ideas",
+      "anchor": "ii33"
+    },
+    {
+      "label": "III.1",
+      "title": "Of Words or Language in General",
+      "anchor": "iii1"
+    },
+    {
+      "label": "III.2",
+      "title": "Of the Signification of Words",
+      "anchor": "iii2"
+    },
+    {
+      "label": "III.3",
+      "title": "Of General Terms",
+      "anchor": "iii3"
+    },
+    {
+      "label": "III.4",
+      "title": "Of the Names of Simple Ideas",
+      "anchor": "iii4"
+    },
+    {
+      "label": "III.5",
+      "title": "Of the Names of Mixed Modes and Relations",
+      "anchor": "iii5"
+    },
+    {
+      "label": "III.6",
+      "title": "Of the Names of Substances",
+      "anchor": "iii6"
+    },
+    {
+      "label": "III.7",
+      "title": "Of Particles",
+      "anchor": "iii7"
+    },
+    {
+      "label": "III.8",
+      "title": "Of Abstract and Concrete Terms",
+      "anchor": "iii8"
+    },
+    {
+      "label": "III.9",
+      "title": "Of the Imperfections of Words",
+      "anchor": "iii9"
+    },
+    {
+      "label": "III.10",
+      "title": "Of the Abuse of Words",
+      "anchor": "iii10"
+    },
+    {
+      "label": "III.11",
+      "title": "Of the Remedies of the Imperfections and Abuses of Words",
+      "anchor": "iii11"
+    },
+    {
+      "label": "IV.1",
+      "title": "Of Knowledge in General",
+      "anchor": "iv1"
+    },
+    {
+      "label": "IV.2",
+      "title": "Of the Degrees of Our Knowledge",
+      "anchor": "iv2"
+    },
+    {
+      "label": "IV.3",
+      "title": "Of the Extent of Human Knowledge",
+      "anchor": "iv3"
+    },
+    {
+      "label": "IV.4",
+      "title": "Of the Reality of Our Knowledge",
+      "anchor": "iv4"
+    },
+    {
+      "label": "IV.5",
+      "title": "Of Truth in General",
+      "anchor": "iv5"
+    },
+    {
+      "label": "IV.6",
+      "title": "Of Universal Propositions",
+      "anchor": "iv6"
+    },
+    {
+      "label": "IV.7",
+      "title": "Of Propositions Called Maxims or Axioms",
+      "anchor": "iv7"
+    },
+    {
+      "label": "IV.8",
+      "title": "Of Trifling Propositions",
+      "anchor": "iv8"
+    },
+    {
+      "label": "IV.9",
+      "title": "Of Our Knowledge of Existence",
+      "anchor": "iv9"
+    },
+    {
+      "label": "IV.10",
+      "title": "Of Our Knowledge of the Existence of a God",
+      "anchor": "iv10"
+    },
+    {
+      "label": "IV.11",
+      "title": "Of Our Knowledge of the Existence of Other Things",
+      "anchor": "iv11"
+    },
+    {
+      "label": "IV.12",
+      "title": "Of the Improvement of Our Knowledge",
+      "anchor": "iv12"
+    },
+    {
+      "label": "IV.13",
+      "title": "Other Considerations Concerning Our Knowledge",
+      "anchor": "iv13"
+    },
+    {
+      "label": "IV.14",
+      "title": "Of Judgment",
+      "anchor": "iv14"
+    },
+    {
+      "label": "IV.15",
+      "title": "Of Probability",
+      "anchor": "iv15"
+    },
+    {
+      "label": "IV.16",
+      "title": "Of the Degrees of Assent",
+      "anchor": "iv16"
+    },
+    {
+      "label": "IV.17",
+      "title": "Of Reason",
+      "anchor": "iv17"
+    },
+    {
+      "label": "IV.18",
+      "title": "Of Faith and Reason and Their Distinct Limits",
+      "anchor": "iv18"
+    },
+    {
+      "label": "IV.19",
+      "title": "Of Enthusiasm",
+      "anchor": "iv19"
+    },
+    {
+      "label": "IV.20",
+      "title": "Of Error",
+      "anchor": "iv20"
+    },
+    {
+      "label": "IV.21",
+      "title": "Of the Division of the Sciences",
+      "anchor": "iv21"
+    }
+  ]
+}

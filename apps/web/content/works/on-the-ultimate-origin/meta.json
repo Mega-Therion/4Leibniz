@@ -1,0 +1,25 @@
+{
+  "slug": "on-the-ultimate-origin",
+  "title": "On the Ultimate Origin of Things",
+  "language": "en",
+  "originalLanguage": "la",
+  "status": "translated",
+  "dateLabel": "1697",
+  "dateStart": 1697,
+  "dateEnd": 1697,
+  "translator": "George Martin Duncan",
+  "summary": "Why infinite past time could never deliver sufficient reason, and why the universe must be traced to a necessary being who chooses the best.",
+  "sourceNote": "Seed text: G. M. Duncan, The Philosophical Works of Leibnitz (New Haven, 1908), translated from the Latin; OCR transcription from the archive.org scan (worksofleibniz00leibuoft), US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; a correction pass against the print edition is scheduled. Section anchors are stable.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [
+    "sufficient-reason",
+    "principle-of-the-best",
+    "optimism-and-theodicy"
+  ],
+  "entities": []
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "slug": "metaphysics",
+    "label": "Metaphysics",
+    "description": "First philosophy: substance, identity, causation, and the architecture of reality.",
+    "works": [
+      "discourse-on-metaphysics",
+      "monadology",
+      "theodicy"
+    ]
+  },
+  {
+    "slug": "monads",
+    "label": "Monads",
+    "description": "Simple substances — windowless, world-mirroring, indivisible — as the elements of things.",
+    "works": [
+      "monadology",
+      "principles-of-nature-and-grace",
+      "new-system"
+    ]
+  },
+  {
+    "slug": "optimism-theodicy",
+    "label": "Optimism & Theodicy",
+    "description": "The best possible world, divine justice, and the problem of evil.",
+    "works": [
+      "discourse-on-metaphysics",
+      "monadology",
+      "theodicy",
+      "on-the-ultimate-origin",
+      "abridgment-of-theodicy",
+      "principles-of-nature-and-grace"
+    ]
+  },
+  {
+    "slug": "substance",
+    "label": "Substance & Individuality",
+    "description": "Complete concepts, individual substances, and the identity of indiscernibles.",
+    "works": [
+      "discourse-on-metaphysics"
+    ]
+  },
+  {
+    "slug": "perfection",
+    "label": "Perfection & the Best",
+    "description": "Divine perfection and the principle that God does everything in the most desirable way.",
+    "works": [
+      "discourse-on-metaphysics"
+    ]
+  },
+  {
+    "slug": "harmony",
+    "label": "Harmony",
+    "description": "Pre-established harmony: synchronized substances without interaction.",
+    "works": [
+      "discourse-on-metaphysics",
+      "monadology",
+      "new-system",
+      "explanation-new-system",
+      "second-explanation-new-system",
+      "third-explanation-new-system",
+      "on-nature-in-itself"
+    ]
+  },
+  {
+    "slug": "mind-and-nature",
+    "label": "Mind & Nature",
+    "description": "Perception, appetite, souls and bodies, and the place of mind in the order of nature.",
+    "works": [
+      "monadology"
+    ]
+  },
+  {
+    "slug": "rationalism",
+    "label": "Rationalism",
+    "description": "Reason as the instrument that can settle questions — the 'Calculemus' ideal.",
+    "works": [
+      "monadology"
+    ]
+  },
+  {
+    "slug": "freedom-and-necessity",
+    "label": "Freedom & Necessity",
+    "description": "Moral necessity versus metaphysical necessity; grace, contingency, and the famous eight objections answered.",
+    "works": [
+      "theodicy",
+      "necessity-and-contingency"
+    ]
+  }
+]

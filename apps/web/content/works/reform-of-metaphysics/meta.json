@@ -1,0 +1,21 @@
+{
+  "slug": "reform-of-metaphysics",
+  "title": "On the Reform of Metaphysics and the Notion of Substance",
+  "language": "en",
+  "originalLanguage": "la",
+  "status": "translated",
+  "dateLabel": "1694",
+  "dateStart": 1694,
+  "dateEnd": 1694,
+  "translator": "George Martin Duncan",
+  "summary": "Metaphysics reformed on the model of mathematics: the fruitful notion of substance from which force, matter, and the laws of nature follow.",
+  "sourceNote": "Seed text: G. M. Duncan, The Philosophical Works of Leibnitz (New Haven, 1908), translated from the Latin; OCR transcription from the archive.org scan (worksofleibniz00leibuoft), US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; a correction pass against the print edition is scheduled. Section anchors are stable.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [],
+  "entities": []
+}

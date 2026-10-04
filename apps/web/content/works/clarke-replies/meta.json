@@ -1,0 +1,24 @@
+{
+  "slug": "clarke-replies",
+  "title": "Dr. Clarke's Five Replies",
+  "language": "en",
+  "originalLanguage": "en",
+  "status": "original",
+  "dateLabel": "1715–1716",
+  "dateStart": 1715,
+  "dateEnd": 1716,
+  "translator": null,
+  "summary": "The other side of the last controversy: Samuel Clarke's five replies to Leibniz, written for Princess Caroline's circle — the Newtonian counter-attack on sufficient reason, on space as the sensorium of God, and on the possibility of miracles. The edition's closing note records that Leibniz was prevented by death from answering the last paper.",
+  "sourceNote": "Seed text: A Collection of Papers, which passed between the late Learned Mr. Leibniz and Dr. Clarke (London, 1717), Clarke's English originals; OCR transcription from the Internet Archive bim scan; French translation pages mechanically filtered from the interleaved edition. US public domain.",
+  "editorialNote": "Scanned-source OCR with the facing French translation mechanically filtered; a few marginal summary notes and short French fragments remain, and paragraph numbering restarts per reply. Section boundaries are page-approximate at the Reply 3/4 seam; a paragraph-level collation against the print edition is scheduled. Leibniz's five papers are in the companion work Five Letters to Samuel Clarke (Duncan text). Anchors §1–§5.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [
+    "sufficient-reason",
+    "freedom-and-necessity"
+  ],
+  "entities": []
+}

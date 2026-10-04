@@ -1,0 +1,24 @@
+{
+  "slug": "letters-to-clarke",
+  "title": "Five Letters to Samuel Clarke",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1715–1716",
+  "dateStart": 1715,
+  "dateEnd": 1716,
+  "translator": "George Martin Duncan",
+  "summary": "The last controversy: Leibniz against the Newtonian divine Samuel Clarke, in the year before Leibniz's death — space and time as orders of things, the sensorium of God, the possibility of miracles, and the sufficient reason that Clarke's God does not need.",
+  "sourceNote": "Seed text: G. M. Duncan, The Philosophical Works of Leibnitz (New Haven, 1908) — Leibniz's five papers of the correspondence; OCR transcription from the archive.org scan, US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; a correction pass is scheduled. Clarke's five replies are in the companion work Dr. Clarke's Five Replies (from the 1717 Collection of Papers). Anchors §1–§5.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [
+    "sufficient-reason",
+    "freedom-and-necessity"
+  ],
+  "entities": []
+}

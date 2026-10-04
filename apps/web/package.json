@@ -1,0 +1,54 @@
+{
+  "name": "4leibniz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A living archive of Leibniz — transcribed, translated, searchable, and guided by a source-grounded AI.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "ingest": "tsx scripts/ingest.ts",
+    "seed:dossier": "tsx scripts/seed-dossier.ts",
+    "test:contract": "tsx tests/formal-claims-contract.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "0.0.60",
+    "ai": "3.4.33",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.3",
+    "next": "^15.5.24",
+    "postgres": "^3.4.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "autoprefixer": "^10.4.20",
+    "dotenv": "^16.4.5",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.5.24",
+    "postcss": "^8.5.28",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "overrides": {
+    "nanoid": "^3.3.18",
+    "jsondiffpatch": "^0.7.6",
+    "esbuild": "^0.25.0",
+    "postcss": "^8.5.28"
+  }
+}

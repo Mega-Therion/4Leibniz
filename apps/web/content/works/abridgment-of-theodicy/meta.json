@@ -1,0 +1,21 @@
+{
+  "slug": "abridgment-of-theodicy",
+  "title": "Abridgment of the Theodicy",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1710",
+  "dateStart": 1710,
+  "dateEnd": 1710,
+  "translator": "George Martin Duncan",
+  "summary": "Leibniz's own compressed statement of the Theodicy's argument, in miniature.",
+  "sourceNote": "Seed text: G. M. Duncan, The Philosophical Works of Leibnitz (New Haven, 1908), translated from the French; OCR transcription from the archive.org scan (worksofleibniz00leibuoft), US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; a correction pass against the print edition is scheduled. Section anchors are stable.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [],
+  "entities": []
+}

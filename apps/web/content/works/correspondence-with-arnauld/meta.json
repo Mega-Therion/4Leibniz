@@ -1,0 +1,26 @@
+{
+  "slug": "correspondence-with-arnauld",
+  "title": "Correspondence with Arnauld",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1686–1687",
+  "dateStart": 1686,
+  "dateEnd": 1687,
+  "translator": "George R. Montgomery",
+  "summary": "The Discourse made flesh: the exchange with the great Jansenist, through Count Ernst von Hessen-Rheinfels, in which the metaphysics of 1686 is attacked, defended, and sharpened into the mature doctrine of substance.",
+  "sourceNote": "Seed text: G. R. Montgomery's translation (Open Court) of the Leibniz–Arnauld correspondence; OCR transcription from the archive.org scan (cu31924014598829), US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; editor footnotes retained inline; a correction pass is scheduled. Letters carry stable anchors §1–§N in Montgomery's order.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics",
+    "harmony"
+  ],
+  "relatedConcepts": [
+    "individual-substance",
+    "windowless-monads",
+    "pre-established-harmony"
+  ],
+  "entities": []
+}

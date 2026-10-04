@@ -1,0 +1,21 @@
+{
+  "slug": "on-the-principles-of-life",
+  "title": "On the Principles of Life",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1705",
+  "dateStart": 1705,
+  "dateEnd": 1705,
+  "translator": "George Martin Duncan",
+  "summary": "On plastic natures and vital principle: neither bare mechanism nor divinely shuffled matter, but organized force.",
+  "sourceNote": "Seed text: G. M. Duncan, The Philosophical Works of Leibnitz (New Haven, 1908), translated from the French; OCR transcription from the archive.org scan (worksofleibniz00leibuoft), US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; a correction pass against the print edition is scheduled. Section anchors are stable.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [],
+  "entities": []
+}

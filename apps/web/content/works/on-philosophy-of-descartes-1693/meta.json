@@ -1,0 +1,21 @@
+{
+  "slug": "on-philosophy-of-descartes-1693",
+  "title": "On the Philosophy of Descartes (1693)",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1693",
+  "dateStart": 1693,
+  "dateEnd": 1693,
+  "translator": "George Martin Duncan",
+  "summary": "A later verdict on Descartes: the useful separated from the false, and the plan for a demonstrative metaphysics.",
+  "sourceNote": "Seed text: G. M. Duncan, The Philosophical Works of Leibnitz (New Haven, 1908), translated from the French; OCR transcription from the archive.org scan (worksofleibniz00leibuoft), US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; a correction pass against the print edition is scheduled. Section anchors are stable.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [],
+  "entities": []
+}

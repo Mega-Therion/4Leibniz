@@ -1,0 +1,32 @@
+{
+  "slug": "monadology",
+  "title": "The Monadology",
+  "altTitle": "La Monadologie · Principes de la philosophie",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1714",
+  "dateStart": 1714,
+  "dateEnd": 1714,
+  "translator": "Robert Latta (1898)",
+  "summary": "The compressed final system: ninety numbered paragraphs composed around 1714, unpublished in Leibniz's lifetime. Monads — simple, windowless substances — mirror the universe from distinct points of view; their pre-established harmony resolves the mind–body problem without interaction; and the world as a whole is the best of all possible worlds, chosen by a God who acts by sufficient reason.",
+  "sourceNote": "Seed text: the public-domain Robert Latta translation (Leibniz: The Monadology and Other Philosophical Writings, Oxford, 1898), as digitized on Wikisource. The archive will replace this with its own critical transcription and re-translation as the editorial program advances.",
+  "editorialNote": "All 90 paragraphs carry stable anchors (¶1–¶90). Cross-references to the Theodicy preserved from Latta's edition. Leibniz's French original and Latta's extensive introduction and notes are not reproduced in this seed edition. The French original (La Monadologie, 1909 edition, Project Gutenberg #17641) is aligned paragraph-by-paragraph — use the Original toggle in the reader for side-by-side view. Paragraph 36, whose number was dropped in the source transcription, was restored at its paragraph boundary.",
+  "featured": true,
+  "published": true,
+  "themes": [
+    "monads",
+    "metaphysics",
+    "mind-and-nature",
+    "harmony",
+    "rationalism"
+  ],
+  "relatedConcepts": [
+    "monad",
+    "pre-established-harmony",
+    "windowless-monads",
+    "sufficient-reason",
+    "principle-of-the-best"
+  ],
+  "entities": []
+}

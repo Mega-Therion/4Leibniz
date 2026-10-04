@@ -1,0 +1,188 @@
+[
+  {
+    "slug": "monad",
+    "term": "Monad",
+    "short": "A simple substance — real, indivisible, without parts.",
+    "definition": "Monads are the true atoms of nature: mind-like simple substances lacking extension, parts, or windows. Each expresses the entire universe from its own point of view, and each differs from every other by an internal quality. Compounds are aggregates of monads; what we call matter is a well-founded phenomenon grounded in them.",
+    "relatedWorks": [
+      "monadology",
+      "discourse-on-metaphysics",
+      "principles-of-nature-and-grace",
+      "active-force-and-souls"
+    ],
+    "relatedConcepts": [
+      "windowless-monads",
+      "pre-established-harmony",
+      "individual-substance"
+    ]
+  },
+  {
+    "slug": "individual-substance",
+    "term": "Individual substance",
+    "short": "A being whose complete concept contains everything that will ever be true of it.",
+    "definition": "In the Discourse on Metaphysics, a substance is 'a being whose concept is so complete that one can understand from it everything that can be attributed to the subject.' Alexander's concept contains 'to conquer Darius and Porus' — every predicate is contained in the subject, and each substance expresses the whole universe in its own way.",
+    "relatedWorks": [
+      "discourse-on-metaphysics",
+      "reform-of-metaphysics"
+    ],
+    "relatedConcepts": [
+      "principle-of-the-best",
+      "monad"
+    ]
+  },
+  {
+    "slug": "principle-of-the-best",
+    "term": "Principle of the best",
+    "short": "God chooses to actualize the world that is best on the whole.",
+    "definition": "Among infinitely many possible worlds present to God's understanding, God wills into existence the one that is simplest in means yet richest in effects. Divine choice is not arbitrary: goodness and order are real principles, so God's selection follows from the nature of things — the foundation of Leibniz's optimism and his theodicy.",
+    "relatedWorks": [
+      "discourse-on-metaphysics",
+      "monadology",
+      "theodicy",
+      "on-the-ultimate-origin"
+    ],
+    "relatedConcepts": [
+      "sufficient-reason",
+      "optimism-and-theodicy"
+    ]
+  },
+  {
+    "slug": "sufficient-reason",
+    "term": "Principle of sufficient reason",
+    "short": "Nothing is without a reason why it is so and not otherwise.",
+    "definition": "The principle that every fact, every event, every existence has a sufficient reason for being as it is rather than otherwise. For contingent truths the full reason ultimately lies outside the series of created things, in God's choice of the best — the principle's most famous use closes the Monadology's cosmological argument.",
+    "relatedWorks": [
+      "monadology",
+      "discourse-on-metaphysics",
+      "theodicy",
+      "on-the-ultimate-origin",
+      "necessity-and-contingency",
+      "meditations-on-knowledge-truth-ideas"
+    ],
+    "relatedConcepts": [
+      "principle-of-the-best",
+      "optimism-and-theodicy"
+    ]
+  },
+  {
+    "slug": "pre-established-harmony",
+    "term": "Pre-established harmony",
+    "short": "Mind and body, and all monads, run in parallel without interacting.",
+    "definition": "Substances do not act on one another; God created each with an internal law such that its states unfold in perfect concert with all others, like clocks synchronized from the start. Mind and body agree, and a thousand watches of the universe keep time together, not by influence but by a harmony built into their creation.",
+    "relatedWorks": [
+      "monadology",
+      "discourse-on-metaphysics",
+      "new-system",
+      "explanation-new-system",
+      "second-explanation-new-system",
+      "third-explanation-new-system",
+      "on-nature-in-itself"
+    ],
+    "relatedConcepts": [
+      "windowless-monads",
+      "monad",
+      "optimism-and-theodicy"
+    ]
+  },
+  {
+    "slug": "windowless-monads",
+    "term": "Windowless monads",
+    "short": "Monads have 'no windows' — nothing enters or leaves them.",
+    "definition": "Because monads are simple, nothing can come in or go out; their changes arise only from an internal principle. Internal states succeed one another by appetite and perception, and apparent interaction is the pre-established harmony of synchronized unfolding.",
+    "relatedWorks": [
+      "monadology",
+      "new-system"
+    ],
+    "relatedConcepts": [
+      "monad",
+      "pre-established-harmony"
+    ]
+  },
+  {
+    "slug": "identity-of-indiscernibles",
+    "term": "Identity of indiscernibles",
+    "short": "No two substances can differ solely in number.",
+    "definition": "If two things agreed in every qualitative respect, they would be one thing. Distinct substances must always differ in some internal quality — so no two leaves, no two monads, no two drops of water are exactly alike. Together with sufficient reason, it grounds individuality in Leibniz's system.",
+    "relatedWorks": [
+      "discourse-on-metaphysics",
+      "monadology"
+    ],
+    "relatedConcepts": [
+      "individual-substance",
+      "sufficient-reason"
+    ]
+  },
+  {
+    "slug": "vis-viva",
+    "term": "Vis viva (living force)",
+    "short": "Leibniz's correction to Descartes: force is mv², not mv.",
+    "definition": "Against the Cartesian conservation of 'quantity of motion' (mv), Leibniz showed that what is conserved in nature is motive force measured by mass times velocity squared — later formalized as kinetic energy. The dispute split European physics for decades and is one of his deepest scientific legacies.",
+    "relatedWorks": [],
+    "relatedConcepts": [
+      "calculus-infinitesimalis"
+    ]
+  },
+  {
+    "slug": "calculus-infinitesimalis",
+    "term": "Calculus",
+    "short": "The differential and integral calculus, invented in Paris in 1675.",
+    "definition": "Leibniz invented the infinitesimal calculus independently of Newton, and published first — with the notation (d, ∫, dx) that mathematics still uses. His insistence on good notation was itself a philosophy: symbols should mirror the structure of thought.",
+    "relatedWorks": [],
+    "relatedConcepts": [
+      "characteristica-universalis"
+    ]
+  },
+  {
+    "slug": "characteristica-universalis",
+    "term": "Characteristica universalis",
+    "short": "A universal formal language in which reasoning could be computed.",
+    "definition": "Leibniz's life project: an alphabet of human thoughts in which all concepts decompose into primitives, so that any dispute could be settled by calculation — 'Calculemus.' Binary arithmetic, which he championed, was one fragment of this dream; modern symbolic logic and computation are its descendants.",
+    "relatedWorks": [],
+    "relatedConcepts": [
+      "calculus-infinitesimalis"
+    ]
+  },
+  {
+    "slug": "optimism-and-theodicy",
+    "term": "The best of all possible worlds",
+    "short": "This world is optimal on the whole — evil notwithstanding.",
+    "definition": "The claim that God, constrained by the essences of things, actualizes the greatest possible net good: a world with evil and disorder can still be the best achievable one. Leibniz defended this publicly in the Théodicée (1710) against Pierre Bayle, arguing that to demand a world without any evil is to demand a different mathematics of goods.",
+    "relatedWorks": [
+      "discourse-on-metaphysics",
+      "monadology",
+      "theodicy",
+      "on-the-ultimate-origin",
+      "abridgment-of-theodicy"
+    ],
+    "relatedConcepts": [
+      "principle-of-the-best",
+      "pre-established-harmony"
+    ]
+  },
+  {
+    "slug": "vinculum-substantiale",
+    "term": "Vinculum substantiale",
+    "short": "The substantial bond uniting monads in a real compound.",
+    "definition": "In the late correspondence with Des Bosses, Leibniz explored whether an 'a substantial chain' makes an aggregate of monads into one real being — a rare moment where he considered real composition above the monad itself, later seized on by Russell and others as a fundamental instability of the system.",
+    "relatedWorks": [
+      "monadology"
+    ],
+    "relatedConcepts": [
+      "monad"
+    ]
+  },
+  {
+    "slug": "freedom-and-necessity",
+    "term": "Freedom and necessity",
+    "short": "To be bound by the consideration of good is to be free, not compelled.",
+    "definition": "Leibniz's central move against Bayle: God and humans are morally, not metaphysically, necessitated. Wisdom's choice is certain without being compulsory — the decrees of God incline without necessitating, which preserves both divine justice and human responsibility.",
+    "relatedWorks": [
+      "theodicy",
+      "necessity-and-contingency"
+    ],
+    "relatedConcepts": [
+      "optimism-and-theodicy",
+      "sufficient-reason"
+    ]
+  }
+]

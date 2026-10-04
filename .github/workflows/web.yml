@@ -1,0 +1,38 @@
+name: Web app (apps/web)
+
+# Ported from the former 4leibniz-web repository's CI when the app moved
+# into apps/web (2026-10-03). Runs only when the app or this file changes.
+on:
+  push:
+    branches: [main]
+    paths: ['apps/web/**', '.github/workflows/web.yml']
+  pull_request:
+    paths: ['apps/web/**', '.github/workflows/web.yml']
+
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build

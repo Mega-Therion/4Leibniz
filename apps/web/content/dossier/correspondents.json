@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "antoine-arnauld",
+    "name": "Antoine Arnauld",
+    "dates": "1612–1694",
+    "relation": "Theologian and philosopher; correspondent, 1686–1690",
+    "summary": "The Jansenist theologian of Port-Royal — 'the great Arnauld' — to whom Leibniz sent a summary of the Discourse on Metaphysics in 1686. Arnauld's sharp objections forced Leibniz to clarify individual substance, expression, and the sense in which everything that happens to a person is contained in their complete concept. Their exchange is one of the most consequential correspondences in the history of philosophy."
+  },
+  {
+    "slug": "samuel-clarke",
+    "name": "Samuel Clarke",
+    "dates": "1675–1729",
+    "relation": "Philosopher and divine; correspondent, 1715–1716",
+    "summary": "Newton's philosophical champion and Leibniz's last major opponent. Their 1715–16 correspondence — on space as the sensorium of God, time, miracles, and the soul — pits Clarke's Newtonian theology against Leibniz's principle of sufficient reason. The exchange ends with Leibniz's death in November 1716."
+  },
+  {
+    "slug": "christian-wolff",
+    "name": "Christian Wolff",
+    "dates": "1679–1754",
+    "relation": "Disciple and systematizer; correspondent from 1704",
+    "summary": "The German school philosopher whose textbooks carried Leibniz's ideas into the universities of Europe. Leibniz encouraged and corrected Wolff's system, and Wolff's rationalist school — 'the Leibniz-Wolff philosophy' — dominated German thought until Kant."
+  },
+  {
+    "slug": "sophia-of-hanover",
+    "name": "Sophia, Electress of Hanover",
+    "dates": "1630–1714",
+    "relation": "Patron and intellectual companion; correspondent, 1696–1714",
+    "summary": "Granddaughter of James I, heir to the British crown, and the most intellectually serious of Leibniz's royal patrons. Their letters on predestination, free will, and the immortality of the soul are among Leibniz's warmest and most careful philosophical writing. He also tutored her daughter, Queen Sophia Charlotte of Prussia."
+  },
+  {
+    "slug": "johann-bernoulli",
+    "name": "Johann Bernoulli",
+    "dates": "1667–1748",
+    "relation": "Mathematician; correspondent, 1694–1716",
+    "summary": "The Swiss mathematician who became Leibniz's most important ally in the calculus wars. Bernoulli pushed the new calculus to its limits, supplied Leibniz with key results against the Newtonians, and (with his brother Jakob) built the continental school that vindicated Leibniz's notation."
+  },
+  {
+    "slug": "ehrenfried-tschirnhaus",
+    "name": "Ehrenfried Walther von Tschirnhaus",
+    "dates": "1651–1708",
+    "relation": "Mathematician and experimenter; correspondent, 1675–1708",
+    "summary": "Fellow traveler from the Paris years and one of Leibniz's earliest mathematical correspondents. Their letters — on algebra, the method of universal science, and porcelain experiments — show Leibniz thinking aloud about method itself."
+  },
+  {
+    "slug": "burchard-de-volder",
+    "name": "Burchard de Volder",
+    "dates": "1643–1709",
+    "relation": "Physicist of Leiden; correspondent, 1698–1706",
+    "summary": "The Leiden experimental philosopher whose skeptical probing of Leibniz's letters forced some of Leibniz's clearest mature statements on force, substance, and the machinery of nature — a correspondence crucial to the development of the 'New System.'"
+  },
+  {
+    "slug": "bartolomeu-des-bosses",
+    "name": "Bartolomeo Des Bosses",
+    "dates": "1668–1738",
+    "relation": "Jesuit theologian; correspondent, 1704–1716",
+    "summary": "The Jesuit to whom Leibniz confided his most speculative late thoughts — including the vinculum substantiale, the substantial bond that might make monads into one real compound. Their correspondence is the essential window into the final metaphysics."
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "slug": "discourse-on-metaphysics",
+  "title": "Discourse on Metaphysics",
+  "altTitle": "Discours de métaphysique",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1686",
+  "dateStart": 1686,
+  "dateEnd": 1686,
+  "translator": "George Redington Montgomery (1908)",
+  "summary": "Leibniz's first full statement of his mature metaphysics, drafted in 1686 and sent in summary to Antoine Arnauld — the beginning of the most famous philosophical correspondence of the century. God does everything in the most perfect way; each individual substance expresses the whole universe from its own point of view; our ideas are not blank tablets but inner dispositions; and final and efficient causes are two ways of telling one truth.",
+  "sourceNote": "Seed text: the public-domain Montgomery translation (Open Court, 1908), as digitized on Wikisource from the Leibniz, Discourse on Metaphysics etc. (1908) scan, pages 28–88. The archive will replace this with its own critical transcription and re-translation as the editorial program advances.",
+  "editorialNote": "All 37 sections carry stable anchors (§I–§XXXVII). The text was machine-extracted from the digitized scan and lightly proofed; apparatus from the print edition (footnotes, page breaks) is not reproduced. The French original (Lestienne edition) awaits section-level alignment before side-by-side reading can be enabled for this work.",
+  "featured": true,
+  "published": true,
+  "themes": ["metaphysics", "optimism-theodicy", "substance", "perfection", "harmony"],
+  "relatedConcepts": ["principle-of-the-best", "individual-substance", "sufficient-reason", "pre-established-harmony", "identity-of-indiscernibles"],
+  "entities": ["Antoine Arnauld"]
+}

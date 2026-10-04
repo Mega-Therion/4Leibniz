@@ -1,0 +1,29 @@
+{
+  "sections": [
+    {
+      "label": "1",
+      "title": "First Reply — An Answer to Mr. Leibniz's First Paper",
+      "anchor": "1"
+    },
+    {
+      "label": "2",
+      "title": "Second Reply — An Answer to Mr. Leibniz's Second Paper",
+      "anchor": "2"
+    },
+    {
+      "label": "3",
+      "title": "Third Reply — An Answer to Mr. Leibniz's Third Paper",
+      "anchor": "3"
+    },
+    {
+      "label": "4",
+      "title": "Fourth Reply — An Answer to Mr. Leibniz's Fourth Paper",
+      "anchor": "4"
+    },
+    {
+      "label": "5",
+      "title": "Fifth Reply — An Answer to Mr. Leibniz's Fifth Paper",
+      "anchor": "5"
+    }
+  ]
+}

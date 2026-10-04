@@ -1,0 +1,27 @@
+{
+  "slug": "new-essays-on-human-understanding",
+  "title": "New Essays on Human Understanding",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1704",
+  "dateStart": 1704,
+  "dateEnd": 1704,
+  "translator": "Alfred Gideon Langley",
+  "summary": "Leibniz's longest work: a chapter-by-chapter dialogue with Locke's Essay Concerning Human Understanding, between Philalethes (Locke's spokesman) and Theophilus (Leibniz). Innate ideas, substance, personal identity, freedom, words, and the degrees of knowledge — the fullest statement of his epistemology, left unpublished at his death.",
+  "sourceNote": "Seed text: A. G. Langley, New Essays Concerning Human Understanding (Open Court, 1896), translated from Gerhardt's Die Philosophischen Schriften vol. V; OCR transcription from the archive.org scan (cu31924032296422), US public domain. Preface and all sixty-eight chapters of Leibniz's text; the translator's introduction and appendix of minor pieces are excluded.",
+  "editorialNote": "Scanned-source OCR with systematic letter confusions (e.g. \"DUEATION\" for \"duration\"); a correction pass against the print edition is scheduled. Two chapter headers dropped in the source transcription (II.25, IV.6) were estimated at midpoint boundaries and flagged for verification. Sections carry stable anchors: Preface, I.1–I.3, II.1–II.33, III.1–III.11, IV.1–IV.21.",
+  "featured": true,
+  "published": true,
+  "themes": [
+    "metaphysics",
+    "rationalism",
+    "mind-and-nature"
+  ],
+  "relatedConcepts": [
+    "sufficient-reason",
+    "monad",
+    "individual-substance"
+  ],
+  "entities": []
+}

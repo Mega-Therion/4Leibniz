@@ -1,0 +1,20 @@
+{
+  "repo": "4leibniz-web",
+  "schema_version": "1.0.0",
+  "invariants": [
+    {
+      "id": "formal-claims-contract",
+      "cmd": "npm run --silent test:contract",
+      "required": true,
+      "timeout": 900,
+      "why": "the consumer gate: only catalog `proved` entries can ever render a proved badge, every proved claim must carry verification with sorries=0 and a 40-hex commit, and statuses are a controlled vocabulary"
+    },
+    {
+      "id": "upstream-freshness",
+      "cmd": "python3 scripts/check_upstream_freshness.py",
+      "required": true,
+      "timeout": 120,
+      "why": "the contract test proves the snapshot is internally sound but cannot see whether it still matches what 4Leibniz publishes. A self-consistent snapshot can be months stale, which is exactly how a displayed 'proved' badge outlives its proof. SKIPs loudly when no upstream checkout is reachable rather than inventing confidence"
+    }
+  ]
+}

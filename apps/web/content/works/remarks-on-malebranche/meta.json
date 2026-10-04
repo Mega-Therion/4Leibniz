@@ -1,0 +1,21 @@
+{
+  "slug": "remarks-on-malebranche",
+  "title": "Remarks on the Doctrine of Malebranche",
+  "language": "en",
+  "originalLanguage": "fr",
+  "status": "translated",
+  "dateLabel": "1708",
+  "dateStart": 1708,
+  "dateEnd": 1708,
+  "translator": "George Martin Duncan",
+  "summary": "Remarks prompted by Locke's Examination of Malebranche: visions in God, occasional causes, and the errors they share.",
+  "sourceNote": "Seed text: G. M. Duncan, The Philosophical Works of Leibnitz (New Haven, 1908), translated from the French; OCR transcription from the archive.org scan (worksofleibniz00leibuoft), US public domain.",
+  "editorialNote": "Scanned-source OCR: minor transcription artifacts remain; a correction pass against the print edition is scheduled. Section anchors are stable.",
+  "featured": false,
+  "published": true,
+  "themes": [
+    "metaphysics"
+  ],
+  "relatedConcepts": [],
+  "entities": []
+}
