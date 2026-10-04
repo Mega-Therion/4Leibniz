@@ -98,8 +98,9 @@ We have audited the existing FIG Tree / Chyren corpus. The following **5 major u
 
 ### 4. Completion of *La Monadologie* (The Holographic Network Equations)
 * **What Leibniz Left Unfinished:** In 1714, Leibniz stated that every Monad mirrors the whole universe, but lacked the mathematics of horizon thermodynamics.
-* **Our Corpus Solution:** We derive the parameter-free cosmic acceleration scale directly from the Rindler/Hubble horizon boundary:
-  $$\boxed{a_0 = \frac{c H_0}{2\pi}}$$
+* **Our Corpus Proposal:** We relate the cosmic acceleration scale to the Rindler/Hubble horizon boundary:
+  $$a_0 \approx \frac{c H_0}{2\pi}$$
+  The closeness of the measured $a_0$ to this value is an observation, not a derivation: the $2\pi$ is declared, not proved (see Res-Nova).
   Every local observer (Monad) perceives bulk dynamics through the information tension projected from its cosmic horizon boundary.
 
 ---
