@@ -54,7 +54,7 @@ This dataset contains machine-checked Lean 4 formalizations, relational informat
 - **GitHub Source of Truth**: [https://github.com/Mega-Therion/4Leibniz](https://github.com/Mega-Therion/4Leibniz)
 - **Living Archive Web**: [https://github.com/Mega-Therion/4leibniz-web](https://github.com/Mega-Therion/4leibniz-web)
 - **Leibniz Companion**: [https://github.com/Mega-Therion/leibniz-oracle](https://github.com/Mega-Therion/leibniz-oracle)
-- **Research Atlas**: [https://resnova-hub-f4ucvy3e.manus.space](https://resnova-hub-f4ucvy3e.manus.space)
+- **Research Atlas**: [https://res-nova-atlas.vercel.app](https://res-nova-atlas.vercel.app)
 - **Author**: R.W. Yett ([ORCID: 0009-0001-1303-7190](https://orcid.org/0009-0001-1303-7190))
 - **LinkedIn**: [R.W. Yett](https://www.linkedin.com/in/r-w-yett/)
 - **X (Twitter)**: [@_ChyRho_](https://x.com/_chyrho_)
