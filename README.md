@@ -2,17 +2,23 @@
 
 [![Lean 4 Verification](https://github.com/Mega-Therion/4Leibniz/actions/workflows/verify.yml/badge.svg)](https://github.com/Mega-Therion/4Leibniz/actions/workflows/verify.yml)
 [![Lean 4: zero sorry](https://img.shields.io/badge/Lean_4-zero--sorry-brightgreen.svg)](scripts/check_sorries.py)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21539453.svg)](https://doi.org/10.5281/zenodo.21539453)
+[![Playground](https://img.shields.io/badge/site-four--leibniz.vercel.app-0070f3)](https://four-leibniz.vercel.app)
 
 <p align="left">
   <a href="https://huggingface.co/datasets/ChyRho/4leibniz"><img src="https://img.shields.io/badge/Hugging%20Face-ChyRho%2F4leibniz-FFD21E?style=flat-square&logo=huggingface&logoColor=black" alt="Hugging Face Dataset"></a>
   <a href="https://orcid.org/0009-0001-1303-7190"><img src="https://img.shields.io/badge/ORCID-0009--0001--1303--7190-A6CE39?style=flat-square&logo=orcid&logoColor=white" alt="ORCID"></a>
-  <a href="https://resnova-hub-f4ucvy3e.manus.space"><img src="https://img.shields.io/badge/Research%20Atlas-resnova--hub-0070f3?style=flat-square&logo=safari&logoColor=white" alt="Research Atlas"></a>
+  <a href="https://res-nova-atlas.vercel.app"><img src="https://img.shields.io/badge/Research%20Atlas-res--nova-0070f3?style=flat-square&logo=safari&logoColor=white" alt="Res Nova Atlas"></a>
   <a href="https://www.linkedin.com/in/r-w-yett/"><img src="https://img.shields.io/badge/LinkedIn-R.W._Yett-0A66C2?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
   <a href="https://x.com/_chyrho_"><img src="https://img.shields.io/badge/X-@__ChyRho__-000000?style=flat-square&logo=x&logoColor=white" alt="X"></a>
 </p>
 
-Formal Relational Information Geometry & Automated Verification in Lean 4 — Dedicated to Gottfried Wilhelm Leibniz.
+Formal relational information geometry and automated verification in Lean 4. Dedicated to Gottfried Wilhelm Leibniz.
+
+The library is the source of truth. A declaration is `proved` only when the pinned Lean toolchain compiles it with no `sorry` and no non-standard axiom. `scripts/check_sorries.py` scans `Leibniz/` for the `sorry` tactic. The web and oracle apps display those artifacts. They do not decide that a theorem is proved.
+
+One closed result, so it is not buried: `chiFloor = 1/√2` is a theorem, the equipartition bound of the vis viva (`Leibniz.VisViva.chiral_dominance_ge_floor`, `Leibniz.LexContinuitatis.chiFloor_is_dyadic_floor`). That is a statement about the formal dyad. It is not a physical measurement.
+
+This repository does not have its own Zenodo record. A badge here used to point at Res-Nova's concept DOI. That DOI now opens on a physics correction, not on this library.
 
 ![4Leibniz Formal Claim Flow](docs/visuals/formal-claim-flow.svg)
 
@@ -22,21 +28,19 @@ Formal Relational Information Geometry & Automated Verification in Lean 4 — De
 
 Two consumer applications live alongside the Lean library: [`apps/web`](apps/web/) (scholarly archive, formerly the `4leibniz-web` repository) and [`apps/oracle`](apps/oracle/) (interactive mobile guide, formerly `leibniz-oracle`), merged here on 2026-10-03. Both consume the versioned proof artifacts emitted by the Lean build. Neither maintains an independent theorem database or has authority to assert that a theorem is proved.
 
-## AI Safety & Scalable Oversight Utility
+## What the kernel checks, and what it does not
 
-Modern reinforcement learning from human/evaluator feedback (RLHF/RLAIF) is vulnerable to *sycophancy* and *vacuous theorem satisfaction*, where language models satisfy logical goals trivially (e.g., conditioning on $P \wedge \neg P$) or mirror false authoritative prompts.
+The Lean kernel rejects an unfinished proof and a `sorry`. It does not notice a true-but-vacuous statement, and it does not notice a statement that is not the one you meant. The witness check that catches `∀ a : Nat, a < 0 → a = 5` lives in the [deductive sycophancy pilot](https://github.com/Mega-Therion/deductive-sycophancy-pilot), not in this library.
 
-`4Leibniz` serves as a deterministic verification check for automated reasoning. The kernel rules out unelaborated and `sorry`-backed claims; on its own it cannot rule out a true-but-vacuous or mis-specified statement, which is what the antecedent checks below are for:
-- **Zero-Sorry Kernel Elaboration**: Every formal derivation is checked down to foundational proof terms via the Lean 4 kernel, eliminating unelaborated claims.
-- **Non-Vacuous Antecedent Enforcement**: Automated test suites check theorem hypotheses for non-trivial model witnesses, preventing models from exploiting the principle of explosion ($P \implies Q$ when $P \equiv \bot$).
-- **Machine-Verifiable Proof Receipts**: CI builds emit structured `proof-receipt.json` artifacts, providing tamper-evident telemetry for neuro-symbolic and process-reward oversight benchmarks.
+- **Zero `sorry` in `Leibniz/`.** `scripts/check_sorries.py` fails the build if the tactic appears.
+- **No second theorem database.** `apps/web` and `apps/oracle` read the exported artifacts. They cannot mark a claim proved.
+- **Receipts are build products.** A `proof-receipt.json` is only as current as the commit that wrote it. Do not treat a stale receipt hash as the present tree.
 
 ## Active Workstreams
 
-- **Open problem `chiral-floor` — CLOSED 2026-09-12**: the continuity floor `chiFloor = 1/√2` is derived from first principles as the equipartition bound of the vis viva (`Leibniz.VisViva.chiral_dominance_ge_floor`, `Leibniz.LexContinuitatis.chiFloor_is_dyadic_floor`): the stronger member of any dyad carries at least half the total living force, with equality exactly at equipartition. `chiFloor_lt_chiCeil` was promoted from a bare axiom to a theorem in the same pass.
-
-- **Issue #11**: Publish a proof-grounded formal-claim export for `apps/web` and `apps/oracle` (`artifacts/v1/formal-claims.json`).
-- **Issue #10**: Consume RYTT via `integration/4leibniz_bridge.json` — symbolic notation and interchange layer without forking the grammar.
+- **`chiral-floor` — closed 2026-09-12.** Stated above. `chiFloor_lt_chiCeil` was promoted from an axiom to a theorem in that pass.
+- **Issue #11 — closed.** `artifacts/v1/formal-claims.json` is the export `apps/web` and `apps/oracle` consume.
+- **Issue #10 — open.** Consume RYTT through `integration/4leibniz_bridge.json`. Do not fork the grammar.
 
 ## Architecture
 
