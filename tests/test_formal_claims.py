@@ -172,7 +172,7 @@ class TestGeneratorGate:
             gen.shutil.which = lambda name: "/usr/bin/" + name
             built = gen.build_claims("0" * 40, "test-toolchain", use_lean=True)
             assert built["verification_record"]["lake_build_exit_code"] is None
-            assert "could not start" in built["verification_record"]["build_error"]
+            assert "could not start" in built["verification_record"]["notes"]
             assert all(c["status"] != "proved" for c in built["claims"])
         finally:
             gen.run = original_run
