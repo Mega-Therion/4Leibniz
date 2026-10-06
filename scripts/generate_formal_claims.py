@@ -464,7 +464,6 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
     record = {
         "lean_available": lean_available_now,
         "lake_build_exit_code": lake_build_exit,
-        "build_error": build_error,
         "sorries": sum(m["sorries"] for m in elaboration.values()),
         "notes": (
             ("The pinned Lean toolchain was available. Proved claims require a "
