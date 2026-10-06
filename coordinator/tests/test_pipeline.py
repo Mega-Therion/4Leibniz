@@ -18,6 +18,15 @@ def test_slicer_and_candidate_header(tmp_path):
     assert "normalization_policy: diplomatic-literal" in content
 
 
+def test_queue_claim_is_single_consumer(tmp_path):
+    queue = QueueManager(tmp_path / "claims.sqlite")
+    queue.enqueue("job-1", JobType.HTR_TRANSCRIPTION, {"text": "Veritas"})
+    first = queue.claim("worker-a")
+    second = queue.claim("worker-b")
+    assert first["unit_id"] == "job-1"
+    assert second is None
+
+
 def test_queue_requires_three_matching_workers(tmp_path):
     """Three INDEPENDENT workers, evidenced by three distinct admitted keys.
 
