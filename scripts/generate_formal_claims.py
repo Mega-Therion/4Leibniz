@@ -454,8 +454,9 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
         "lake_build_exit_code": lake_build_exit,
         "sorries": sum(m["sorries"] for m in elaboration.values()),
         "notes": (
-            ("All theorem claims were grounded by running the pinned Lean toolchain "
-             "(lake build + per-module elaboration + #print axioms per declaration)."
+            ("The pinned Lean toolchain was available. Proved claims require a "
+             "successful project-wide lake build, clean per-module elaboration, and "
+             "#print axioms per declaration."
              + exclusion_note)
             if lean_available_now else
             ("Lean toolchain unavailable in this run: theorem claims could not be "
