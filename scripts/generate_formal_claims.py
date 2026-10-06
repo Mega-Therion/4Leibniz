@@ -296,13 +296,25 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
     axiom_reports: dict[str, dict] = {}
     lean_available_now = use_lean and lean_available()
     lake_build_exit: int | None = None
+    build_error: str | None = None
     if lean_available_now:
-        build = run(["lake", "build"])
-        lake_build_exit = build.returncode
-        if lake_build_exit != 0:
-            sys.stderr.write("lake build failed; refusing to ground any 'proved' status.\n")
-            sys.stderr.write(build.stdout[-2000:] + build.stderr[-2000:])
-        elaboration = elaborate_modules()
+        try:
+            build = run(["lake", "build"])
+            lake_build_exit = build.returncode
+            if lake_build_exit != 0:
+                sys.stderr.write("lake build failed; refusing to ground any 'proved' status.\n")
+                sys.stderr.write(build.stdout[-2000:] + build.stderr[-2000:])
+            elaboration = elaborate_modules()
+        except FileNotFoundError as exc:
+            # Discovery can race with process creation if the toolchain PATH
+            # changes between lean_available() and subprocess execution.
+            lake_build_exit = None
+            build_error = f"lake build could not start: {exc}"
+            sys.stderr.write(build_error + "\n")
+        except subprocess.TimeoutExpired as exc:
+            lake_build_exit = None
+            build_error = f"lake build was interrupted by timeout: {exc}"
+            sys.stderr.write(build_error + "\n")
         by_module: dict[str, list[str]] = {}
         for d in all_decls:
             if d["kind"] == "theorem":
@@ -452,11 +464,13 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
     record = {
         "lean_available": lean_available_now,
         "lake_build_exit_code": lake_build_exit,
+        "build_error": build_error,
         "sorries": sum(m["sorries"] for m in elaboration.values()),
         "notes": (
             ("The pinned Lean toolchain was available. Proved claims require a "
              "successful project-wide lake build, clean per-module elaboration, and "
              "#print axioms per declaration."
+             + (f" Build error: {build_error}." if build_error else "")
              + exclusion_note)
             if lean_available_now else
             ("Lean toolchain unavailable in this run: theorem claims could not be "
