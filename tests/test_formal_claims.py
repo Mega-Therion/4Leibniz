@@ -160,6 +160,24 @@ class TestGeneratorGate:
             {"ok": True, "axioms": ["propext", "Classical.choice", "Quot.sound"]}, 0, 0)
         assert (status, assumptions) == ("proved", [])
 
+    def test_build_launch_failure_cannot_prove(self, gen):
+        original_run = gen.run
+        original_elaborate = gen.elaborate_modules
+        try:
+            def fail_to_start(cmd, cwd=None):
+                raise FileNotFoundError(2, "No such file or directory", cmd[0])
+            gen.run = fail_to_start
+            gen.elaborate_modules = lambda: (_ for _ in ()).throw(
+                AssertionError("elaboration must not run after build launch failure"))
+            gen.shutil.which = lambda name: "/usr/bin/" + name
+            built = gen.build_claims("0" * 40, "test-toolchain", use_lean=True)
+            assert built["verification_record"]["lake_build_exit_code"] is None
+            assert "could not start" in built["verification_record"]["build_error"]
+            assert all(c["status"] != "proved" for c in built["claims"])
+        finally:
+            gen.run = original_run
+            gen.elaborate_modules = original_elaborate
+
     def test_failed_global_build_cannot_prove(self, gen):
         # A declaration-level check is insufficient evidence if the canonical
         # project build failed. build_claims must force the same fail-closed gate.
