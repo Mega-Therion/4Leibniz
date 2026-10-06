@@ -295,9 +295,11 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
     elaboration: dict[str, dict] = {}
     axiom_reports: dict[str, dict] = {}
     lean_available_now = use_lean and lean_available()
+    lake_build_exit: int | None = None
     if lean_available_now:
         build = run(["lake", "build"])
-        if build.returncode != 0:
+        lake_build_exit = build.returncode
+        if lake_build_exit != 0:
             sys.stderr.write("lake build failed; refusing to ground any 'proved' status.\n")
             sys.stderr.write(build.stdout[-2000:] + build.stderr[-2000:])
         elaboration = elaborate_modules()
@@ -349,7 +351,11 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
         mod_exec = elaboration.get(mod_rel, {"exit": None, "sorries": 0})
         report = axiom_reports.get(d["full_name"],
                                    {"ok": False, "axioms": [], "error": "missing report"})
-        status, assumptions = decide_status(report, mod_exec["exit"], mod_exec["sorries"])
+        status, assumptions = decide_status(
+            report,
+            mod_exec["exit"] if lake_build_exit == 0 else 1,
+            mod_exec["sorries"],
+        )
         if status is None:
             excluded.append(f"{d['full_name']} ({report.get('error') or 'module elaboration failed'})")
             continue
@@ -445,7 +451,7 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
         exclusion_note = ""
     record = {
         "lean_available": lean_available_now,
-        "lake_build_exit_code": None,
+        "lake_build_exit_code": lake_build_exit,
         "sorries": sum(m["sorries"] for m in elaboration.values()),
         "notes": (
             ("All theorem claims were grounded by running the pinned Lean toolchain "
@@ -457,9 +463,6 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
              "axioms are extracted statically and included honestly."
              + exclusion_note)),
     }
-    if lean_available_now:
-        record["lake_build_exit_code"] = run(["lake", "build"]).returncode
-
     return {"claims": claims, "verification_record": record, "excluded": excluded,
             "lean_was_used": lean_available_now}
 
@@ -503,7 +506,9 @@ def main() -> int:
         if epoch:
             generated_at = datetime.fromtimestamp(int(epoch), tz=timezone.utc).isoformat()
         else:
-            generated_at = datetime.now(timezone.utc).isoformat()
+            # Default to the pinned proof-source commit date so identical
+            # source/toolchain state produces identical catalog metadata.
+            generated_at = _author_date
 
     built = build_claims(commit, toolchain, use_lean=not args.no_lean)
     catalog = {
