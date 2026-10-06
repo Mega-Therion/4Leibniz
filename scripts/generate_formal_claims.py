@@ -9,9 +9,9 @@ Determinism and honesty rules (contracts/README.md has the full story):
 
 * The canonical claim list is a pure function of the checkout: declarations are
   extracted from Leibniz/**/*.lean, sorted by claim_id, and serialized with a
-  fixed shape. `generated_at` records when the verification run happened
-  (UTC); --generated-at or SOURCE_DATE_EPOCH pin it deliberately for
-  reproducible CI runs.
+  fixed shape. `generated_at` is deterministic by default from the pinned
+  proof-source commit author date; --generated-at or SOURCE_DATE_EPOCH can
+  override it explicitly.
 
 * `proved` is emitted ONLY when the pinned Lean toolchain actually checked the
   declaration: `lake build` succeeded, the module elaborates without 'sorry',
