@@ -304,7 +304,13 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
             if lake_build_exit != 0:
                 sys.stderr.write("lake build failed; refusing to ground any 'proved' status.\n")
                 sys.stderr.write(build.stdout[-2000:] + build.stderr[-2000:])
-            elaboration = elaborate_modules()
+            if lake_build_exit == 0:
+                elaboration = elaborate_modules()
+                by_module: dict[str, list[str]] = {}
+                for d in all_decls:
+                    if d["kind"] == "theorem":
+                        by_module.setdefault(d["module"], []).append(d["full_name"])
+                axiom_reports = print_axioms(by_module)
         except FileNotFoundError as exc:
             # Discovery can race with process creation if the toolchain PATH
             # changes between lean_available() and subprocess execution.
@@ -315,12 +321,6 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
             lake_build_exit = None
             build_error = f"lake build was interrupted by timeout: {exc}"
             sys.stderr.write(build_error + "\n")
-        by_module: dict[str, list[str]] = {}
-        for d in all_decls:
-            if d["kind"] == "theorem":
-                by_module.setdefault(d["module"], []).append(d["full_name"])
-        axiom_reports = print_axioms(by_module)
-
     claims: list[dict] = []
     excluded: list[str] = []
 
