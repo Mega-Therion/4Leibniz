@@ -98,7 +98,11 @@ def emit_lean(ir: ArgumentIR) -> str:
     c = ir.claim
     assumptions = "\n".join(f"  (h{i} : {p.text})" for i, p in enumerate(c.premises, 1))
     source = f"\nSource: {c.source}" if c.source else ""
-    return (f"/-- Generated from Universal Calculus IR {ir.fingerprint}.{source} -/\n"
+    # Generated output is deliberately an unverified proof obligation. The
+    # marker is machine-readable so downstream tooling cannot mistake a
+    # skeleton for kernel evidence.
+    return (f"/-- Generated from Universal Calculus IR {ir.fingerprint}. UNVERIFIED PROOF OBLIGATION.{source} -/\n"
+            f"/- Verification status: unverified; this file is not proof evidence. -/\n"
             f"theorem {c.name}{' ' if assumptions else ''}{assumptions} : {c.conclusion} := by\n"
             f"  sorry\n")
 
