@@ -1,0 +1,38 @@
+@IMPORTS@
+import Lean
+open Lean Elab Command
+
+/-- constants reachable from a theorem's statement through definition bodies
+    and inductive types (proof bodies of theorems are not followed). -/
+partial def defClosure (env : Environment) (start : Array Name) : Array Name := Id.run do
+  let mut seen : NameSet := {}
+  let mut stack := start.toList
+  let mut out : Array Name := #[]
+  while !stack.isEmpty do
+    let n := stack.head!; stack := stack.tail!
+    if seen.contains n then continue
+    seen := seen.insert n
+    out := out.push n
+    match env.find? n with
+    | some (.defnInfo d) => stack := d.type.getUsedConstants.toList ++ d.value.getUsedConstants.toList ++ stack
+    | some (.inductInfo i) => stack := i.type.getUsedConstants.toList ++ i.ctors ++ stack
+    | some (.ctorInfo c) => stack := c.type.getUsedConstants.toList ++ stack
+    | some ci => stack := ci.type.getUsedConstants.toList ++ stack
+    | none => pure ()
+  return out
+
+#eval show CommandElabM Unit from do
+  let env ← getEnv
+  for t in [@THEOREMS@] do
+    let some ci := env.find? t | continue
+    let axs ← liftCoreM (Lean.collectAxioms t)
+    let clos := (defClosure env ci.type.getUsedConstants).qsort (·.toString < ·.toString)
+    let defsTxt := clos.map fun n => match env.find? n with
+      | some (.defnInfo d) => s!"{n}:{d.type}:={d.value}"
+      | some c => s!"{n}:{c.type}"
+      | none => s!"{n}:?"
+    IO.println (Json.compress (Json.mkObj [
+      ("theorem", toJson t.toString),
+      ("statement", toJson (toString ci.type)),
+      ("axioms", toJson (axs.map (·.toString) |>.qsort (· < ·))),
+      ("def_closure", toJson defsTxt)]))
