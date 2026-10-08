@@ -1,0 +1,81 @@
+{
+  "payload": {
+    "protocol": "vkernel/0.1",
+    "evidence_mode": "ci-run-countersigned",
+    "ci_run": "https://github.com/Mega-Therion/4Leibniz/actions/runs/37772759451",
+    "lean_toolchain": "leanprover/lean4:v4.34.0-rc2",
+    "source_commitment": "3d5c456ab90f048de339394fb3e2b9dea37abf5888effe3aca130a743f9e004f",
+    "build_exit": 0,
+    "probe_exit": 0,
+    "axiom_policy": "standard-3",
+    "theorems": [
+      {
+        "name": "Leibniz.VisViva.pars_viva_ge_half",
+        "statement_hash": "955a9a7d1f0c59fd77550aadbbbce8e02e7987a5b6587f542b04a2168883d0c4",
+        "statement_text": "forall {v₁ : Real} {v₂ : Real}, (LT.lt.{0} Real Real.instLT (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZero)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAdd) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (NPow.toPow.{0} Real (Monoid.toNPow.{0} Real Real.instMonoid))) v₁ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (NPow.toPow.{0} Real (Monoid.toNPow.{0} Real Real.instMonoid))) v₂ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) -> (LE.le.{0} Real Real.instLE (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOne)) (OfNat.ofNat.{0} Real 2 (instOfNatAtLeastTwo.{0} Real 2 Real.instNatCast (Nat.instAtLeastTwoHAddOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Nat.instNeZeroSucc (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))) (Leibniz.VisViva.parsViva v₁ v₂))",
+        "def_closure_hash": "0d4711c6a3199cbcbeafec37a66f92c99f8254de60d2ae596290c879ebd48c80",
+        "def_closure_size": 1141,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_policy_ok": true
+      },
+      {
+        "name": "Leibniz.VisViva.chiral_dominance_ge_floor",
+        "statement_hash": "a3eb4ccc2640c313da3d1ffe733b463915bfb9eb7130d3844bfa9a372bce96b5",
+        "statement_text": "forall {v₁ : Real} {v₂ : Real}, (LT.lt.{0} Real Real.instLT (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZero)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAdd) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (NPow.toPow.{0} Real (Monoid.toNPow.{0} Real Real.instMonoid))) v₁ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (NPow.toPow.{0} Real (Monoid.toNPow.{0} Real Real.instMonoid))) v₂ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) -> (LE.le.{0} Real Real.instLE (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOne)) (Real.sqrt (OfNat.ofNat.{0} Real 2 (instOfNatAtLeastTwo.{0} Real 2 Real.instNatCast (Nat.instAtLeastTwoHAddOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Nat.instNeZeroSucc (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))))) (Leibniz.VisViva.dominatioChiralis v₁ v₂))",
+        "def_closure_hash": "24aaf6c7e34ec904551039efe5acce2f0c1b7ae98e8568a5dbb433a1e84ad6f1",
+        "def_closure_size": 1406,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_policy_ok": true
+      },
+      {
+        "name": "Leibniz.VisViva.chiral_dominance_eq_floor_iff",
+        "statement_hash": "2acb95f7ffe790b65e1f42ff84dc191a451b98f628514c963bef8375e8612a0c",
+        "statement_text": "forall {v₁ : Real} {v₂ : Real}, (LT.lt.{0} Real Real.instLT (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZero)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAdd) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (NPow.toPow.{0} Real (Monoid.toNPow.{0} Real Real.instMonoid))) v₁ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (NPow.toPow.{0} Real (Monoid.toNPow.{0} Real Real.instMonoid))) v₂ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) -> (Iff (Eq.{1} Real (Leibniz.VisViva.dominatioChiralis v₁ v₂) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOne)) (Real.sqrt (OfNat.ofNat.{0} Real 2 (instOfNatAtLeastTwo.{0} Real 2 Real.instNatCast (Nat.instAtLeastTwoHAddOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Nat.instNeZeroSucc (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))))) (Eq.{1} Real (abs.{0} Real Real.lattice Real.instAddGroup v₁) (abs.{0} Real Real.lattice Real.instAddGroup v₂)))",
+        "def_closure_hash": "24aaf6c7e34ec904551039efe5acce2f0c1b7ae98e8568a5dbb433a1e84ad6f1",
+        "def_closure_size": 1406,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_policy_ok": true
+      },
+      {
+        "name": "Leibniz.VisViva.chiral_dominance_floor_attained",
+        "statement_hash": "125c1c42d5222511bc70221e83708f27bb53f66fe544470962084be44cff8381",
+        "statement_text": "Eq.{1} Real (Leibniz.VisViva.dominatioChiralis (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOne)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOne))) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOne)) (Real.sqrt (OfNat.ofNat.{0} Real 2 (instOfNatAtLeastTwo.{0} Real 2 Real.instNatCast (Nat.instAtLeastTwoHAddOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Nat.instNeZeroSucc (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))))",
+        "def_closure_hash": "24aaf6c7e34ec904551039efe5acce2f0c1b7ae98e8568a5dbb433a1e84ad6f1",
+        "def_closure_size": 1406,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "axiom_policy_ok": true
+      }
+    ],
+    "missing_theorems": [],
+    "statement_match": "not-checked",
+    "nonvacuity": "not-established",
+    "independent_checker": "leanchecker",
+    "checker_runs": [
+      {
+        "module": "Leibniz.VisViva",
+        "exit": 0,
+        "clean_output": true,
+        "ok": true
+      }
+    ],
+    "formal_result": "accepted",
+    "signer": "9049bf248ade5fc5719ae3016fbf5535496d7331fc63a3727d5ddfaec3718384"
+  },
+  "signature": "09ea54dbd0ced76a154d9f087803b57a8ac85fc89020135b2bd781fe7289ffb98e1187063edc944dbd654b8e0ba1029dc7ff01a855a838981eeef9158d952c0b"
+}
