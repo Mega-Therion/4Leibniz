@@ -28,6 +28,10 @@ def main() -> int:
     if p["missing_theorems"]: fails.append(f"missing {p['missing_theorems']}")
     for t in p["theorems"]:
         if not t["axiom_policy_ok"]: fails.append(f"{t['name']} axioms {t['axioms']} violate {p['axiom_policy']}")
+    for c in p.get("checker_runs", []):
+        if not c["ok"]: fails.append(f"leanchecker failed on {c['module']}")
+    if "--require-checker" in sys.argv and p.get("independent_checker", "not-run") == "not-run":
+        fails.append("independent checker required but not run")
     if "--source" in sys.argv:
         src = Path(sys.argv[sys.argv.index("--source") + 1])
         if source_commitment(src) != p["source_commitment"]: fails.append("source commitment mismatch")

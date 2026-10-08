@@ -10,7 +10,7 @@ A consumer can check a record **without Lean, Lake or Mathlib**: `verify.py` nee
 ## What a record does NOT establish (fields say so explicitly)
 - `evidence_mode: signed-service`: a signature says the key holder asserts the run happened. It is not a proof that the run happened.
 - `statement_match: not-checked`: no comparison against a trusted challenge statement (Lean `comparator`) yet.
-- `independent_checker: not-run`: no `lean4checker` / `nanoda` replay yet.
+- `independent_checker`: `leanchecker` (bundled with the toolchain) replays the stored declarations of each module in `check_modules`. It is the same kernel implementation re-run, not an independent one; a second kernel (nanoda) is not wired. **leanchecker can print `uncaught exception` and still exit 0**, so any output counts as failure.
 - `nonvacuity: not-established`: never inferred automatically. A tautology or an impossible premise passes every check here.
 - No tier. The record never says `[P]`; the consumer's policy decides.
 
@@ -20,11 +20,11 @@ A consumer can check a record **without Lean, Lake or Mathlib**: `verify.py` nee
     python3 scripts/vkernel/verify.py proof-record.json scripts/vkernel/trusted_signers.json --source .
 
 ## Tests
-`scripts/vkernel/test_vkernel.sh` runs on a temp copy of `fixture/` (Lean v4.33.0-rc1, no Mathlib) with a throwaway key. All 8 checks must PASS:
-clean accepted / verifies; custom axiom, `sorry`, missing theorem rejected; tampered payload, foreign signer, edited source fail.
+`scripts/vkernel/test_vkernel.sh` runs on a temp copy of `fixture/` (Lean v4.33.0-rc1, no Mathlib) with a throwaway key. All 9 checks must PASS:
+clean accepted / verifies; custom axiom, `sorry`, missing theorem, leanchecker exception-with-exit-0 rejected; tampered payload, foreign signer, edited source fail.
 `fixture/Fix/Basic.lean` contains a deliberate `axiom` and `sorry`: they are the sabotage targets.
 
 ## Next (not built)
 1. `comparator` statement match against a trusted challenge file.
-2. `lean4checker` replay, recorded in `independent_checker`.
+2. A second, independent kernel (nanoda) for dual-kernel consensus.
 3. A local zk backend, benchmark-only. No paid proving networks, no on-chain verifier.

@@ -1,10 +1,15 @@
 {
-  "imports": ["Leibniz"],
+  "imports": [
+    "Leibniz"
+  ],
   "theorems": [
     "Leibniz.VisViva.pars_viva_ge_half",
     "Leibniz.VisViva.chiral_dominance_ge_floor",
     "Leibniz.VisViva.chiral_dominance_eq_floor_iff",
     "Leibniz.VisViva.chiral_dominance_floor_attained"
   ],
-  "axiom_policy": "standard-3"
+  "axiom_policy": "standard-3",
+  "check_modules": [
+    "Leibniz.VisViva"
+  ]
 }

@@ -53,6 +53,16 @@ def main() -> int:
     finally:
         probe.unlink()
 
+    # Independent replay of the stored declarations through leanchecker.
+    # leanchecker can print "uncaught exception" and still exit 0, so any output counts as failure.
+    checks = []
+    for mod in cfg.get("check_modules", []):
+        args = ["lake", "env", "leanchecker"] + (["--fresh"] if cfg.get("checker_fresh") else []) + [mod]
+        c = subprocess.run(args, cwd=root, capture_output=True, text=True)
+        out_txt = (c.stdout + c.stderr).strip()
+        checks.append({"module": mod, "exit": c.returncode, "clean_output": out_txt == "",
+                       "ok": c.returncode == 0 and out_txt == ""})
+
     theorems = []
     for line in run.stdout.splitlines():
         if not line.startswith("{"): continue
@@ -82,9 +92,11 @@ def main() -> int:
         "missing_theorems": missing,
         "statement_match": "not-checked",   # comparator vs trusted challenge: not wired yet
         "nonvacuity": "not-established",    # never inferred automatically
-        "independent_checker": "not-run",   # lean4checker / nanoda: not wired yet
+        "independent_checker": ("leanchecker" + (" --fresh" if cfg.get("checker_fresh") else "")) if checks else "not-run",
+        "checker_runs": checks,
         "formal_result": "accepted" if (build.returncode == 0 and run.returncode == 0 and not missing
-                                         and all(t["axiom_policy_ok"] for t in theorems)) else "rejected",
+                                         and all(t["axiom_policy_ok"] for t in theorems)
+                                         and all(c["ok"] for c in checks)) else "rejected",
         "signer": sk.verify_key.encode().hex(),
     }
     record = {"payload": payload, "signature": sk.sign(canon(payload)).signature.hex()}
