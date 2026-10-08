@@ -35,11 +35,30 @@ class QueueManager:
         if kind not in JOB_TYPES: raise ValueError(f"unknown job type: {kind}")
         with self._connect() as db: db.execute("INSERT OR IGNORE INTO jobs VALUES (?, ?, ?, 'pending', NULL, NULL, ?)", (unit_id, kind, json.dumps(payload, sort_keys=True), time.time()))
     def claim(self, worker_id: str) -> dict[str, Any] | None:
+        if not worker_id or len(worker_id) > 256:
+            raise ValueError("worker_id must be 1-256 characters")
         with self._connect() as db:
-            row = db.execute("SELECT * FROM jobs WHERE status='pending' ORDER BY created_at LIMIT 1").fetchone()
-            if row is None: return None
-            db.execute("UPDATE jobs SET status='leased', lease_owner=? WHERE id=?", (worker_id, row['id']))
-            return {"unit_id": row['id'], "kind": row['kind'], "payload": json.loads(row['payload'])}
+            # Serialize claimers so two workers cannot SELECT the same pending
+            # row before either UPDATE commits. The previous SELECT→UPDATE pair
+            # was raceable under concurrent workers.
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute(
+                "SELECT * FROM jobs WHERE status='pending' ORDER BY created_at LIMIT 1"
+            ).fetchone()
+            if row is None:
+                return None
+            changed = db.execute(
+                "UPDATE jobs SET status='leased', lease_owner=? "
+                "WHERE id=? AND status='pending'",
+                (worker_id, row["id"]),
+            ).rowcount
+            if changed != 1:
+                return None
+            return {
+                "unit_id": row["id"],
+                "kind": row["kind"],
+                "payload": json.loads(row["payload"]),
+            }
     def requeue_unfinalized(self) -> int:
         with self._connect() as db:
             result = db.execute("UPDATE jobs SET status='pending', lease_owner=NULL WHERE status='leased'")

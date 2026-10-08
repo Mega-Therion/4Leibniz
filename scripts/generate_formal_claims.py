@@ -9,9 +9,9 @@ Determinism and honesty rules (contracts/README.md has the full story):
 
 * The canonical claim list is a pure function of the checkout: declarations are
   extracted from Leibniz/**/*.lean, sorted by claim_id, and serialized with a
-  fixed shape. `generated_at` records when the verification run happened
-  (UTC); --generated-at or SOURCE_DATE_EPOCH pin it deliberately for
-  reproducible CI runs.
+  fixed shape. `generated_at` is deterministic by default from the pinned
+  proof-source commit author date; --generated-at or SOURCE_DATE_EPOCH can
+  override it explicitly.
 
 * `proved` is emitted ONLY when the pinned Lean toolchain actually checked the
   declaration: `lake build` succeeded, the module elaborates without 'sorry',
@@ -295,18 +295,32 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
     elaboration: dict[str, dict] = {}
     axiom_reports: dict[str, dict] = {}
     lean_available_now = use_lean and lean_available()
+    lake_build_exit: int | None = None
+    build_error: str | None = None
     if lean_available_now:
-        build = run(["lake", "build"])
-        if build.returncode != 0:
-            sys.stderr.write("lake build failed; refusing to ground any 'proved' status.\n")
-            sys.stderr.write(build.stdout[-2000:] + build.stderr[-2000:])
-        elaboration = elaborate_modules()
-        by_module: dict[str, list[str]] = {}
-        for d in all_decls:
-            if d["kind"] == "theorem":
-                by_module.setdefault(d["module"], []).append(d["full_name"])
-        axiom_reports = print_axioms(by_module)
-
+        try:
+            build = run(["lake", "build"])
+            lake_build_exit = build.returncode
+            if lake_build_exit != 0:
+                sys.stderr.write("lake build failed; refusing to ground any 'proved' status.\n")
+                sys.stderr.write(build.stdout[-2000:] + build.stderr[-2000:])
+            if lake_build_exit == 0:
+                elaboration = elaborate_modules()
+                by_module: dict[str, list[str]] = {}
+                for d in all_decls:
+                    if d["kind"] == "theorem":
+                        by_module.setdefault(d["module"], []).append(d["full_name"])
+                axiom_reports = print_axioms(by_module)
+        except FileNotFoundError as exc:
+            # Discovery can race with process creation if the toolchain PATH
+            # changes between lean_available() and subprocess execution.
+            lake_build_exit = None
+            build_error = f"lake build could not start: {exc}"
+            sys.stderr.write(build_error + "\n")
+        except subprocess.TimeoutExpired as exc:
+            lake_build_exit = None
+            build_error = f"lake build was interrupted by timeout: {exc}"
+            sys.stderr.write(build_error + "\n")
     claims: list[dict] = []
     excluded: list[str] = []
 
@@ -349,7 +363,11 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
         mod_exec = elaboration.get(mod_rel, {"exit": None, "sorries": 0})
         report = axiom_reports.get(d["full_name"],
                                    {"ok": False, "axioms": [], "error": "missing report"})
-        status, assumptions = decide_status(report, mod_exec["exit"], mod_exec["sorries"])
+        status, assumptions = decide_status(
+            report,
+            mod_exec["exit"] if lake_build_exit == 0 else 1,
+            mod_exec["sorries"],
+        )
         if status is None:
             excluded.append(f"{d['full_name']} ({report.get('error') or 'module elaboration failed'})")
             continue
@@ -445,11 +463,13 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
         exclusion_note = ""
     record = {
         "lean_available": lean_available_now,
-        "lake_build_exit_code": None,
+        "lake_build_exit_code": lake_build_exit,
         "sorries": sum(m["sorries"] for m in elaboration.values()),
         "notes": (
-            ("All theorem claims were grounded by running the pinned Lean toolchain "
-             "(lake build + per-module elaboration + #print axioms per declaration)."
+            ("The pinned Lean toolchain was available. Proved claims require a "
+             "successful project-wide lake build, clean per-module elaboration, and "
+             "#print axioms per declaration."
+             + (f" Build error: {build_error}." if build_error else "")
              + exclusion_note)
             if lean_available_now else
             ("Lean toolchain unavailable in this run: theorem claims could not be "
@@ -457,9 +477,6 @@ def build_claims(commit: str, toolchain: str, use_lean: bool) -> dict:
              "axioms are extracted statically and included honestly."
              + exclusion_note)),
     }
-    if lean_available_now:
-        record["lake_build_exit_code"] = run(["lake", "build"]).returncode
-
     return {"claims": claims, "verification_record": record, "excluded": excluded,
             "lean_was_used": lean_available_now}
 
@@ -503,7 +520,9 @@ def main() -> int:
         if epoch:
             generated_at = datetime.fromtimestamp(int(epoch), tz=timezone.utc).isoformat()
         else:
-            generated_at = datetime.now(timezone.utc).isoformat()
+            # Default to the pinned proof-source commit date so identical
+            # source/toolchain state produces identical catalog metadata.
+            generated_at = _author_date
 
     built = build_claims(commit, toolchain, use_lean=not args.no_lean)
     catalog = {

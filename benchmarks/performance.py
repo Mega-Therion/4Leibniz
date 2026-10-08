@@ -27,6 +27,13 @@ def run(*, lean_timeout: int = 5) -> dict:
             lean_ok=proc.returncode==0
         except subprocess.TimeoutExpired:
             lean_ms=None; lean_ok=False; lean_available=False
+        except FileNotFoundError:
+            # PATH discovery can become stale between which() and process
+            # creation (for example when Lean is only installed in another job).
+            # Treat the backend as unavailable rather than failing the Python
+            # contract suite before it can report that fact.
+            lean_available = False
+            lean_ok = None
     backends=[{'name':'universal-calculus proof search','status':'available','mean_ms':round(sum(r['proof_search_ms'] for r in rows)/len(rows),3)},
               {'name':'bounded integer model search','status':'available','mean_ms':round(sum(r['bounded_model_ms'] for r in rows)/len(rows),3)},
               {'name':'Lean kernel build','status':'available' if lean_available else 'unavailable','mean_ms':lean_ms,'ok':lean_ok},

@@ -18,6 +18,8 @@ class UniversalCalculusTests(unittest.TestCase):
         result = compile_text(EXAMPLE.read_text())
         self.assertEqual(len(result["fingerprint"]), 64)
         self.assertIn("theorem Stability", result["lean"])
+        self.assertIn("UNVERIFIED PROOF OBLIGATION", result["lean"])
+        self.assertIn("Verification status: unverified", result["lean"])
         self.assertEqual(result["claim"]["source"], "Harmonia Praestabilita")
 
     def test_invalid_status_is_rejected(self):
