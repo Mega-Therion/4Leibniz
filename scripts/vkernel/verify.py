@@ -19,9 +19,12 @@ def main() -> int:
     rec = json.loads(Path(sys.argv[1]).read_text())
     trusted = set(json.loads(Path(sys.argv[2]).read_text())["ed25519"])
     p, fails = rec["payload"], []
-    try:
+    if not rec.get("signature") or not p.get("signer"):
+        fails.append("record is unsigned")
+    else:
+      try:
         VerifyKey(bytes.fromhex(p["signer"])).verify(canon(p), bytes.fromhex(rec["signature"]))
-    except (BadSignatureError, ValueError):
+      except (BadSignatureError, ValueError):
         fails.append("signature invalid")
     if p["signer"] not in trusted: fails.append("signer not trusted")
     if p["formal_result"] != "accepted": fails.append(f"formal_result={p['formal_result']}")

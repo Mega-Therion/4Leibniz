@@ -37,10 +37,11 @@ def main() -> int:
     root, cfg_path, out = Path(sys.argv[1]).resolve(), Path(sys.argv[2]), Path(sys.argv[3])
     cfg = json.loads(cfg_path.read_text())
     allowed = POLICIES[cfg["axiom_policy"]]
+    unsigned = "--unsigned" in sys.argv
     key_path = os.environ.get("VKERNEL_SIGNING_KEY")
-    if not key_path:
-        print("VKERNEL_SIGNING_KEY not set", file=sys.stderr); return 2
-    sk = SigningKey(Path(key_path).read_bytes())
+    if not key_path and not unsigned:
+        print("VKERNEL_SIGNING_KEY not set (use --unsigned in CI)", file=sys.stderr); return 2
+    sk = None if unsigned else SigningKey(Path(key_path).read_bytes())
 
     build = subprocess.run(["lake", "build"], cwd=root, capture_output=True, text=True)
     template = (HERE / "Probe.lean.in").read_text()
@@ -54,7 +55,7 @@ def main() -> int:
         probe.unlink()
 
     # Independent replay of the stored declarations through leanchecker.
-    # leanchecker can print "uncaught exception" and still exit 0, so any output counts as failure.
+    # Fail on nonzero exit OR any output (a clean leanchecker run is silent).
     checks = []
     for mod in cfg.get("check_modules", []):
         args = ["lake", "env", "leanchecker"] + (["--fresh"] if cfg.get("checker_fresh") else []) + [mod]
@@ -82,7 +83,9 @@ def main() -> int:
 
     payload = {
         "protocol": PROTOCOL,
-        "evidence_mode": "signed-service",
+        "evidence_mode": "ci-unsigned" if unsigned else "signed-service",
+        "ci_run": os.environ.get("GITHUB_SERVER_URL", "") + "/" + os.environ.get("GITHUB_REPOSITORY", "")
+                  + "/actions/runs/" + os.environ["GITHUB_RUN_ID"] if os.environ.get("GITHUB_RUN_ID") else None,
         "lean_toolchain": (root / "lean-toolchain").read_text().strip(),
         "source_commitment": source_commitment(root),
         "build_exit": build.returncode,
@@ -97,9 +100,9 @@ def main() -> int:
         "formal_result": "accepted" if (build.returncode == 0 and run.returncode == 0 and not missing
                                          and all(t["axiom_policy_ok"] for t in theorems)
                                          and all(c["ok"] for c in checks)) else "rejected",
-        "signer": sk.verify_key.encode().hex(),
+        "signer": None if unsigned else sk.verify_key.encode().hex(),
     }
-    record = {"payload": payload, "signature": sk.sign(canon(payload)).signature.hex()}
+    record = {"payload": payload, "signature": None if unsigned else sk.sign(canon(payload)).signature.hex()}
     out.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n")
     print(f"formal_result={payload['formal_result']} build_exit={build.returncode} probe_exit={run.returncode} "
           f"theorems={len(theorems)} missing={len(missing)}")

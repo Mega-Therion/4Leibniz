@@ -14,9 +14,14 @@ python3 "$H/verify.py" "$T/ok.json" "$T/trusted.json" --source "$T/fix" >/dev/nu
 cfg uses_axiom;  python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/r.json" >/dev/null; check "custom axiom rejected" 1 $?
 cfg uses_sorry;  python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/r.json" >/dev/null; check "sorry rejected" 1 $?
 cfg missing_thm; python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/r.json" >/dev/null; check "missing theorem rejected" 1 $?
-cfg ok Fix.NoSuchModule; python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/r.json" >/dev/null; check "leanchecker exception (exit 0) rejected" 1 $?
+cfg ok Fix.NoSuchModule; python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/r.json" >/dev/null; check "leanchecker failure rejected" 1 $?
 python3 -c "import json;r=json.load(open('$T/ok.json'));r['payload']['theorems'][0]['axioms']=['x'];json.dump(r,open('$T/t.json','w'))"
 python3 "$H/verify.py" "$T/t.json" "$T/trusted.json" >/dev/null; check "tampered payload fails" 1 $?
 python3 "$H/verify.py" "$T/ok.json" "$H/trusted_signers.json" >/dev/null; check "foreign signer fails" 1 $?
 echo "-- edit" >> "$T/fix/Fix/Basic.lean"; python3 "$H/verify.py" "$T/ok.json" "$T/trusted.json" --source "$T/fix" >/dev/null; check "edited source fails" 1 $?
+cfg ok; env -u VKERNEL_SIGNING_KEY python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/u.json" --unsigned >/dev/null; check "unsigned CI attest runs" 0 $?
+python3 "$H/verify.py" "$T/u.json" "$T/trusted.json" >/dev/null; check "unsigned record does not verify" 1 $?
+python3 "$H/countersign.py" "$T/u.json" "$T/cs.json" >/dev/null 2>&1; check "countersign refuses record without ci_run" 1 $?
+GITHUB_RUN_ID=42 GITHUB_SERVER_URL=https://github.com GITHUB_REPOSITORY=x/y env -u VKERNEL_SIGNING_KEY python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/u2.json" --unsigned >/dev/null
+python3 "$H/countersign.py" "$T/u2.json" "$T/cs.json" >/dev/null && python3 "$H/verify.py" "$T/cs.json" "$T/trusted.json" >/dev/null; check "CI record countersigned locally verifies" 0 $?
 exit $fail

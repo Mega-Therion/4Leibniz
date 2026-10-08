@@ -112,6 +112,28 @@ jobs:
           build-page: false
           deploy: false
 
+  vkernel:
+    # Builds and probes in CI (free on this public repo), emits an UNSIGNED record.
+    # The record is signed later, locally, with scripts/vkernel/countersign.py: the key never enters CI.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: .
+      - name: Fetch pre-built Mathlib binaries
+        run: lake exe cache get
+      - name: Install PyNaCl
+        run: python3 -m pip install --quiet pynacl
+      - name: Attest (unsigned)
+        run: python3 scripts/vkernel/attest.py . scripts/vkernel/vkernel.4leibniz.json proof-record.unsigned.json --unsigned
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vkernel-record
+          path: proof-record.unsigned.json
+
   independent-kernel:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
