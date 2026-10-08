@@ -60,7 +60,7 @@ def main() -> int:
     errors = [l for l in text.splitlines() if ": error" in l][:20]
     rec = {
         "tool": TOOL,
-        "project": str(root),
+        "project": root.name,
         "source_commitment": source_commitment(root),
         "config": cfg,
         "preamble_used": bool(preamble),
