@@ -24,6 +24,25 @@ A consumer can check a record **without Lean, Lake or Mathlib**: `verify.py` nee
 clean accepted / verifies; custom axiom, `sorry`, missing theorem, leanchecker failure rejected; tampered payload, foreign signer, edited source fail.
 `fixture/Fix/Basic.lean` contains a deliberate `axiom` and `sorry`: they are the sabotage targets.
 
+## Vacuity screen (sidecar, not part of a record)
+`vacuity_screen.py <project> <config.json> <out.json> [--preamble F.lean]` runs one Lean process (`VacuityScreen.lean.in`). It classifies each named theorem by the vacuity patterns actually found in chyren-aeon on 2026-10-06 (e8ae1d4, b6ed95b, 2a38838), conjunct by conjunct, before and after unfolding the project's own definitions:
+- **REFLEXIVE:** both sides of an `=` are reducibly equal (`15/2 = 15/2`).
+- **CLOSED-ARITH:** no free variables; `norm_num`, `decide` or `simp` closes it.
+- **RING-ID:** `ring` closes it with every hypothesis removed (`x = −(−x)`, `l − l = 0`).
+- **FIELD-ID:** only `≠`/`<` side conditions kept, and `field_simp`/`simp` closes it (`μke/(μk) = e`).
+- **CONTRADICTORY-PREMISES:** the hypotheses prove `False`.
+
+**PASS** only means none of these fired. A record's `nonvacuity` stays `not-established`. A screen can't certify meaning, and the CLAUDE.md anti-vacuity rule still applies.
+
+Calibration (`calibration/check_calibration.py`, frozen in `chyren_aeon_expected.json`):
+- The 6 statements later replaced as vacuous, copied verbatim from git, must all be flagged.
+- 4 genuine replacements must PASS.
+- Measured 2026-10-08: 6/6 flagged, 4/4 pass.
+
+Sabotage on copies:
+- "never flag": the check exits 1, 6 expectation failures.
+- "flag everything": the check exits 1, 4 failures.
+
 ## Next (not built)
 1. `comparator` statement match against a trusted challenge file.
 2. A second, independent kernel (nanoda) for dual-kernel consensus.

@@ -1,0 +1,18 @@
+{
+  "imports": ["LeanCore.InvariantTheory"],
+  "theorems": [
+    "VacuityCalib.Old.oscillator_n2_singlet_neg_radial",
+    "VacuityCalib.Old.su11_angular_momentum_conservation",
+    "VacuityCalib.Old.fock_vacuum_norm_chain",
+    "VacuityCalib.Old.bohlin_conformal_energy_relation",
+    "VacuityCalib.Old.arnold_bohlin_bertrand_duality",
+    "VacuityCalib.Old.runge_lenz_eccentricity_magnitude",
+    "LeanCore.InvariantTheory.oscillator_n2_singlet_neg_radial",
+    "LeanCore.InvariantTheory.su11_angular_momentum_conservation",
+    "LeanCore.InvariantTheory.fock_vacuum_norm_chain",
+    "LeanCore.InvariantTheory.bohlin_focus_at_origin",
+    "LeanCore.InvariantTheory.powerDual_involutive",
+    "LeanCore.InvariantTheory.powerDual_swaps_bertrand",
+    "LeanCore.InvariantTheory.runge_lenz_magnitude"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "must_flag": [
+    "VacuityCalib.Old.oscillator_n2_singlet_neg_radial",
+    "VacuityCalib.Old.su11_angular_momentum_conservation",
+    "VacuityCalib.Old.fock_vacuum_norm_chain",
+    "VacuityCalib.Old.bohlin_conformal_energy_relation",
+    "VacuityCalib.Old.arnold_bohlin_bertrand_duality",
+    "VacuityCalib.Old.runge_lenz_eccentricity_magnitude"
+  ],
+  "must_pass": [
+    "LeanCore.InvariantTheory.oscillator_n2_singlet_neg_radial",
+    "LeanCore.InvariantTheory.su11_angular_momentum_conservation",
+    "LeanCore.InvariantTheory.bohlin_focus_at_origin",
+    "LeanCore.InvariantTheory.runge_lenz_magnitude"
+  ],
+  "note": "The other three replacements (fock_vacuum_norm_chain, powerDual_swaps_bertrand, powerDual_involutive) are closed arithmetic or a field identity of a defined map; the screen reports them in those classes, which is the anti-vacuity category, not a detector failure."
+}
