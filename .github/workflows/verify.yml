@@ -124,4 +124,12 @@ jobs:
         working-directory: /tmp/lean4lean
         run: lake build lean4lean
       - name: Check the project artifact graph
-        run: lake env /tmp/lean4lean/.lake/build/bin/lean4lean Leibniz
+        # lean4lean can exit 0 while printing "failed to read ... incompatible header"
+        # when its toolchain differs from the project's. Fail on any such diagnostic.
+        run: |
+          set -o pipefail
+          lake env /tmp/lean4lean/.lake/build/bin/lean4lean Leibniz 2>&1 | tee lean4lean.log
+          if grep -qiE "incompatible header|failed to read|error" lean4lean.log; then
+            echo "::error::lean4lean reported diagnostics; external kernel check did not run cleanly"
+            exit 1
+          fi
