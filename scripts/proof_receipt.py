@@ -8,6 +8,8 @@ for path in sorted([*root.glob('Leibniz/**/*.lean'), root/'lakefile.lean', root/
     h.update(str(path.relative_to(root)).encode()); h.update(path.read_bytes())
 oleans = sorted(str(p.relative_to(root)) for p in root.glob('.lake/build/lib/lean/**/*.olean'))
 receipt = {'project': '4Leibniz', 'source_sha256': h.hexdigest(), 'olean_files': oleans,
-           'lean_toolchain': (root/'lean-toolchain').read_text().strip(), 'sorries': 0}
+           'lean_toolchain': (root/'lean-toolchain').read_text().strip(),
+           # measured, not asserted: exit code of the comment-aware sorry scan
+           'sorry_scan_exit': subprocess.run(['python3', str(root/'scripts'/'check_sorries.py')], cwd=root).returncode}
 (root/'proof-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
 print(json.dumps(receipt, indent=2))
