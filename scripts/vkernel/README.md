@@ -30,17 +30,19 @@ clean accepted / verifies; custom axiom, `sorry`, missing theorem, leanchecker f
 - **CLOSED-ARITH:** no free variables; `norm_num`, `decide` or `simp` closes it.
 - **RING-ID:** `ring` closes it with every hypothesis removed (`x = −(−x)`, `l − l = 0`).
 - **FIELD-ID:** only `≠`/`<` side conditions kept, and `field_simp`/`simp` closes it (`μke/(μk) = e`).
+- **HYP-RESTATED:** the conclusion is one of the hypotheses (`(h : c = 1) : c = 1 := h`).
+- **HYP-PINNED/K:** after `subst_vars` on the equality hypotheses, the rest falls in class K (`(hT : c_T = 1) (hγ : c_γ = 1) … : |c_T/c_γ − 1| < ε`).
 - **CONTRADICTORY-PREMISES:** the hypotheses prove `False`.
 
 **PASS** only means none of these fired. A record's `nonvacuity` stays `not-established`. A screen can't certify meaning, and the CLAUDE.md anti-vacuity rule still applies.
 
 Calibration (`calibration/check_calibration.py`, frozen in `chyren_aeon_expected.json`):
-- The 6 statements later replaced as vacuous, copied verbatim from git, must all be flagged.
-- 4 genuine replacements must PASS.
-- Measured 2026-10-08: 6/6 flagged, 4/4 pass.
+- Must be flagged (8): the 6 statements later replaced as vacuous, copied verbatim from git, plus 2 probes copying the two Res-Nova patterns the first version missed (`physical_frame_tensor_speed_unity`, `gw170817_concordance`).
+- Must PASS: 4 genuine replacements.
+- Measured 2026-10-08: 8/8 flagged, 4/4 pass.
 
 Sabotage on copies:
-- "never flag": the check exits 1, 6 expectation failures.
+- "never flag": the check exits 1, 8 expectation failures.
 - "flag everything": the check exits 1, 4 failures.
 
 ## Next (not built)

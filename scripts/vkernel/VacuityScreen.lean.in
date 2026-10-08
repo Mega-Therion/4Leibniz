@@ -7,6 +7,11 @@ For each named theorem: split the conclusion into conjuncts and classify each on
 the failure modes actually seen in chyren-aeon on 2026-10-06 (e8ae1d4, b6ed95b, 2a38838):
 
 * REFLEXIVE      both sides of an `=` are equal up to reducible unfolding (`15/2 = 15/2`)
+* HYP-RESTATED   the conclusion is one of the hypotheses (`(h : x = 1) : x = 1 := h`; added
+                 2026-10-08 after Res-Nova `physical_frame_tensor_speed_unity` passed without it)
+* HYP-PINNED/K   after `subst_vars` on the equality hypotheses, what is left falls in class K
+                 (`(hT : c_T = 1) (hγ : c_γ = 1) … : |c_T / c_γ − 1| < ε`; added 2026-10-08 after
+                 Res-Nova `gw170817_concordance` passed without it)
 * CLOSED-ARITH   no free variables; `norm_num`/`decide`/`simp` closes it (`(-1+2)*(2+2) = 4`)
 * RING-ID        holds by `ring` with every hypothesis removed (`x = -(-x)`, `l - l = 0`)
 * FIELD-ID       holds by `field_simp`(+`ring`) keeping only `≠`/`<` side conditions
@@ -64,6 +69,9 @@ partial def conjuncts (e : Expr) : List Expr :=
 def classifyOnce (c : Expr) (propHyps : Array Expr) : TermElabM String := do
   if let some (_, l, r) := c.eq? then
     if ← withReducible (isDefEq l r) then return "REFLEXIVE"
+  -- the conclusion is one of the hypotheses (`(h : x = 1) : x = 1 := h`)
+  for h in propHyps do
+    if ← withReducible (isDefEq (← instantiateMVars (← inferType h)) c) then return "HYP-RESTATED"
   let allProps := propHyps.map (·.fvarId!)
   if !c.hasFVar then
     let g ← goalWithout c allProps
@@ -82,14 +90,37 @@ def classifyOnce (c : Expr) (propHyps : Array Expr) : TermElabM String := do
   if ← tryClose g2 (← `(tactic| simp [*])) then return "FIELD-ID"
   return "PASS"
 
+/-- Substitute every hypothesis of the form `x = t` / `t = x` (`subst_vars`) and classify what is
+left. Catches hypotheses that pin the variables (`(hT : c_T = 1) … : |c_T / c_γ − 1| < ε`). -/
+def classifyPinned (c : Expr) : TermElabM String := do
+  let g := (← mkFreshExprMVar c).mvarId!
+  let s ← saveState
+  let res ← try
+      let gs ← withCurrHeartbeats <| Tactic.run g (evalTactic (← `(tactic| subst_vars)))
+      match gs with
+      | [g'] =>
+        if (← g'.getType) == c then pure "PASS" else
+        g'.withContext do
+          let mut ph := #[]
+          for d in (← getLCtx) do
+            if !d.isImplementationDetail then
+              if ← isProp d.type then ph := ph.push (mkFVar d.fvarId)
+          let k ← classifyOnce (← instantiateMVars (← g'.getType)) ph
+          pure (if k == "PASS" then "PASS" else "HYP-PINNED/" ++ k)
+      | _ => pure "PASS"
+    catch _ => pure "PASS"
+  s.restore
+  return res
+
 def classify (c : Expr) (propHyps : Array Expr) : TermElabM String := do
   let k ← classifyOnce c propHyps
   if k != "PASS" then return k
   let env ← getEnv
   let c' ← deltaExpand c (isProjectDef env)
-  if c' == c then return "PASS"
-  let k' ← classifyOnce c' propHyps
-  return if k' == "PASS" then "PASS" else k' ++ "/unfolded"
+  if c' != c then
+    let k' ← classifyOnce c' propHyps
+    if k' != "PASS" then return k' ++ "/unfolded"
+  classifyPinned c
 
 def screenOne (n : Name) : TermElabM Unit := do
   let ci ← getConstInfo n

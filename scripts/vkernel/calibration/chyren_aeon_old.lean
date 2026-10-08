@@ -36,4 +36,16 @@ theorem runge_lenz_eccentricity_magnitude (mu k e : ℝ) (h_muk : mu * k ≠ 0) 
     mu * k * e / (mu * k) = e := by
   exact mul_div_cancel_left₀ e h_muk
 
+/-- Not from chyren-aeon: a hypothesis restated as the conclusion, the pattern of Res-Nova
+`physical_frame_tensor_speed_unity` (PrintAxiomsD8.lean), added 2026-10-08. -/
+theorem hyp_restated_probe (c_T_g : ℝ) (h_lum : c_T_g = 1) : c_T_g = 1 := h_lum
+
+/-- Not from chyren-aeon: hypotheses that pin the variables, the pattern of Res-Nova
+`gw170817_concordance` (PrintAxiomsD8.lean), added 2026-10-08. -/
+theorem hyp_pinned_probe (c_T c_gamma : ℝ) (hT : c_T = 1) (hGamma : c_gamma = 1) (eps : ℝ)
+    (heps : eps > 0) : |c_T / c_gamma - 1| < eps := by
+  rw [hT, hGamma]
+  norm_num
+  exact heps
+
 end VacuityCalib.Old
