@@ -11,7 +11,7 @@ exp = json.loads((here / "chyren_aeon_expected.json").read_text())
 with tempfile.TemporaryDirectory() as td:
     out = Path(td) / "screen.json"
     subprocess.run([sys.executable, str(vk / "vacuity_screen.py"), "/home/mega/Chyren/chyren-aeon/formal",
-                    str(here / "chyren_aeon.json"), str(out), "--preamble", str(here / "chyren_aeon_old.lean")],
+                    str(here / "chyren_aeon.json"), str(out), "--preamble", str(here / "chyren_aeon_old.lean.in")],
                    check=False)
     got = {r["theorem"]: r["statement"] for r in json.loads(out.read_text())["results"]}
 bad = [f"not flagged: {n} ({got.get(n)})" for n in exp["must_flag"] if got.get(n) in (None, "PASS", "ERROR")]
