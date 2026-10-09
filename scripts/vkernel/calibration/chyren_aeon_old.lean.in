@@ -48,4 +48,14 @@ theorem hyp_pinned_probe (c_T c_gamma : ℝ) (hT : c_T = 1) (hGamma : c_gamma = 
   norm_num
   exact heps
 
+/-- Not from chyren-aeon: the conclusion is a field of a structure argument, the pattern of
+Res-Nova `sovereign_regularity_theorem` (SovereignRegularity.lean), added 2026-10-08. -/
+structure ControlledProbe where
+  f : ℝ → ℝ
+  B : ℝ
+  h_controlled : ∀ t ≥ 0, f t ≤ B
+
+theorem field_projection_probe (st : ControlledProbe) (T : ℝ) (hT : 0 ≤ T) : st.f T ≤ st.B :=
+  st.h_controlled T hT
+
 end VacuityCalib.Old

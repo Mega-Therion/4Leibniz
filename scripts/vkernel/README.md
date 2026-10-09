@@ -31,19 +31,22 @@ clean accepted / verifies; custom axiom, `sorry`, missing theorem, leanchecker f
 - **RING-ID:** `ring` closes it with every hypothesis removed (`x = −(−x)`, `l − l = 0`).
 - **FIELD-ID:** only `≠`/`<` side conditions kept, and `field_simp`/`simp` closes it (`μke/(μk) = e`).
 - **HYP-RESTATED:** the conclusion is one of the hypotheses (`(h : c = 1) : c = 1 := h`).
+- **PROOF-IS-FIELD** (proof-level): the proof term is a projection of one of the theorem's own arguments (`st.h_controlled T hT`), an assumption carried in a structure field.
 - **HYP-PINNED/K:** after `subst_vars` on the equality hypotheses, the rest falls in class K (`(hT : c_T = 1) (hγ : c_γ = 1) … : |c_T/c_γ − 1| < ε`).
 - **CONTRADICTORY-PREMISES:** the hypotheses prove `False`.
 
 **PASS** only means none of these fired. A record's `nonvacuity` stays `not-established`. A screen can't certify meaning, and the CLAUDE.md anti-vacuity rule still applies.
 
 Calibration (`calibration/check_calibration.py`, frozen in `chyren_aeon_expected.json`):
-- Must be flagged (8): the 6 statements later replaced as vacuous, copied verbatim from git, plus 2 probes copying the two Res-Nova patterns the first version missed (`physical_frame_tensor_speed_unity`, `gw170817_concordance`).
+- Must be flagged (9): the 6 statements later replaced as vacuous, copied verbatim from git, plus 3 probes copying the Res-Nova patterns earlier versions missed (`physical_frame_tensor_speed_unity`, `gw170817_concordance`, `sovereign_regularity_theorem`).
 - Must PASS: 4 genuine replacements.
-- Measured 2026-10-08: 8/8 flagged, 4/4 pass.
+- Measured 2026-10-08 (tool `vacuity_screen/0.2`): 9/9 flagged, 4/4 pass.
 
 Sabotage on copies:
-- "never flag": the check exits 1, 8 expectation failures.
+- "never flag": the check exits 1, 9 expectation failures.
 - "flag everything": the check exits 1, 4 failures.
+
+**Known blind spot:** arithmetic consequences of an assumed structure field PASS, e.g. Res-Nova `bkm_no_blowup`, which multiplies `st.h_controlled` by `T`. The screen sees only bare projections.
 
 ## Next (not built)
 1. `comparator` statement match against a trusted challenge file.

@@ -11,6 +11,7 @@
     "VacuityCalib.Old.runge_lenz_eccentricity_magnitude",
     "VacuityCalib.Old.hyp_restated_probe",
     "VacuityCalib.Old.hyp_pinned_probe",
+    "VacuityCalib.Old.field_projection_probe",
     "LeanCore.InvariantTheory.oscillator_n2_singlet_neg_radial",
     "LeanCore.InvariantTheory.su11_angular_momentum_conservation",
     "LeanCore.InvariantTheory.fock_vacuum_norm_chain",

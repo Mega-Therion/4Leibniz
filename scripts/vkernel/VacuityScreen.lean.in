@@ -9,6 +9,9 @@ the failure modes actually seen in chyren-aeon on 2026-10-06 (e8ae1d4, b6ed95b, 
 * REFLEXIVE      both sides of an `=` are equal up to reducible unfolding (`15/2 = 15/2`)
 * HYP-RESTATED   the conclusion is one of the hypotheses (`(h : x = 1) : x = 1 := h`; added
                  2026-10-08 after Res-Nova `physical_frame_tensor_speed_unity` passed without it)
+* PROOF-IS-FIELD (proof-level) the proof term is a projection of one of the theorem's own
+                 arguments (`st.h_controlled T hT`): an assumption carried in a structure field.
+                 Added 2026-10-08 after Res-Nova `sovereign_regularity_theorem` passed without it
 * HYP-PINNED/K   after `subst_vars` on the equality hypotheses, what is left falls in class K
                  (`(hT : c_T = 1) (hγ : c_γ = 1) … : |c_T / c_γ − 1| < ε`; added 2026-10-08 after
                  Res-Nova `gw170817_concordance` passed without it)
@@ -122,8 +125,31 @@ def classify (c : Expr) (propHyps : Array Expr) : TermElabM String := do
     if k' != "PASS" then return k' ++ "/unfolded"
   classifyPinned c
 
+/-- Proof-level check: the proof term, under its binders, is a projection of one of its own
+arguments (`st.h_controlled T hT`), so the conclusion is an assumption carried in a structure. -/
+def proofIsField (ci : ConstantInfo) : MetaM Bool := do
+  -- `ConstantInfo.value?` returns `none` for theorems in this Lean version, so match directly
+  let v ← match ci with
+    | .thmInfo t => pure t.value
+    | .defnInfo d => pure d.value
+    | _ => return false
+  lambdaTelescope v fun xs body => do
+    let body ← instantiateMVars body
+    let isArg (e : Expr) : Bool := e.isFVar && xs.contains e
+    let f := body.getAppFn
+    if f.isProj then return isArg f.projExpr!
+    if let some c := f.constName? then
+      if let some info ← getProjectionFnInfo? c then
+        let args := body.getAppArgs
+        if h : info.numParams < args.size then
+          return isArg args[info.numParams]
+    return false
+
 def screenOne (n : Name) : TermElabM Unit := do
   let ci ← getConstInfo n
+  if ← proofIsField ci then
+    logInfo m!"VACUITY|{n}|PROOF-IS-FIELD|PROOF-IS-FIELD"
+    return
   let ty ← zetaReduce ci.type
   forallTelescope ty fun xs body => do
     let body ← zetaReduce (← instantiateMVars body)

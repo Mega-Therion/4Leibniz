@@ -15,7 +15,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from attest import source_commitment  # same commitment a vkernel record uses
 
-TOOL = "vacuity_screen/0.1"
+TOOL = "vacuity_screen/0.2"  # 0.2: PROOF-IS-FIELD, HYP-RESTATED, HYP-PINNED
 LINE = re.compile(r"VACUITY\|([^|\n]+)\|([^|\n]+)\|([^\n]*)")
 
 
