@@ -24,4 +24,17 @@ python3 "$H/verify.py" "$T/u.json" "$T/trusted.json" >/dev/null; check "unsigned
 python3 "$H/countersign.py" "$T/u.json" "$T/cs.json" >/dev/null 2>&1; check "countersign refuses record without ci_run" 1 $?
 GITHUB_RUN_ID=42 GITHUB_SERVER_URL=https://github.com GITHUB_REPOSITORY=x/y env -u VKERNEL_SIGNING_KEY python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/u2.json" --unsigned >/dev/null
 python3 "$H/countersign.py" "$T/u2.json" "$T/cs.json" >/dev/null && python3 "$H/verify.py" "$T/cs.json" "$T/trusted.json" >/dev/null; check "CI record countersigned locally verifies" 0 $?
+
+# --- hardening (v0.2): isolation, strict parser, statement-match comparator ---
+python3 -c "import json,sys;p=json.load(open('$T/ok.json'))['payload'];sys.exit(0 if p['network_blocked'] and p['build_isolation']=='bwrap' and p['recheck_isolation']=='bwrap' else 1)"; check "record shows build+recheck sandboxed, network blocked" 0 $?
+printf '{"payload":{"a":1},"payload":{"a":2},"signature":"x"}' > "$T/dup.json"
+python3 "$H/verify.py" "$T/dup.json" "$T/trusted.json" >/dev/null 2>&1; check "duplicate-key record rejected by strict parser" 1 $?
+python3 -c "import json;r=json.load(open('$T/ok.json'));t=r['payload']['theorems'][0];json.dump({'protocol':'vkernel/0.2','theorems':{t['name']:{'statement_hash':t['statement_hash']}}},open('$T/chal.json','w'))"
+# NB: no --source here; an earlier case ("edited source fails") deliberately corrupted the fixture.
+python3 "$H/verify.py" "$T/ok.json" "$T/trusted.json" --challenge "$T/chal.json" >/dev/null; check "matching trusted challenge verifies" 0 $?
+python3 -c "import json;c=json.load(open('$T/chal.json'));k=list(c['theorems'])[0];c['theorems'][k]['statement_hash']='deadbeef';json.dump(c,open('$T/chalbad.json','w'))"
+python3 "$H/verify.py" "$T/ok.json" "$T/trusted.json" --challenge "$T/chalbad.json" >/dev/null; check "wrong-statement challenge rejected by consumer" 1 $?
+cfg ok; python3 "$H/attest.py" "$T/fix" "$T/c.json" "$T/mm.json" --challenge "$T/chalbad.json" >/dev/null; check "attest rejects on statement_match mismatch" 1 $?
+python3 -c "import json;r=json.load(open('$T/ok.json'));r['payload_digest']='sha256:'+('0'*64);json.dump(r,open('$T/dg.json','w'))"
+python3 "$H/verify.py" "$T/dg.json" "$T/trusted.json" >/dev/null; check "forged payload_digest rejected" 1 $?
 exit $fail
