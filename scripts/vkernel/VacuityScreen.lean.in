@@ -19,6 +19,10 @@ the failure modes actually seen in chyren-aeon on 2026-10-06 (e8ae1d4, b6ed95b, 
 * RING-ID        holds by `ring` with every hypothesis removed (`x = -(-x)`, `l - l = 0`)
 * FIELD-ID       holds by `field_simp`(+`ring`) keeping only `≠`/`<` side conditions
                  (`μ k e / (μ k) = e`)
+* POSITIVITY     an order or nonzero statement (`0 < e`, `0 ≤ e`, `e ≠ 0`) that `positivity` closes
+                 from the side conditions alone: positive inputs give a positive output (added
+                 2026-10-13 after the dual-scalar seesaw's `light_eigenvalue_pos` passed without it)
+                 `/fields` means the side conditions were Prop fields of a structure argument
 * PASS           none of the above
 A `/unfolded` suffix means the class was reached only after delta-expanding the
 project's own definitions. CONTRADICTORY-PREMISES (statement level): `linarith`,
@@ -91,6 +95,9 @@ def classifyOnce (c : Expr) (propHyps : Array Expr) : TermElabM String := do
   if ← tryClose g2 (← `(tactic| field_simp)) then return "FIELD-ID"
   -- a side condition on a product (`μ * k ≠ 0`) cancels as a unit: `simp [*]` uses it directly
   if ← tryClose g2 (← `(tactic| simp [*])) then return "FIELD-ID"
+  -- positive inputs give a positive output: closed by `positivity` from the side conditions alone
+  if c.isAppOf ``LT.lt || c.isAppOf ``LE.le || c.isAppOf ``Ne || c.isAppOf ``GT.gt || c.isAppOf ``GE.ge then
+    if ← tryClose g2 (← `(tactic| positivity)) then return "POSITIVITY"
   return "PASS"
 
 /-- Substitute every hypothesis of the form `x = t` / `t = x` (`subst_vars`) and classify what is
@@ -115,6 +122,26 @@ def classifyPinned (c : Expr) : TermElabM String := do
   s.restore
   return res
 
+def isOrderLike (c : Expr) : Bool :=
+  c.isAppOf ``LT.lt || c.isAppOf ``LE.le || c.isAppOf ``Ne || c.isAppOf ``GT.gt || c.isAppOf ``GE.ge
+
+/-- The Prop-valued fields of every structure-typed local (`p.hM : 0 < p.M_pl`), as hypotheses. -/
+def withStructFields (g : MVarId) : MetaM MVarId := g.withContext do
+  let mut g := g
+  for d in (← getLCtx) do
+    if d.isImplementationDetail then continue
+    let ty ← whnf d.type
+    let .const n _ := ty.getAppFn | continue
+    let some info := getStructureInfo? (← getEnv) n | continue
+    for f in info.fieldNames do
+      let some proj ← (try some <$> mkProjection (mkFVar d.fvarId) f catch _ => pure none) | continue
+      let pty ← inferType proj
+      if ← isProp pty then
+        let g1 ← g.assert f pty proj
+        let (_, g2) ← g1.intro1
+        g := g2
+  return g
+
 def classify (c : Expr) (propHyps : Array Expr) : TermElabM String := do
   let k ← classifyOnce c propHyps
   if k != "PASS" then return k
@@ -123,6 +150,10 @@ def classify (c : Expr) (propHyps : Array Expr) : TermElabM String := do
   if c' != c then
     let k' ← classifyOnce c' propHyps
     if k' != "PASS" then return k' ++ "/unfolded"
+  -- assumptions carried as structure fields: positive fields give a positive output
+  if isOrderLike c' then
+    let g ← withStructFields (← mkFreshExprMVar c').mvarId!
+    if ← tryClose g (← `(tactic| positivity)) then return "POSITIVITY/fields"
   classifyPinned c
 
 /-- Proof-level check: the proof term, under its binders, is a projection of one of its own

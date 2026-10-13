@@ -15,7 +15,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from attest import source_commitment  # same commitment a vkernel record uses
 
-TOOL = "vacuity_screen/0.2"  # 0.2: PROOF-IS-FIELD, HYP-RESTATED, HYP-PINNED
+TOOL = "vacuity_screen/0.3"  # 0.2: PROOF-IS-FIELD, HYP-RESTATED, HYP-PINNED; 0.3: POSITIVITY
 LINE = re.compile(r"VACUITY\|([^|\n]+)\|([^|\n]+)\|([^\n]*)")
 
 
@@ -35,7 +35,7 @@ def main() -> int:
     if (mbuild / "Tactic.olean").exists():
         tactic_mods, missing = ["Mathlib.Tactic"], []
     else:
-        want = ["Mathlib.Tactic.Ring", "Mathlib.Tactic.FieldSimp", "Mathlib.Tactic.NormNum", "Mathlib.Tactic.Linarith"]
+        want = ["Mathlib.Tactic.Ring", "Mathlib.Tactic.FieldSimp", "Mathlib.Tactic.NormNum", "Mathlib.Tactic.Linarith", "Mathlib.Tactic.Positivity"]
         tactic_mods = [m for m in want if (mbuild / (m.split(".", 1)[1].replace(".", "/") + ".olean")).exists()]
         missing = [m for m in want if m not in tactic_mods]
     src = (HERE / "VacuityScreen.lean.in").read_text() \

@@ -41,6 +41,7 @@ Calibration (`calibration/check_calibration.py`, frozen in `chyren_aeon_expected
 - Must be flagged (9): the 6 statements later replaced as vacuous, copied verbatim from git, plus 3 probes copying the Res-Nova patterns earlier versions missed (`physical_frame_tensor_speed_unity`, `gw170817_concordance`, `sovereign_regularity_theorem`).
 - Must PASS: 4 genuine replacements.
 - Measured 2026-10-08 (tool `vacuity_screen/0.2`): 9/9 flagged, 4/4 pass.
+- Measured 2026-10-13 (tool `vacuity_screen/0.3`, adds POSITIVITY and POSITIVITY/fields): 9/9 flagged, 4/4 pass. The new class flags all five theorems of the real-valued dual-scalar seesaw in Chyren, which 0.2 passed four of. On Res-Nova's signed sets it newly flags four helper lemmas (`one_add_pow_pos`, `F_std_deriv2_positivity`, `one_add_sq_pos`, `Jstd_deriv_pos`); `theorem_A_constitutive` still passes.
 
 Sabotage on copies:
 - "never flag": the check exits 1, 9 expectation failures.
