@@ -266,3 +266,15 @@ class TestDeterminismAndStableIds:
         assert not [c for c in built["claims"] if c["status"] == "open_problem"], (
             "the registry has no open problems left; none may appear"
         )
+
+
+def test_neutrino_tetrad_signature():
+    """Verify that Leibniz/NeutrinoTetrad.lean exists and specifies the (1,3) Minkowski signature."""
+    from pathlib import Path
+    lean_file = Path('/home/mega/Chyren/3_research/4Leibniz/Leibniz/NeutrinoTetrad.lean')
+    assert lean_file.exists(), 'NeutrinoTetrad.lean must exist'
+    content = lean_file.read_text(encoding='utf-8')
+    assert 'eta13' in content, 'eta13 definition must be present'
+    assert 'det_eta13_eq_neg_one' in content, 'Signature determinant theorem must be present'
+    assert 'induced_metric_det_neg' in content, 'Induced metric negativity theorem must be present'
+    assert 'SeesawTexture3x2' in content, '3x2 seesaw texture must be formalized'
