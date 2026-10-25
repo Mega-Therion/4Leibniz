@@ -1,6 +1,11 @@
-import { streamText, StreamData, type JSONValue } from 'ai';
+import { convertToModelMessages, streamText } from 'ai';
 import { chatModel } from '@/lib/ai/providers';
 import { buildSystemPrompt, suggestedFollowups } from '@/lib/ai/system-prompt';
+import {
+  toUIMessage,
+  textOfIncoming,
+  type IncomingChatMessage,
+} from '@/lib/ai/incoming-message';
 import { retrieveContext } from '@/lib/retrieval/retrieve';
 import { db } from '@/lib/db/client';
 import * as t from '@/lib/db/schema';
@@ -10,7 +15,7 @@ export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 interface ChatRequestBody {
-  messages?: { role: 'user' | 'assistant' | 'system'; content: string }[];
+  messages?: IncomingChatMessage[];
   workSlug?: string | null;
   sessionId?: string | null;
 }
@@ -26,12 +31,13 @@ export async function POST(req: Request) {
     });
   }
 
-  const messages = (body.messages ?? [])
+  const incoming = (body.messages ?? [])
     .filter((m) => m.role === 'user' || m.role === 'assistant')
-    .slice(-12); // keep the window bounded
+    .slice(-12);
 
-  const lastUser = [...messages].reverse().find((m) => m.role === 'user');
-  if (!lastUser) {
+  const lastUser = [...incoming].reverse().find((m) => m.role === 'user');
+  const lastUserText = lastUser ? textOfIncoming(lastUser) : '';
+  if (!lastUser || !lastUserText.trim()) {
     return new Response(JSON.stringify({ error: 'No user message found.' }), {
       status: 400,
       headers: { 'content-type': 'application/json' },
@@ -39,22 +45,14 @@ export async function POST(req: Request) {
   }
 
   const workSlug = body.workSlug ?? null;
-
-  // ── Retrieval-first context assembly (server-side only) ────────────────
-  const retrieval = await retrieveContext(lastUser.content, workSlug);
-
-  const data = new StreamData();
-  data.append({
+  const retrieval = await retrieveContext(lastUserText, workSlug);
+  const metadata = {
     mode: retrieval.mode,
     sources: retrieval.sources,
-    suggestedFollowups: suggestedFollowups(
-      retrieval.mode,
-      retrieval.sources[0]?.title ?? null,
-    ),
+    suggestedFollowups: suggestedFollowups(retrieval.mode, retrieval.sources[0]?.title ?? null),
     scope: workSlug,
     degraded: retrieval.degraded !== 'ok' ? retrieval.degraded : undefined,
-  } as unknown as JSONValue);
-  data.close();
+  };
 
   const system = buildSystemPrompt({
     mode: retrieval.mode,
@@ -62,18 +60,6 @@ export async function POST(req: Request) {
     scope: workSlug,
   });
 
-  const result = await streamText({
-    model: chatModel(),
-    system,
-    messages,
-    temperature: 0.4,
-    maxTokens: 1200,
-    onFinish: ({ text }) => {
-      void persist(text);
-    },
-  });
-
-  // best-effort transcript persistence — never block the stream on it
   const persist = async (answer: string) => {
     try {
       if (!process.env.POSTGRES_URL || !body.sessionId) return;
@@ -93,7 +79,7 @@ export async function POST(req: Request) {
         )[0]?.id;
       if (!sessionId) return;
       await database.insert(t.chatMessages).values([
-        { sessionId, role: 'user', content: lastUser.content },
+        { sessionId, role: 'user', content: lastUserText },
         {
           sessionId,
           role: 'assistant',
@@ -107,5 +93,18 @@ export async function POST(req: Request) {
     }
   };
 
-  return result.toDataStreamResponse({ data });
+  const result = streamText({
+    model: chatModel(),
+    system,
+    messages: await convertToModelMessages(incoming.map(toUIMessage)),
+    temperature: 0.4,
+    maxOutputTokens: 1200,
+    onFinish: ({ text }) => {
+      void persist(text);
+    },
+  });
+
+  return result.toUIMessageStreamResponse({
+    messageMetadata: () => metadata,
+  });
 }
