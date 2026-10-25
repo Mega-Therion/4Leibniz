@@ -1,26 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useChat } from 'ai/react';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
+import { guideDataFromMessage } from '@/lib/ai/incoming-message';
 import Link from 'next/link';
 import { GuideMessage } from '@/components/GuideMessage';
 import type { GuideData } from '@/lib/types';
-
-function extractGuideData(data: unknown): GuideData[] {
-  if (!Array.isArray(data)) return [];
-  const found: GuideData[] = [];
-  for (const entry of data) {
-    if (
-      entry &&
-      typeof entry === 'object' &&
-      'sources' in entry &&
-      'mode' in entry
-    ) {
-      found.push(entry as GuideData);
-    }
-  }
-  return found;
-}
 
 const GENERAL_PROMPTS = [
   'What concepts recur across the translated works?',
@@ -44,29 +30,32 @@ export function GuidePanel({
     typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : '',
   );
   const [followups, setFollowups] = useState<string[]>([]);
+  const [input, setInput] = useState(initialInput ?? '');
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, stop, error, data, reload } =
-    useChat({
-      body: {
-        workSlug,
-        sessionId: sessionRef.current,
-      },
-      initialInput,
-    });
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        api: '/api/chat',
+        body: {
+          workSlug,
+          sessionId: sessionRef.current,
+        },
+      }),
+    [workSlug],
+  );
 
-  // zip streamed data payloads to assistant messages, in order
-  const guideData = useMemo(() => extractGuideData(data), [data]);
+  const { messages, sendMessage, status, stop, error, regenerate } = useChat({ transport });
+  const isLoading = status === 'submitted' || status === 'streaming';
+
   const assistantData = useMemo(() => {
-    let i = 0;
-    const map = new Map<string, GuideData>();
+    const map = new Map<string, GuideData | null>();
     for (const m of messages) {
       if (m.role === 'assistant') {
-        map.set(m.id, guideData[i] ?? null);
-        i += 1;
+        map.set(m.id, guideDataFromMessage(m) as GuideData | null);
       }
     }
     return map;
-  }, [messages, guideData]);
+  }, [messages]);
 
   const lastAssistant = [...messages].reverse().find((m) => m.role === 'assistant');
   const lastFollowups = lastAssistant
@@ -114,13 +103,11 @@ export function GuidePanel({
       <div className="flex-1 space-y-s8 overflow-y-auto py-s2">
         {messages.length === 0 && (
           <div className="panel flex flex-col items-center gap-s4 p-s8 text-center">
-            <span className="serif-heading text-3xl text-text1">
-              Ask the archive.
-            </span>
+            <span className="serif-heading text-3xl text-text1">Ask the archive.</span>
             <p className="max-w-md text-sm leading-relaxed text-text3">
-              Every answer is retrieval-grounded in the texts and the editorial
-              dossier, with sources you can open and verify. The guide will
-              tell you plainly when the evidence runs out.
+              Every answer is retrieval-grounded in the texts and the editorial dossier, with
+              sources you can open and verify. The guide will tell you plainly when the evidence
+              runs out.
             </p>
           </div>
         )}
@@ -130,7 +117,10 @@ export function GuidePanel({
             <GuideMessage
               key={m.id}
               role={m.role as 'user' | 'assistant'}
-              content={m.content}
+              content={m.parts
+                .filter((part) => part.type === 'text')
+                .map((part) => ('text' in part ? part.text : ''))
+                .join('')}
               mode={gd?.mode}
               sources={gd?.sources}
               isStreaming={isLoading && m.id === messages[messages.length - 1]?.id}
@@ -142,7 +132,7 @@ export function GuidePanel({
             <p>The guide could not answer: {(error as Error).message ?? 'stream error'}</p>
             <button
               type="button"
-              onClick={() => reload()}
+              onClick={() => regenerate()}
               className="btn-ghost mt-s3 !px-4 !py-1.5 text-xs"
             >
               Retry
@@ -161,12 +151,7 @@ export function GuidePanel({
                 type="button"
                 className="chip transition-colors hover:border-gold1 hover:text-text1"
                 onClick={() => {
-                  const synthetic = { target: { value: q } } as never;
-                  handleInputChange(synthetic);
-                  setTimeout(() => {
-                    const form = document.getElementById('guide-form') as HTMLFormElement | null;
-                    form?.requestSubmit();
-                  }, 0);
+                  void sendMessage({ text: q });
                 }}
               >
                 {q}
@@ -182,12 +167,7 @@ export function GuidePanel({
                 type="button"
                 className="chip transition-colors hover:border-gold1 hover:text-text1"
                 onClick={() => {
-                  const synthetic = { target: { value: q } } as never;
-                  handleInputChange(synthetic);
-                  setTimeout(() => {
-                    const form = document.getElementById('guide-form') as HTMLFormElement | null;
-                    form?.requestSubmit();
-                  }, 0);
+                  void sendMessage({ text: q });
                 }}
               >
                 {q}
@@ -200,7 +180,13 @@ export function GuidePanel({
       {/* sticky input */}
       <form
         id="guide-form"
-        onSubmit={handleSubmit}
+        onSubmit={(event) => {
+          event.preventDefault();
+          const text = input.trim();
+          if (!text || isLoading) return;
+          void sendMessage({ text });
+          setInput('');
+        }}
         className="panel sticky bottom-4 mt-s4 flex items-end gap-s3 p-s3"
       >
         <label htmlFor="guide-input" className="sr-only">
@@ -210,11 +196,14 @@ export function GuidePanel({
           id="guide-input"
           rows={1}
           value={input}
-          onChange={handleInputChange}
+          onChange={(event) => setInput(event.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              handleSubmit(e);
+              const text = input.trim();
+              if (!text || isLoading) return;
+              void sendMessage({ text });
+              setInput('');
             }
           }}
           placeholder={
@@ -230,14 +219,18 @@ export function GuidePanel({
             Stop
           </button>
         ) : (
-          <button type="submit" className="btn-gold !px-5 !py-1.5 text-xs" disabled={!input.trim()}>
+          <button
+            type="submit"
+            className="btn-gold !px-5 !py-1.5 text-xs"
+            disabled={!input.trim()}
+          >
             Ask
           </button>
         )}
       </form>
       <p className="mt-s2 text-center text-[11px] text-text3">
-        Answers are grounded in retrieved sources but can be wrong — open the
-        citations and verify.
+        Answers are grounded in retrieved sources but can be wrong — open the citations and
+        verify.
       </p>
     </div>
   );
