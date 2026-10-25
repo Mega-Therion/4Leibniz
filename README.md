@@ -22,6 +22,8 @@ This repository does not have its own Zenodo record. A badge here used to point 
 
 ![4Leibniz Formal Claim Flow](docs/visuals/formal-claim-flow.svg)
 
+A map of the Lean library versus the root Python prototype is [`docs/WHERE_THE_LIBRARY_IS.md`](docs/WHERE_THE_LIBRARY_IS.md).
+
 ## System Role
 
 `4Leibniz` is the canonical mathematical and formal proof source of truth across the Chyren constellation. It provides formalizations of relational information geometry, epistemic logic, and classical philosophical foundations in Lean 4.
