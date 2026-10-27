@@ -7,7 +7,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted. The module itself documents this theorem as one that 'compiles while establishing nothing': it proves execute_calculemus.build = true, i.e. that a hand-typed literal field equals true. It audits nothing else.",
       "module": "Leibniz.Calculemus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Calculemus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -35,7 +35,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Calculemus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Calculemus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -67,7 +67,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Characteristica",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Characteristica.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -97,7 +97,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Characteristica",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Characteristica.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -127,7 +127,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Characteristica",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Characteristica.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -161,7 +161,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Characteristica",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Characteristica.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -195,7 +195,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -227,7 +227,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -259,7 +259,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -291,7 +291,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -323,7 +323,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -355,7 +355,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -387,7 +387,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -419,7 +419,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -451,7 +451,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -483,7 +483,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -515,7 +515,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -547,7 +547,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -579,7 +579,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -611,7 +611,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -643,7 +643,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -675,7 +675,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -707,7 +707,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -739,7 +739,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -771,7 +771,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Dissipatio",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Dissipatio.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -803,7 +803,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted. Unwraps the ProvenArgument constructor: a proof of p given a packaged proof of p. The epistemic content is in the structure's typing discipline, not in this theorem's body.",
       "module": "Leibniz.Epistemic",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Epistemic.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -831,7 +831,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Epistemic",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Epistemic.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -859,7 +859,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Epistemic",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Epistemic.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -887,7 +887,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Epistemic",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Epistemic.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -915,7 +915,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Epistemic",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Epistemic.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -943,7 +943,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Epistemic",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Epistemic.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -971,7 +971,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Epistemic",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Epistemic.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -999,7 +999,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted. Machine-generated by the Calculemus proof engine from the claim 'SufficientReason'; the theorem records the exact logical form of the inference over an arbitrary preordered type.",
       "module": "Leibniz.Generated.SufficientReason",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Generated/SufficientReason.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1035,7 +1035,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Harmonia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Harmonia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1067,7 +1067,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Harmonia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Harmonia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1099,7 +1099,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Harmonia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Harmonia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1131,7 +1131,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Harmonia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Harmonia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1163,7 +1163,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Harmonia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Harmonia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1195,7 +1195,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Harmonia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Harmonia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1227,7 +1227,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Harmonia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Harmonia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1259,7 +1259,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Harmonia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Harmonia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1291,7 +1291,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Holonomia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Holonomia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1323,7 +1323,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Holonomia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Holonomia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1355,7 +1355,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Holonomia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Holonomia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1387,7 +1387,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Holonomia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Holonomia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1419,7 +1419,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Holonomia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Holonomia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1451,7 +1451,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1483,7 +1483,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1515,7 +1515,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1547,7 +1547,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1579,7 +1579,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1611,7 +1611,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1643,7 +1643,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1675,7 +1675,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1707,7 +1707,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1739,7 +1739,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1771,7 +1771,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1803,7 +1803,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1835,7 +1835,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1867,7 +1867,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1899,7 +1899,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Kraus",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Kraus.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1931,7 +1931,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1963,7 +1963,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -1995,7 +1995,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2027,7 +2027,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2059,7 +2059,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2091,7 +2091,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2123,7 +2123,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2155,7 +2155,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2187,7 +2187,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2219,7 +2219,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2251,7 +2251,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2279,7 +2279,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2310,7 +2310,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2342,7 +2342,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2374,7 +2374,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.LexContinuitatis",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/LexContinuitatis.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2406,7 +2406,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Monadologia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Monadologia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2434,7 +2434,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Monadologia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Monadologia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2462,7 +2462,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: none. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.Monadologia",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/Monadologia.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2490,7 +2490,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.NeutrinoTetrad",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/NeutrinoTetrad.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2522,7 +2522,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.NeutrinoTetrad",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/NeutrinoTetrad.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2554,7 +2554,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.NeutrinoTetrad",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/NeutrinoTetrad.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2580,13 +2580,269 @@
       }
     },
     {
+      "claim_id": "Leibniz.RimOffset.int_mu_sq",
+      "declaration": "Leibniz.RimOffset.int_mu_sq",
+      "formal_statement": "theorem int_mu_sq : ((1 : Rat) ^ 3 / 3) - (((-1 : Rat) ^ 3) / 3) = 2 / 3",
+      "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
+      "module": "Leibniz.RimOffset",
+      "proof_source": {
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
+        "path": "Leibniz/RimOffset.lean",
+        "repository": "Mega-Therion/4Leibniz"
+      },
+      "schema_version": "v1",
+      "source_refs": [
+        {
+          "line": 8,
+          "ref": "Leibniz/RimOffset.lean",
+          "type": "file"
+        }
+      ],
+      "status": "proved",
+      "title": "int_mu_sq",
+      "verification": {
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "sorries": 0,
+        "toolchain": "leanprover/lean4:v4.34.0-rc2"
+      }
+    },
+    {
+      "claim_id": "Leibniz.RimOffset.int_quad_weight",
+      "declaration": "Leibniz.RimOffset.int_quad_weight",
+      "formal_statement": "theorem int_quad_weight : ((-3 : Rat) / 5 + 4 / 3 - 1) = -4 / 15",
+      "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
+      "module": "Leibniz.RimOffset",
+      "proof_source": {
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
+        "path": "Leibniz/RimOffset.lean",
+        "repository": "Mega-Therion/4Leibniz"
+      },
+      "schema_version": "v1",
+      "source_refs": [
+        {
+          "line": 12,
+          "ref": "Leibniz/RimOffset.lean",
+          "type": "file"
+        }
+      ],
+      "status": "proved",
+      "title": "int_quad_weight",
+      "verification": {
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "sorries": 0,
+        "toolchain": "leanprover/lean4:v4.34.0-rc2"
+      }
+    },
+    {
+      "claim_id": "Leibniz.RimOffset.rim_a1",
+      "declaration": "Leibniz.RimOffset.rim_a1",
+      "formal_statement": "theorem rim_a1 (ε : Rat) : (3 / 2 : Rat) * ((-2) / 3 * ε) = -ε",
+      "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
+      "module": "Leibniz.RimOffset",
+      "proof_source": {
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
+        "path": "Leibniz/RimOffset.lean",
+        "repository": "Mega-Therion/4Leibniz"
+      },
+      "schema_version": "v1",
+      "source_refs": [
+        {
+          "line": 19,
+          "ref": "Leibniz/RimOffset.lean",
+          "type": "file"
+        }
+      ],
+      "status": "proved",
+      "title": "rim_a1",
+      "verification": {
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "sorries": 0,
+        "toolchain": "leanprover/lean4:v4.34.0-rc2"
+      }
+    },
+    {
+      "claim_id": "Leibniz.RimOffset.rim_dipole_coeff",
+      "declaration": "Leibniz.RimOffset.rim_dipole_coeff",
+      "formal_statement": "theorem rim_dipole_coeff : (3 / 2 : Rat) * ((-2) / 3) = -1",
+      "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
+      "module": "Leibniz.RimOffset",
+      "proof_source": {
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
+        "path": "Leibniz/RimOffset.lean",
+        "repository": "Mega-Therion/4Leibniz"
+      },
+      "schema_version": "v1",
+      "source_refs": [
+        {
+          "line": 16,
+          "ref": "Leibniz/RimOffset.lean",
+          "type": "file"
+        }
+      ],
+      "status": "proved",
+      "title": "rim_dipole_coeff",
+      "verification": {
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "sorries": 0,
+        "toolchain": "leanprover/lean4:v4.34.0-rc2"
+      }
+    },
+    {
+      "claim_id": "Leibniz.RimOffset.rim_quad_coeff",
+      "declaration": "Leibniz.RimOffset.rim_quad_coeff",
+      "formal_statement": "theorem rim_quad_coeff : (5 / 2 : Rat) * (1 / 2) * (-4 / 15) = -1 / 3",
+      "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
+      "module": "Leibniz.RimOffset",
+      "proof_source": {
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
+        "path": "Leibniz/RimOffset.lean",
+        "repository": "Mega-Therion/4Leibniz"
+      },
+      "schema_version": "v1",
+      "source_refs": [
+        {
+          "line": 27,
+          "ref": "Leibniz/RimOffset.lean",
+          "type": "file"
+        }
+      ],
+      "status": "proved",
+      "title": "rim_quad_coeff",
+      "verification": {
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "sorries": 0,
+        "toolchain": "leanprover/lean4:v4.34.0-rc2"
+      }
+    },
+    {
+      "claim_id": "Leibniz.RimOffset.rim_quad_integral",
+      "declaration": "Leibniz.RimOffset.rim_quad_integral",
+      "formal_statement": "theorem rim_quad_integral : (1 / 2 : Rat) * (-4 / 15) * 2 = -4 / 15",
+      "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
+      "module": "Leibniz.RimOffset",
+      "proof_source": {
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
+        "path": "Leibniz/RimOffset.lean",
+        "repository": "Mega-Therion/4Leibniz"
+      },
+      "schema_version": "v1",
+      "source_refs": [
+        {
+          "line": 23,
+          "ref": "Leibniz/RimOffset.lean",
+          "type": "file"
+        }
+      ],
+      "status": "proved",
+      "title": "rim_quad_integral",
+      "verification": {
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "sorries": 0,
+        "toolchain": "leanprover/lean4:v4.34.0-rc2"
+      }
+    },
+    {
+      "claim_id": "Leibniz.RimOffset.rim_ratio_at_one_percent",
+      "declaration": "Leibniz.RimOffset.rim_ratio_at_one_percent",
+      "formal_statement": "theorem rim_ratio_at_one_percent : (1 : Rat) / 100 / 3 = 1 / 300",
+      "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
+      "module": "Leibniz.RimOffset",
+      "proof_source": {
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
+        "path": "Leibniz/RimOffset.lean",
+        "repository": "Mega-Therion/4Leibniz"
+      },
+      "schema_version": "v1",
+      "source_refs": [
+        {
+          "line": 35,
+          "ref": "Leibniz/RimOffset.lean",
+          "type": "file"
+        }
+      ],
+      "status": "proved",
+      "title": "rim_ratio_at_one_percent",
+      "verification": {
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "sorries": 0,
+        "toolchain": "leanprover/lean4:v4.34.0-rc2"
+      }
+    },
+    {
+      "claim_id": "Leibniz.RimOffset.rim_ratio_from_coeffs",
+      "declaration": "Leibniz.RimOffset.rim_ratio_from_coeffs",
+      "formal_statement": "theorem rim_ratio_from_coeffs : ((-1 : Rat) / 3 * (1 / 100 * (1 / 100))) / (-(1 / 100)) = 1 / 300",
+      "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
+      "module": "Leibniz.RimOffset",
+      "proof_source": {
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
+        "path": "Leibniz/RimOffset.lean",
+        "repository": "Mega-Therion/4Leibniz"
+      },
+      "schema_version": "v1",
+      "source_refs": [
+        {
+          "line": 31,
+          "ref": "Leibniz/RimOffset.lean",
+          "type": "file"
+        }
+      ],
+      "status": "proved",
+      "title": "rim_ratio_from_coeffs",
+      "verification": {
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "checked_by": "lake build + lake env lean (#print axioms)",
+        "sorries": 0,
+        "toolchain": "leanprover/lean4:v4.34.0-rc2"
+      }
+    },
+    {
       "claim_id": "Leibniz.SpatiumRelativum.distantia_self",
       "declaration": "Leibniz.SpatiumRelativum.distantia_self",
       "formal_statement": "theorem distantia_self {N : ℕ} (m : Monas N) : distantia_relativa m m = 0",
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.SpatiumRelativum",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/SpatiumRelativum.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2618,7 +2874,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.SpatiumRelativum",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/SpatiumRelativum.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2657,7 +2913,7 @@
       "human_summary": "Declared as a bare Lean axiom: assumed without proof inside the kernel. No verification is claimed for it; any theorem that depends on it is catalogued as conditional. Statement: axiom exponential_map_exists {m N : ℕ} (X : Stiefel m N) (V : Matrix (Fin N) (Fin m) ℝ) :\n∃ γ : ℝ → Matrix (Fin N) (Fin m) ℝ, γ 0 = X.1 ∧ HasDerivAt γ V 0\nstructure GlobalFieldState (G : Type) (N : ℕ) where\nfieldValue : Fin N → G\ntime : ℝ\nstructure Holonomia (G : Type) (N : ℕ) where\nconnection : Fin N → Fin N → G\ngaugeGroup : Type",
       "module": "Leibniz.SpatiumRelativum",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/SpatiumRelativum.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2682,7 +2938,7 @@
       "human_summary": "Declared as a bare Lean axiom: assumed without proof inside the kernel. No verification is claimed for it; any theorem that depends on it is catalogued as conditional. Statement: axiom tangentSpace_closed {m N : ℕ} (X : Stiefel m N) (V : Matrix (Fin N) (Fin m) ℝ) :\ntangentSpace X V → HasDerivAt (fun t => geodesic X V t) V 0\naxiom exponential_map_exists {m N : ℕ} (X : Stiefel m N) (V : Matrix (Fin N) (Fin m) ℝ) :\n∃ γ : ℝ → Matrix (Fin N) (Fin m) ℝ, γ 0 = X.1 ∧ HasDerivAt γ V 0\nstructure GlobalFieldState (G : Type) (N : ℕ) where\nfieldValue : Fin N → G\ntime : ℝ\nstructure Holonomia (G : Type) (N : ℕ) where\nconnection : Fin N → Fin N → G\ngaugeGroup : Type",
       "module": "Leibniz.SpatiumRelativum",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/SpatiumRelativum.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2704,7 +2960,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2736,7 +2992,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2768,7 +3024,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2803,7 +3059,7 @@
       "human_summary": "Declared as a bare Lean axiom: assumed without proof inside the kernel. No verification is claimed for it; any theorem that depends on it is catalogued as conditional. Statement: axiom ghost_force_positive {x : ℝ} (hx : 0 < x) : 0 < ghostForce x\naxiom ghost_potential_positive {x : ℝ} (hx : 0 < x) : 0 < ghostPotential x\naxiom ghost_potential_strictConvex : StrictConvexOn ℝ (Ioi 0) ghostPotential\naxiom vis_mortua_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / (x ^ 2 / 2)) atTop (nhds 1)\naxiom vis_viva_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / x) (nhdsWithin 0 (Ioi 0)) (nhds 0)\nnoncomputable def parsViva (v₁ v₂ : ℝ) : ℝ",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2828,7 +3084,7 @@
       "human_summary": "Declared as a bare Lean axiom: assumed without proof inside the kernel. No verification is claimed for it; any theorem that depends on it is catalogued as conditional. Statement: axiom ghost_potential_positive {x : ℝ} (hx : 0 < x) : 0 < ghostPotential x\naxiom ghost_potential_strictConvex : StrictConvexOn ℝ (Ioi 0) ghostPotential\naxiom vis_mortua_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / (x ^ 2 / 2)) atTop (nhds 1)\naxiom vis_viva_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / x) (nhdsWithin 0 (Ioi 0)) (nhds 0)\nnoncomputable def parsViva (v₁ v₂ : ℝ) : ℝ",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2853,7 +3109,7 @@
       "human_summary": "Declared as a bare Lean axiom: assumed without proof inside the kernel. No verification is claimed for it; any theorem that depends on it is catalogued as conditional. Statement: axiom ghost_potential_strictConvex : StrictConvexOn ℝ (Ioi 0) ghostPotential\naxiom vis_mortua_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / (x ^ 2 / 2)) atTop (nhds 1)\naxiom vis_viva_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / x) (nhdsWithin 0 (Ioi 0)) (nhds 0)\nnoncomputable def parsViva (v₁ v₂ : ℝ) : ℝ",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2875,7 +3131,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2907,7 +3163,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2939,7 +3195,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -2971,7 +3227,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -3003,7 +3259,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -3038,7 +3294,7 @@
       "human_summary": "Declared as a bare Lean axiom: assumed without proof inside the kernel. No verification is claimed for it; any theorem that depends on it is catalogued as conditional. Statement: axiom vis_mortua_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / (x ^ 2 / 2)) atTop (nhds 1)\naxiom vis_viva_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / x) (nhdsWithin 0 (Ioi 0)) (nhds 0)\nnoncomputable def parsViva (v₁ v₂ : ℝ) : ℝ",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -3063,7 +3319,7 @@
       "human_summary": "Declared as a bare Lean axiom: assumed without proof inside the kernel. No verification is claimed for it; any theorem that depends on it is catalogued as conditional. Statement: axiom vis_viva_limit : Filter.Tendsto (fun x : ℝ => ghostPotential x / x) (nhdsWithin 0 (Ioi 0)) (nhds 0)\nnoncomputable def parsViva (v₁ v₂ : ℝ) : ℝ",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -3085,7 +3341,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -3117,7 +3373,7 @@
       "human_summary": "Checked by the pinned Lean toolchain: zero 'sorry', axiom dependencies: Classical.choice, Quot.sound, propext. The formal_statement field reproduces the complete content proved; no informal reading beyond it is asserted.",
       "module": "Leibniz.VisViva",
       "proof_source": {
-        "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+        "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
         "path": "Leibniz/VisViva.lean",
         "repository": "Mega-Therion/4Leibniz"
       },
@@ -3143,14 +3399,14 @@
       }
     }
   ],
-  "generated_at": "2026-10-20T14:51:57-05:00",
+  "generated_at": "2026-10-26T19:26:45-05:00",
   "generator": {
     "name": "4leibniz-formal-claims",
     "version": "1.0.0"
   },
   "schema_version": "v1",
   "source": {
-    "commit": "af99811d43c27b0ed833a658ab10c4b277301321",
+    "commit": "ea30a86d7077374fdabe51a1a7f2b65c17ff13e4",
     "lean_toolchain": "leanprover/lean4:v4.34.0-rc2",
     "repository": "Mega-Therion/4Leibniz"
   },
