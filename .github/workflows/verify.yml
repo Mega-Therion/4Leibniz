@@ -126,10 +126,13 @@ jobs:
         run: lake exe cache get
       - name: Install PyNaCl
         run: python3 -m pip install --quiet pynacl
-      - name: Allow unprivileged user namespaces
-        # ubuntu-latest (24.04) blocks them through AppArmor; the sandbox needs
-        # `unshare --net` and fails with "unshare failed: Operation not permitted".
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Install bubblewrap and allow user namespaces
+        # sandbox.py prefers bwrap. Without it the fallback is a bare `unshare --net`,
+        # which an unprivileged user cannot run ("unshare failed: Operation not permitted").
+        # ubuntu-latest (24.04) also blocks unprivileged user namespaces through AppArmor.
+        run: |
+          sudo apt-get install -y --no-install-recommends bubblewrap
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Attest (unsigned)
         run: python3 scripts/vkernel/attest.py . scripts/vkernel/vkernel.4leibniz.json proof-record.unsigned.json --unsigned
       - uses: actions/upload-artifact@v4
