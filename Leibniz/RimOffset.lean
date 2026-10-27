@@ -14,6 +14,8 @@ The definite integrals below are the evaluated antiderivatives.
 because the 4Leibniz mathlib build is not present in `.lake/packages`.
 -/
 
+namespace Leibniz.RimOffset
+
 /-- ∫₀¹ μ² dμ = 1/3, so ∫_{-1}^{1} μ² dμ = 2/3. -/
 theorem int_mu_sq : ((1 : Rat) ^ 3 / 3) - (((-1 : Rat) ^ 3) / 3) = 2 / 3 := by
   decide +kernel
@@ -45,3 +47,5 @@ theorem rim_ratio_from_coeffs : ((-1 : Rat) / 3 * (1 / 100 * (1 / 100))) / (-(1 
 /-- At the computed shell d/R = 1/100 the truncation ratio is 1/300. -/
 theorem rim_ratio_at_one_percent : (1 : Rat) / 100 / 3 = 1 / 300 := by
   decide +kernel
+
+end Leibniz.RimOffset
