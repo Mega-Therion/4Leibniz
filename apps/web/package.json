@@ -23,11 +23,11 @@
     "ai": "7.0.133",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.3",
-    "next": "^15.5.27",
+    "next": "^15.5.28",
     "postgres": "^3.4.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "zod": "^3.23.8"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",
