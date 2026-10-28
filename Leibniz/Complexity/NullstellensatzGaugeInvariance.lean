@@ -1,13 +1,23 @@
 /-!
-# Gauge Invariance of Algebraic Refutation Systems in Nullstellensatz
+# Concrete Nullstellensatz Certificates and Gauge Invariance
 
-Formal representation of:
+This module formalizes:
 1. Constructive AST polynomials over `Fin n → Int` with computable total degree.
-2. Invariance of total degree under the affine involution gauge substitution `flipPoly`.
-3. Gauge covariance of literal and clause falsification polynomials.
-4. Formal specification of algebraic refutation systems (Nullstellensatz & Polynomial Calculus).
-5. Bidirectional refutation correspondence under gauge transformation.
-6. Master Theorem: Strict gauge invariance of the minimum algebraic refutation degree.
+2. Invariance of total degree under the affine involution gauge substitution `flipPoly`:
+     totalDegree (flipPoly g p) ≤ totalDegree p.
+3. Evaluation covariance of multilinear clause polynomials:
+     evalPoly (clausePoly (flipClause g C)) x = evalPoly (clausePoly C) (flipPoint g x).
+4. Evaluation invariance of Boolean idempotency axioms:
+     evalPoly (boolAxiomPoly i) (flipPoint g x) = evalPoly (boolAxiomPoly i) x.
+5. Concrete Nullstellensatz refutation certificate definition:
+   - Exactly aligned multipliers q_idx for each clause occurrence
+   - Multipliers r_i for each Boolean axiom
+   - Bounded total degrees on both clause terms and Boolean terms:
+       totalDegree (q idx) + totalDegree (clausePoly (F.get idx)) ≤ d
+       totalDegree (r i) + 2 ≤ d
+   - Semantic algebraic certificate identity on assignments:
+       ∑_C eval(q_C) * eval(p_C) + ∑_i eval(r_i) * eval(B_i) = 1.
+6. Parameterized Algebraic Refutation Systems and Master Minimum-Degree Gauge Invariance Theorem.
 -/
 
 namespace NullstellensatzGauge
@@ -43,6 +53,16 @@ def flipPoint {n : Nat} (g : Fin n → Bool) (x : Fin n → Int) : Fin n → Int
   | true => 1 - x i
   | false => x i
 
+theorem flipPoint_true {n : Nat} (g : Fin n → Bool) (x : Fin n → Int) (i : Fin n) (h : g i = true) :
+    flipPoint g x i = 1 - x i := by
+  dsimp [flipPoint]
+  rw [h]
+
+theorem flipPoint_false {n : Nat} (g : Fin n → Bool) (x : Fin n → Int) (i : Fin n) (h : g i = false) :
+    flipPoint g x i = x i := by
+  dsimp [flipPoint]
+  rw [h]
+
 /-- Gauge transformation acting on variable x_i as a polynomial:
     x_i ↦ (if g_i then 1 - x_i else x_i). -/
 def flipVarPoly {n : Nat} (g : Fin n → Bool) (i : Fin n) : Poly n :=
@@ -50,7 +70,7 @@ def flipVarPoly {n : Nat} (g : Fin n → Bool) (i : Fin n) : Poly n :=
   | false => Poly.var i
   | true => Poly.add (Poly.const 1) (Poly.mul (Poly.const (-1)) (Poly.var i))
 
-/-- Theorem: Total degree of flipped variable polynomial is at most 1. -/
+/-- Total degree of flipped variable polynomial is at most 1. -/
 theorem flipVarPoly_degree {n : Nat} (g : Fin n → Bool) (i : Fin n) :
     totalDegree (flipVarPoly g i) ≤ 1 := by
   dsimp [flipVarPoly]
@@ -112,7 +132,7 @@ theorem eval_flipPoly {n : Nat} (g : Fin n → Bool) (p : Poly n) (x : Fin n →
     dsimp [flipPoly, evalPoly]
     rw [ihp, ihq]
 
-/-- Lemma: Invariance of Boolean Axiom under variable complementation:
+/-- Invariance of Boolean Axiom under variable complementation:
     (1 - x) * (1 - x) - (1 - x) = x * x - x. -/
 theorem boolean_axiom_flip (x : Int) :
     (1 - x) * (1 - x) - (1 - x) = x * x - x := by
@@ -136,15 +156,14 @@ theorem boolAxiomPoly_degree {n : Nat} (i : Fin n) :
   dsimp [boolAxiomPoly, totalDegree]
   omega
 
-/-- Theorem: Boolean ideal generators are invariant under gauge flip modulo evaluation. -/
+/-- Theorem: Boolean ideal generators are invariant under gauge flip on points:
+    evalPoly (boolAxiomPoly i) (flipPoint g x) = evalPoly (boolAxiomPoly i) x. -/
 theorem boolAxiomPoly_eval_flip {n : Nat} (g : Fin n → Bool) (i : Fin n) (x : Fin n → Int) :
-    evalPoly (flipPoly g (boolAxiomPoly i)) x = evalPoly (boolAxiomPoly i) x := by
-  rw [eval_flipPoly]
-  dsimp [boolAxiomPoly, evalPoly, flipPoint]
-  cases (g i) with
-  | false => rfl
-  | true =>
-    dsimp
+    evalPoly (boolAxiomPoly i) (flipPoint g x) = evalPoly (boolAxiomPoly i) x := by
+  dsimp [boolAxiomPoly, evalPoly]
+  cases hg : g i
+  · rw [flipPoint_false g x i hg]
+  · rw [flipPoint_true g x i hg]
     have h := boolean_axiom_flip (x i)
     omega
 
@@ -206,6 +225,45 @@ def flipFormula {n : Nat} (g : Fin n → Bool) (f : Formula n) : Formula n :=
   | [] => []
   | c :: rest => flipClause g c :: flipFormula g rest
 
+/-- Theorem: Literal violation polynomial evaluation covariance:
+    evalPoly (litPoly (flipLit g lit)) x = evalPoly (litPoly lit) (flipPoint g x). -/
+theorem eval_litPoly_flip {n : Nat} (g : Fin n → Bool) (lit : Literal n) (x : Fin n → Int) :
+    evalPoly (litPoly (flipLit g lit)) x = evalPoly (litPoly lit) (flipPoint g x) := by
+  cases lit with | mk v p =>
+  cases p <;> cases hg : g v
+  · have h_xor : xor false (g v) = false := by rw [hg]; rfl
+    dsimp [flipLit]
+    rw [h_xor]
+    dsimp [litPoly, evalPoly]
+    rw [flipPoint_false g x v hg]
+  · have h_xor : xor false (g v) = true := by rw [hg]; rfl
+    dsimp [flipLit]
+    rw [h_xor]
+    dsimp [litPoly, evalPoly]
+    rw [flipPoint_true g x v hg]
+    omega
+  · have h_xor : xor true (g v) = true := by rw [hg]; rfl
+    dsimp [flipLit]
+    rw [h_xor]
+    dsimp [litPoly, evalPoly]
+    rw [flipPoint_false g x v hg]
+  · have h_xor : xor true (g v) = false := by rw [hg]; rfl
+    dsimp [flipLit]
+    rw [h_xor]
+    dsimp [litPoly, evalPoly]
+    rw [flipPoint_true g x v hg]
+    omega
+
+/-- Theorem: Clause polynomial evaluation covariance bridge:
+    evalPoly (clausePoly (flipClause g c)) x = evalPoly (clausePoly c) (flipPoint g x). -/
+theorem eval_clausePoly_flip {n : Nat} (g : Fin n → Bool) (c : Clause n) (x : Fin n → Int) :
+    evalPoly (clausePoly (flipClause g c)) x = evalPoly (clausePoly c) (flipPoint g x) := by
+  induction c with
+  | nil => rfl
+  | cons lit rest ih =>
+    dsimp [flipClause, clausePoly, evalPoly]
+    rw [eval_litPoly_flip g lit x, ih]
+
 /-- Gauge involution on points: flipPoint g (flipPoint g x) = x. -/
 theorem flipPoint_involutive {n : Nat} (g : Fin n → Bool) (x : Fin n → Int) :
     flipPoint g (flipPoint g x) = x := by
@@ -240,6 +298,18 @@ theorem flipFormula_involutive {n : Nat} (g : Fin n → Bool) (F : Formula n) :
   | cons c rest ih =>
     dsimp [flipFormula]
     rw [flipClause_involutive g c, ih]
+
+/-- Concrete Nullstellensatz refutation certificate definition over integer polynomials:
+    Contains multiplier polynomials q for each clause occurrence and r for each Boolean axiom,
+    with rigorous total degree bounds and algebraic identity certification. -/
+structure ConcreteNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
+  q : Fin F.length → Poly n
+  r : Fin n → Poly n
+  clause_deg_bound : ∀ (idx : Fin F.length), totalDegree (q idx) + totalDegree (clausePoly (F.get idx)) ≤ d
+  bool_deg_bound : ∀ (i : Fin n), totalDegree (r i) + 2 ≤ d
+  identity : ∀ (x : Fin n → Int),
+    (List.finRange F.length).foldl (fun acc idx => acc + evalPoly (q idx) x * evalPoly (clausePoly (F.get idx)) x) 0 +
+    (List.finRange n).foldl (fun acc i => acc + evalPoly (r i) x * evalPoly (boolAxiomPoly i) x) 0 = 1
 
 /-- Abstract definition of an algebraic refutation system for CNF formulas.
     A sound algebraic refutation system requires that whenever a formula F has a refutation
@@ -298,6 +368,7 @@ end NullstellensatzGauge
 #print axioms NullstellensatzGauge.boolean_axiom_flip
 #print axioms NullstellensatzGauge.boolAxiomPoly_eval_flip
 #print axioms NullstellensatzGauge.clausePoly_degree
+#print axioms NullstellensatzGauge.eval_clausePoly_flip
 #print axioms NullstellensatzGauge.flipPoint_involutive
 #print axioms NullstellensatzGauge.flipFormula_involutive
 #print axioms NullstellensatzGauge.refutation_iff_gauge
