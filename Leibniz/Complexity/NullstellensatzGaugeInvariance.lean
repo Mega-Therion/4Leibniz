@@ -299,17 +299,193 @@ theorem flipFormula_involutive {n : Nat} (g : Fin n → Bool) (F : Formula n) :
     dsimp [flipFormula]
     rw [flipClause_involutive g c, ih]
 
+/-- Inductive evaluation of clause terms: ∑_i q_i * clausePoly C_i. -/
+def evalClauseTerms {n : Nat} (q : List (Poly n)) (F : Formula n) (x : Fin n → Int) : Int :=
+  match q, F with
+  | [], _ => 0
+  | _, [] => 0
+  | q_head :: q_tail, c :: F_tail =>
+    evalPoly q_head x * evalPoly (clausePoly c) x + evalClauseTerms q_tail F_tail x
+
+/-- Theorem: Evaluation covariance for clause terms under affine gauge flip:
+    evalClauseTerms (q.map (flipPoly g)) (flipFormula g F) x = evalClauseTerms q F (flipPoint g x). -/
+theorem evalClauseTerms_flip {n : Nat} (g : Fin n → Bool) (q : List (Poly n)) (F : Formula n) (x : Fin n → Int) :
+    evalClauseTerms (q.map (flipPoly g)) (flipFormula g F) x =
+    evalClauseTerms q F (flipPoint g x) := by
+  induction q generalizing F with
+  | nil => rfl
+  | cons q_head q_tail ih =>
+    cases F with
+    | nil => rfl
+    | cons c F_tail =>
+      dsimp [flipFormula, evalClauseTerms, List.map]
+      rw [eval_flipPoly g q_head x, eval_clausePoly_flip g c x]
+      have ih_call := ih F_tail
+      rw [ih_call]
+
+/-- Sum of Boolean axiom terms: ∑_i r_i * boolAxiomPoly i. -/
+def evalBoolTerms {n : Nat} (r : Fin n → Poly n) (x : Fin n → Int) : Int :=
+  (List.finRange n).foldl (fun acc i => acc + evalPoly (r i) x * evalPoly (boolAxiomPoly i) x) 0
+
+/-- Helper lemma: Congruence for list foldl with term addition. -/
+theorem foldl_term_congr {α : Type} (L : List α) (f g : α → Int)
+    (h : ∀ a, a ∈ L → f a = g a) (acc : Int) :
+    L.foldl (fun s a => s + f a) acc = L.foldl (fun s a => s + g a) acc := by
+  induction L generalizing acc with
+  | nil => rfl
+  | cons hd tl ih =>
+    dsimp [List.foldl]
+    have h_hd : f hd = g hd := h hd (List.Mem.head tl)
+    have h_tl : ∀ a, a ∈ tl → f a = g a := fun a ha => h a (List.Mem.tail hd ha)
+    rw [h_hd]
+    exact ih h_tl (acc + g hd)
+
+/-- Theorem: Evaluation covariance for Boolean axiom terms under affine gauge flip:
+    evalBoolTerms (fun i => flipPoly g (r i)) x = evalBoolTerms r (flipPoint g x). -/
+theorem evalBoolTerms_flip {n : Nat} (g : Fin n → Bool) (r : Fin n → Poly n) (x : Fin n → Int) :
+    evalBoolTerms (fun i => flipPoly g (r i)) x = evalBoolTerms r (flipPoint g x) := by
+  dsimp [evalBoolTerms]
+  apply foldl_term_congr
+  intro i _
+  rw [eval_flipPoly g (r i) x, boolAxiomPoly_eval_flip g i x]
+
+/-- Length preservation of formula under flipFormula. -/
+theorem flipFormula_length {n : Nat} (g : Fin n → Bool) (F : Formula n) :
+    (flipFormula g F).length = F.length := by
+  induction F with
+  | nil => rfl
+  | cons c rest ih =>
+    dsimp [flipFormula]
+    rw [ih]
+
+/-- Length preservation of clause under flipClause. -/
+theorem flipClause_length {n : Nat} (g : Fin n → Bool) (c : Clause n) :
+    (flipClause g c).length = c.length := by
+  induction c with
+  | nil => rfl
+  | cons lit rest ih =>
+    dsimp [flipClause]
+    rw [ih]
+
+/-- List indexing under map flipPoly. -/
+theorem get_map_flipPoly {n : Nat} (g : Fin n → Bool) (q : List (Poly n)) (i : Nat) (hq : i < (q.map (flipPoly g)).length) :
+    (q.map (flipPoly g)).get ⟨i, hq⟩ = flipPoly g (q.get ⟨i, by rw [List.length_map] at hq; exact hq⟩) := by
+  induction q generalizing i with
+  | nil =>
+    have : i < 0 := by rw [List.length_map] at hq; exact hq
+    contradiction
+  | cons hd tl ih =>
+    cases i with
+    | zero => rfl
+    | succ j =>
+      dsimp [List.map, List.get]
+      have hj : j < (tl.map (flipPoly g)).length := by
+        dsimp [List.map] at hq
+        omega
+      exact ih j hj
+
+/-- List indexing under flipFormula. -/
+theorem get_flipFormula {n : Nat} (g : Fin n → Bool) (F : Formula n) (i : Nat) (hF : i < (flipFormula g F).length) :
+    (flipFormula g F).get ⟨i, hF⟩ = flipClause g (F.get ⟨i, by rw [flipFormula_length] at hF; exact hF⟩) := by
+  induction F generalizing i with
+  | nil =>
+    dsimp [flipFormula] at hF
+    contradiction
+  | cons c rest ih =>
+    cases i with
+    | zero => rfl
+    | succ j =>
+      dsimp [flipFormula, List.get]
+      have hj : j < (flipFormula g rest).length := by
+        dsimp [flipFormula] at hF
+        omega
+      exact ih j hj
+
 /-- Concrete Nullstellensatz refutation certificate definition over integer polynomials:
-    Contains multiplier polynomials q for each clause occurrence and r for each Boolean axiom,
+    Contains multiplier polynomials q aligned with each clause occurrence and r for each Boolean axiom,
     with rigorous total degree bounds and algebraic identity certification. -/
 structure ConcreteNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
-  q : Fin F.length → Poly n
+  q : List (Poly n)
   r : Fin n → Poly n
-  clause_deg_bound : ∀ (idx : Fin F.length), totalDegree (q idx) + totalDegree (clausePoly (F.get idx)) ≤ d
+  q_len : q.length = F.length
+  clause_deg_bound : ∀ (i : Nat) (hq : i < q.length) (hF : i < F.length),
+    totalDegree (q.get ⟨i, hq⟩) + totalDegree (clausePoly (F.get ⟨i, hF⟩)) ≤ d
   bool_deg_bound : ∀ (i : Fin n), totalDegree (r i) + 2 ≤ d
   identity : ∀ (x : Fin n → Int),
-    (List.finRange F.length).foldl (fun acc idx => acc + evalPoly (q idx) x * evalPoly (clausePoly (F.get idx)) x) 0 +
-    (List.finRange n).foldl (fun acc i => acc + evalPoly (r i) x * evalPoly (boolAxiomPoly i) x) 0 = 1
+    evalClauseTerms q F x + evalBoolTerms r x = 1
+
+/-- Transport theorem for Concrete Nullstellensatz certificates:
+    Transforms multipliers q ↦ q.map (flipPoly g) and r ↦ fun i => flipPoly g (r i)
+    and verifies that all degree bounds and algebraic identities hold for flipFormula g F at degree ≤ d. -/
+def transportConcreteNSRefutation {n : Nat} {F : Formula n} {d : Nat}
+    (g : Fin n → Bool) (cert : ConcreteNSRefutation F d) :
+    ConcreteNSRefutation (flipFormula g F) d where
+  q := cert.q.map (flipPoly g)
+  r := fun i => flipPoly g (cert.r i)
+  q_len := by
+    rw [List.length_map, cert.q_len, flipFormula_length]
+  clause_deg_bound := by
+    intro i hq hF
+    rw [get_map_flipPoly]
+    rw [get_flipFormula]
+    rw [clausePoly_degree (flipClause g _), flipClause_length]
+    rw [← clausePoly_degree (F.get _)]
+    have h_orig := cert.clause_deg_bound i (by rw [List.length_map] at hq; exact hq) (by rw [flipFormula_length] at hF; exact hF)
+    have h_deg := flipPoly_deg_le g (cert.q.get ⟨i, by rw [List.length_map] at hq; exact hq⟩)
+    omega
+  bool_deg_bound := by
+    intro i
+    have h_orig := cert.bool_deg_bound i
+    have h_deg := flipPoly_deg_le g (cert.r i)
+    omega
+  identity := by
+    intro x
+    rw [evalClauseTerms_flip g cert.q F x]
+    rw [evalBoolTerms_flip g cert.r x]
+    exact cert.identity (flipPoint g x)
+
+/-- Predicate stating existence of a concrete Nullstellensatz refutation certificate at degree ≤ d. -/
+def HasConcreteNSRefutation {n : Nat} (F : Formula n) (d : Nat) : Prop :=
+  Nonempty (ConcreteNSRefutation F d)
+
+/-- Bidirectional Equivalence Theorem for Concrete Nullstellensatz refutations:
+    A formula F has a concrete Nullstellensatz refutation at degree ≤ d if and only if
+    flipFormula g F has a concrete Nullstellensatz refutation at degree ≤ d. -/
+theorem hasConcreteNSRefutation_iff_gauge {n : Nat}
+    (g : Fin n → Bool) (F : Formula n) (d : Nat) :
+    HasConcreteNSRefutation (flipFormula g F) d ↔ HasConcreteNSRefutation F d := by
+  constructor
+  · rintro ⟨cert⟩
+    have cert_flipped := transportConcreteNSRefutation g cert
+    rw [flipFormula_involutive g F] at cert_flipped
+    exact ⟨cert_flipped⟩
+  · rintro ⟨cert⟩
+    exact ⟨transportConcreteNSRefutation g cert⟩
+
+/-- Minimum refutation degree predicate for concrete Nullstellensatz certificates. -/
+def IsMinConcreteNSDegree {n : Nat} (F : Formula n) (d : Nat) : Prop :=
+  HasConcreteNSRefutation F d ∧ (∀ (k : Nat), k < d → ¬ HasConcreteNSRefutation F k)
+
+/-- Master Theorem for Concrete Nullstellensatz:
+    The minimum concrete Nullstellensatz refutation degree is strictly invariant under gauge transformation:
+    IsMinConcreteNSDegree (flipFormula g F) d ↔ IsMinConcreteNSDegree F d. -/
+theorem min_concrete_ns_degree_gauge_invariant {n : Nat}
+    (g : Fin n → Bool) (F : Formula n) (d : Nat) :
+    IsMinConcreteNSDegree (flipFormula g F) d ↔ IsMinConcreteNSDegree F d := by
+  dsimp [IsMinConcreteNSDegree]
+  constructor
+  · rintro ⟨hd, hmin⟩
+    constructor
+    · exact (hasConcreteNSRefutation_iff_gauge g F d).mp hd
+    · intro k hk hk_ref
+      have hk_gauge := (hasConcreteNSRefutation_iff_gauge g F k).mpr hk_ref
+      exact (hmin k hk) hk_gauge
+  · rintro ⟨hd, hmin⟩
+    constructor
+    · exact (hasConcreteNSRefutation_iff_gauge g F d).mpr hd
+    · intro k hk hk_ref
+      have hk_orig := (hasConcreteNSRefutation_iff_gauge g F k).mp hk_ref
+      exact (hmin k hk) hk_orig
 
 /-- Abstract definition of an algebraic refutation system for CNF formulas.
     A sound algebraic refutation system requires that whenever a formula F has a refutation
@@ -319,6 +495,11 @@ structure AlgebraicRefutationSystem (n : Nat) where
   hasRefutation : Formula n → Nat → Prop
   deg_preservation : ∀ (F : Formula n) (d : Nat) (g : Fin n → Bool),
     hasRefutation F d → hasRefutation (flipFormula g F) d
+
+/-- Concrete Nullstellensatz Refutation System as an instance of AlgebraicRefutationSystem. -/
+def concreteNSRefutationSystem (n : Nat) : AlgebraicRefutationSystem n where
+  hasRefutation := HasConcreteNSRefutation
+  deg_preservation := fun _ _ g ⟨cert⟩ => ⟨transportConcreteNSRefutation g cert⟩
 
 /-- Bidirectional Equivalence Theorem:
     A formula F has an algebraic refutation of degree ≤ d if and only if F^g has an algebraic
@@ -371,5 +552,9 @@ end NullstellensatzGauge
 #print axioms NullstellensatzGauge.eval_clausePoly_flip
 #print axioms NullstellensatzGauge.flipPoint_involutive
 #print axioms NullstellensatzGauge.flipFormula_involutive
+#print axioms NullstellensatzGauge.transportConcreteNSRefutation
+#print axioms NullstellensatzGauge.hasConcreteNSRefutation_iff_gauge
+#print axioms NullstellensatzGauge.min_concrete_ns_degree_gauge_invariant
+#print axioms NullstellensatzGauge.concreteNSRefutationSystem
 #print axioms NullstellensatzGauge.refutation_iff_gauge
 #print axioms NullstellensatzGauge.min_refutation_degree_gauge_invariant
