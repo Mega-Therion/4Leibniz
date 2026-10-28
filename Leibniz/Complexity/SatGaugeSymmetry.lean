@@ -117,3 +117,23 @@ theorem flipFormulaList_involutive {n : Nat} (g : PolarityMask n) (f : List (Lis
     rw [flipClauseList_involutive g c, ih]
 
 end SatGauge
+
+/-!
+### Axiom Dependency Ledger
+
+Verified via `#print axioms`:
+- `SatGauge.evalLit_flip`: 0 axioms (purely computational / structural)
+- `SatGauge.evalClauseList_flip`: 0 axioms (purely computational / structural)
+- `SatGauge.evalFormulaList_flip`: 0 axioms (purely computational / structural)
+- `SatGauge.flipLit_involutive`: 0 axioms (purely computational / structural)
+- `SatGauge.flipClauseList_involutive`: 0 axioms (purely computational / structural)
+- `SatGauge.flipFormulaList_involutive`: 0 axioms (purely computational / structural)
+- `SatGauge.flipAssignment_involutive`: relies solely on Lean core standard `[Quot.sound]` (due to `funext` on function equality). 0 custom axioms.
+-/
+#print axioms SatGauge.evalLit_flip
+#print axioms SatGauge.evalClauseList_flip
+#print axioms SatGauge.evalFormulaList_flip
+#print axioms SatGauge.flipAssignment_involutive
+#print axioms SatGauge.flipLit_involutive
+#print axioms SatGauge.flipClauseList_involutive
+#print axioms SatGauge.flipFormulaList_involutive
