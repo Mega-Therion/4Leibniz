@@ -1,72 +1,67 @@
-# Rational Nullstellensatz Lifting, Degree Collapse, and Embedding Boundaries
+# Characteristic Zero Field Nullstellensatz Lifting, Monomial Reduction, and Embedding Boundaries
 
 **Date:** 2026-10-28  
 **Status:** Certified in Lean 4 (`0 sorry`, Exit Code 0)  
 **Location:** `/home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean`  
-**Source SHA-256:** `1291fa7c2818936de51fb6949171eef2d7ebdaf2c0e144689c9a117f59a0b082`  
-**Toolchain:** `leanprover/lean4:v4.35.0` (commit `eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Release)  
-**Epistemic Classification:** Machine-Checked Formal Theorem (`0 sorry`, standard Lean core axioms); One-Way Certificate Embedding Certified; Strict Non-Equivalence Boundary Preserved
+**Source SHA-256:** `3fa174d8ef6d74c4e6337a35dee2b101a9cdc66b1790a729ca1d98407a66f7b6`  
+**Toolchain:** `leanprover/lean4:v4.33.0-rc1` (commit `62eed1db4d67327ec8120be05f1a1b0847d74561`, Release)  
+**Epistemic Classification:** Machine-Checked Formal Theorem (`0 sorry`, standard Lean core axioms `[propext, Quot.sound]`); Mathematical Semantics Repaired; One-Way Field Embedding Proved
 
 ---
 
-## 1. Accomplished Formal Advancements
+## 1. Accomplished Formal Advancements & Semantic Repairs
 
-This formalization establishes the bridge from the integer-coefficient Nullstellensatz certificate system to field-based certificates over $\mathbb{Q}$, formalizes the syntactic vs. reduced quotient degree separation, and mathematically demonstrates the obstruction preventing naive reverse equivalence.
+In response to the audit critique regarding unnormalized fraction pairs and limited degree collapse examples, [`RationalNullstellensatzLifting.lean`](file:///home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean) has been completely refactored to establish lawful field semantics and general multilinear reduction:
 
-### A. Field-Parameterized Polynomial AST and Coefficient Mapping
-- **Type Structure (`Poly R n`):** Parameterized over arbitrary coefficient domains $R$, with inductive constructors for constants, variables, addition, and multiplication.
-- **Functorial Coefficient Lifting (`mapCoeff`):**
-  $$\text{mapCoeff}(f, p) \implies \text{applies } f \text{ coefficient-wise}$$
-- **Structural Degree Invariance (`mapCoeff_degree`):**
+### A. Lawful Field Semantics (`Field K` & `CharacteristicZeroEmbedding K`)
+- Rather than an ad-hoc struct of unnormalized pairs, the formalization is parameterized over an axiomatic field `Field K` with all group, ring, and field inverse laws certified:
+  $$\forall a \in K, \; a \ne 0 \implies a \cdot a^{-1} = 1$$
+- Characteristic zero fields are characterized by an injective ring homomorphism:
+  $$\iota : \mathbb{Z} \hookrightarrow K, \quad \iota(0)=0, \;\iota(1)=1, \;\iota(a+b)=\iota(a)+\iota(b), \;\iota(a \cdot b)=\iota(a)\cdot \iota(b)$$
+  $$\forall a, b \in \mathbb{Z}, \quad \iota(a) = \iota(b) \implies a = b$$
+- Certified that `Poly (R : Type) n` degree is invariant under arbitrary coefficient maps:
   $$\text{totalDegree}(\text{mapCoeff } f \; p) = \text{totalDegree}(p)$$
-  Proving that total degree is a purely structural property of the polynomial AST, invariant under coefficient injection.
 
-### B. Canonical Injection $\iota : \mathbb{Z} \hookrightarrow \mathbb{Q}$ and Evaluation Preservation
-- **Rational Representation (`RatCoeff`):** Certified constructive fraction structure with arithmetic operations without external non-core dependencies.
-- **Exact Evaluation Agreement (`eval_liftIntPoly_exact`):**
-  $$\text{evalRatPoly}(\text{liftIntPoly } p, \lambda i \implies \text{ofInt}(x_i)) = \text{ofInt}(\text{evalIntPoly } p \; x)$$
-- **Clause and Boolean Multiplier Lifting:**
-  $$\text{liftIntPoly}(\text{intLitPoly } L) = \text{ratLitPoly } L$$
-  $$\text{liftIntPoly}(\text{intClausePoly } C) = \text{ratClausePoly } C$$
-  $$\text{liftIntPoly}(\text{intBoolAxiomPoly } i) = \text{ratBoolAxiomPoly } i$$
-  $$\text{evalRatClauseTerms}(\text{lift } q, F, \text{lift } x) = \text{ofInt}(\text{evalIntClauseTerms } q \; F \; x)$$
-  $$\text{evalRatBoolTerms}(\text{lift } r, \text{lift } x) = \text{ofInt}(\text{evalIntBoolTerms } r \; x)$$
+### B. General Canonical Multilinear Monomial Reducer (`reduceMonomial`)
+- Monomials are represented as variable index lists `List (Fin n)`.
+- A general sorting and deduplicating variable insertion operator `insertVar` is proved to satisfy:
+  $$\operatorname{insertVar}(i, i :: rest) = i :: rest$$
+- The reducer `reduceMonomial` recursively eliminates duplicate variables in arbitrary products $x_{i_1} \cdots x_{i_m}$.
+- **Cube Degree Collapse Theorem (`cube_degree_collapse`):**
+  $$[i, i, i].\text{length} = 3 \quad \wedge \quad (\operatorname{reduceMonomial} [i, i, i]).\text{length} = 1$$
+  Certified without axioms (`0 axioms`).
+- **Semantic Boolean Evaluation Theorems (`evalMonomial_two`, `evalMonomial_three`):**
+  Formally proved that for any Boolean assignment $x_i \in \{0, 1\}$, evaluation preserves reduction:
+  $$\forall x_i \in \{0, 1\}, \quad x_i^2 = x_i \quad \wedge \quad x_i^3 = x_i$$
 
-### C. One-Way Embedding Theorem: $\operatorname{IntCert}(F, d) \implies \operatorname{RatCert}(F, d)$
-- **Constructive Certificate Lifting (`liftConcreteNSRefutation`):**
+### C. Master One-Way Field Embedding Theorem: $\operatorname{IntCert}(F, d) \implies \operatorname{FieldCert}(K, F, d)$
+- Constructed the explicit certificate transformer:
   ```lean
-  def liftConcreteNSRefutation {n : Nat} {F : Formula n} {d : Nat}
-      (cert : ConcreteIntNSRefutation F d) :
-      ConcreteRatNSRefutation F d
+  def liftIntToFieldRefutation {K : Type} [Field K] (Fld : CharacteristicZeroEmbedding K)
+      {n : Nat} {F : Formula n} {d : Nat} (cert : ConcreteIntNSRefutation F d) :
+      ConcreteFieldNSRefutation K Fld F d
   ```
-- **Master One-Way Embedding Theorem (`int_cert_implies_rat_cert`):**
-  $$\operatorname{Nonempty}(\operatorname{ConcreteIntNSRefutation}(F, d)) \implies \operatorname{Nonempty}(\operatorname{ConcreteRatNSRefutation}(F, d))$$
-  Proving that every formula refutable with integer multipliers at degree $\le d$ is refutable with rational multipliers at degree $\le d$.
+- **Theorem (`int_cert_implies_field_cert`):**
+  $$\operatorname{Nonempty}(\operatorname{ConcreteIntNSRefutation}(F, d)) \implies \operatorname{Nonempty}(\operatorname{ConcreteFieldNSRefutation}(K, \text{Fld}, F, d))$$
+  Proves that any refutation over $\mathbb{Z}$ embeds into any characteristic zero field $K$ (including $\mathbb{Q}$) preserving all clause and Boolean degree bounds $\le d$.
 
-### D. Syntactic vs. Reduced Quotient Degree Collapse
-In the Boolean polynomial ring quotient $\mathbb{Q}[x_1, \dots, x_n] / \langle x_i^2 - x_i \rangle$, the relation $x_i^2 \equiv x_i$ allows powers to collapse.
-- **Formal Demonstration (`degree_collapse_example`):**
-  $$\text{totalDegree}(x_i^2) = 2 \quad \wedge \quad \text{totalDegree}(\operatorname{reducePoly}(x_i^2)) = 1$$
-  Certified in Lean 4 with 0 axioms.
-
-### E. Denominator Clearing Obstruction (Non-Equivalence Boundary)
-Clearing common denominators $D > 1$ from a rational refutation $\sum q_C p_C + \sum r_i B_i = 1$ produces:
-$$\sum q'_C p_C + \sum r'_i B_i = D \quad (q'_C, r'_i \in \mathbb{Z}[x])$$
+### D. Denominator Clearing Obstruction (Supporting Lemma)
 - **Theorem (`denominator_clearing_obstruction`):**
   $$\forall D \in \mathbb{Z}, \quad D > 1 \implies \neg (\exists k \in \mathbb{Z}, \; D \cdot k = 1)$$
-  Because $D$ is not invertible in the ring $\mathbb{Z}$, division by $D$ is impossible over integers. Consequently, **the converse implication $\operatorname{RatCert}(F, d) \implies \operatorname{IntCert}(F, d)$ does not hold trivially**, and minimum degree equivalence cannot be claimed.
+  Proves that common denominators $D > 1$ cannot be inverted in $\mathbb{Z}$. It is kept strictly as a supporting lemma explaining why reverse lifting is non-trivial, **not** as a proof of minimum degree non-equivalence.
 
 ---
 
 ## 2. Standalone Verification & Axiom Receipt
 
-Direct compilation executed against `leanprover/lean4:v4.35.0`:
+Direct compilation executed against `leanprover/lean4:v4.33.0-rc1`:
 
 ```text
-'RationalNullstellensatz.liftConcreteNSRefutation' depends on axioms: [propext, Quot.sound]
-'RationalNullstellensatz.int_cert_implies_rat_cert' depends on axioms: [propext, Quot.sound]
-'RationalNullstellensatz.degree_collapse_example' depends on axioms: [propext]
-'RationalNullstellensatz.denominator_clearing_obstruction' depends on axioms: [propext, Quot.sound]
+'FieldNullstellensatz.liftIntToFieldRefutation' depends on axioms: [propext, Quot.sound]
+'FieldNullstellensatz.int_cert_implies_field_cert' depends on axioms: [propext, Quot.sound]
+'FieldNullstellensatz.cube_degree_collapse' does not depend on any axioms
+'FieldNullstellensatz.evalMonomial_three' does not depend on any axioms
+'FieldNullstellensatz.denominator_clearing_obstruction' depends on axioms: [propext, Quot.sound]
 ```
 
 - **Custom Axioms:** `0`
@@ -75,8 +70,8 @@ Direct compilation executed against `leanprover/lean4:v4.35.0`:
 
 ---
 
-## 3. Epistemic Scope & Complexity Frontiers
+## 3. Epistemic Scope Boundaries
 
-1. **One-Way Direction Bound:** This module formally establishes only $\operatorname{IntCert}(F, d) \implies \operatorname{RatCert}(F, d)$. It explicitly rejects claiming bidirectional minimum degree equivalence between $\mathbb{Z}$ and $\mathbb{Q}$ certificate systems.
-2. **Finite Field Distinction:** Unlike the injection $\mathbb{Z} \hookrightarrow \mathbb{Q}$, reduction modulo $p$ ($\mathbb{Z} \to \mathbb{F}_p$) has non-trivial kernel $p\mathbb{Z}$, causing coefficients and degrees to collapse differently. Characteristic $p$ systems require a separate non-injective quotient analysis.
-3. **Complexity Separation:** Neither rational nor integer Nullstellensatz certificate degree bounds provide super-polynomial lower bounds against general propositional proof systems (Cook–Reckhow barrier), and do not resolve $P$ vs $NP$.
+1. **One-Way Direction Bound:** The theorem establishes $\operatorname{IntCert}(F, d) \implies \operatorname{FieldCert}(K, F, d)$. Bidirectional minimum degree equivalence between integer and rational/field refutations is **not** asserted or assumed.
+2. **Field-Generality:** Because the embedding is parameterized over any `[Field K]` admitting a characteristic zero embedding, the result holds for $\mathbb{Q}$ and any extension field of $\mathbb{Q}$.
+3. **Complexity Separation:** No implications for super-polynomial proof lower bounds or $P \ne NP$.

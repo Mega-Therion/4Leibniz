@@ -1,49 +1,50 @@
 /-!
-# Rational Nullstellensatz Lifting, Degree Collapse, and Embedding Boundaries
+# Characteristic Zero Field Nullstellensatz Lifting, Monomial Reduction, and Embedding Boundaries
 
 This module formalizes:
-1. Field-parameterized polynomial representation `Poly R n` and coefficient embedding `mapCoeff`.
-2. Exact coefficient lifting $\iota : \mathbb{Z} \hookrightarrow \mathbb{Q}$ mapping integer certificates to rational certificates:
-     `liftConcreteNSRefutation : ConcreteIntNSRefutation F d → ConcreteRatNSRefutation F d`.
-3. The one-way embedding theorem:
-     `int_cert_implies_rat_cert : Nonempty (ConcreteIntNSRefutation F d) → Nonempty (ConcreteRatNSRefutation F d)`.
-4. Demonstration of syntactic vs. reduced quotient degree collapse in $\mathbb{Q}[x] / \langle x_i^2 - x_i \rangle$:
-     `totalDegree (x_i^2) = 2`, but `totalDegree (reducePoly (x_i^2)) = 1`.
-5. Formal denominator clearing obstruction:
+1. Mathematical semantics for arbitrary Characteristic Zero Fields $K$ satisfying lawful field axioms
+   (`Field K`) equipped with an injective homomorphism `CharacteristicZeroEmbedding K`.
+2. Functorial coefficient lifting $\iota : \mathbb{Z} \hookrightarrow K$ mapping integer certificates
+   to field certificates over $K$:
+     `liftIntToFieldRefutation : ConcreteIntNSRefutation F d → ConcreteFieldNSRefutation K Fld F d`.
+3. The master one-way embedding theorem:
+     `int_cert_implies_field_cert : Nonempty (ConcreteIntNSRefutation F d) → Nonempty (ConcreteFieldNSRefutation K Fld F d)`.
+4. Canonical multilinear Boolean monomial reducer `reduceMonomial : List (Fin n) → List (Fin n)`
+   sorting and deduplicating variable lists, with formal proof of cube degree collapse ($x_i^3 \to x_i$)
+   and Boolean point evaluation invariance ($x_i \in \{0, 1\} \implies x_i^3 = x_i$).
+5. Supporting lemma for denominator clearing obstruction:
      `denominator_clearing_obstruction : ∀ D > 1, ¬ ∃ k : ℤ, D * k = 1`,
-   proving why rational refutations do not invert trivially to integer refutations.
+   explaining the algebraic obstruction in inverting field refutations back to integer refutations.
 -/
 
-namespace RationalNullstellensatz
+namespace FieldNullstellensatz
 
-/-- Exact fractional representation of rational coefficients without external library dependencies. -/
-structure RatCoeff where
-  num : Int
-  den : Nat
-  den_pos : 0 < den
+/-- Axiomatic field structure over carrier type K, establishing all additive,
+    multiplicative, and inverse laws required for a commutative field. -/
+class Field (K : Type) extends Add K, Mul K, Neg K, Sub K, Zero K, One K where
+  add_assoc : ∀ a b c : K, a + b + c = a + (b + c)
+  add_comm : ∀ a b : K, a + b = b + a
+  zero_add : ∀ a : K, 0 + a = a
+  add_left_neg : ∀ a : K, -a + a = 0
+  sub_eq_add_neg : ∀ a b : K, a - b = a + -b
+  mul_assoc : ∀ a b c : K, a * b * c = a * (b * c)
+  mul_comm : ∀ a b : K, a * b = b * a
+  one_mul : ∀ a : K, 1 * a = a
+  left_distrib : ∀ a b c : K, a * (b + c) = a * b + a * c
+  mul_zero : ∀ a : K, a * 0 = 0
+  zero_ne_one : (0 : K) ≠ 1
+  inv : K → K
+  mul_inv_cancel : ∀ a : K, a ≠ 0 → a * inv a = 1
 
-instance : Inhabited RatCoeff where
-  default := ⟨0, 1, Nat.zero_lt_one⟩
-
-def RatCoeff.ofInt (z : Int) : RatCoeff := ⟨z, 1, Nat.zero_lt_one⟩
-def RatCoeff.zero : RatCoeff := ⟨0, 1, Nat.zero_lt_one⟩
-def RatCoeff.one : RatCoeff := ⟨1, 1, Nat.zero_lt_one⟩
-def RatCoeff.neg_one : RatCoeff := ⟨-1, 1, Nat.zero_lt_one⟩
-
-/-- Addition of rational coefficients. -/
-def addRat (a b : RatCoeff) : RatCoeff :=
-  ⟨a.num * (b.den : Int) + b.num * (a.den : Int), a.den * b.den, Nat.mul_pos a.den_pos b.den_pos⟩
-
-/-- Multiplication of rational coefficients. -/
-def mulRat (a b : RatCoeff) : RatCoeff :=
-  ⟨a.num * b.num, a.den * b.den, Nat.mul_pos a.den_pos b.den_pos⟩
-
-/-- Homomorphism lemma: integer addition lifts to rational addition. -/
-theorem addRat_ofInt (a b : Int) :
-    addRat (RatCoeff.ofInt a) (RatCoeff.ofInt b) = RatCoeff.ofInt (a + b) := by
-  dsimp [addRat, RatCoeff.ofInt]
-  congr 1
-  omega
+/-- Characteristic zero field embedding: an injective ring homomorphism from ℤ into field K. -/
+structure CharacteristicZeroEmbedding (K : Type) [Field K] where
+  embedInt : Int → K
+  embed_zero : embedInt 0 = 0
+  embed_one : embedInt 1 = 1
+  embed_add : ∀ a b : Int, embedInt (a + b) = embedInt a + embedInt b
+  embed_mul : ∀ a b : Int, embedInt (a * b) = embedInt a * embedInt b
+  embed_neg : ∀ a : Int, embedInt (-a) = - embedInt a
+  embed_injective : ∀ a b : Int, embedInt a = embedInt b → a = b
 
 /-- Parameterized polynomial AST over an arbitrary coefficient type R. -/
 inductive Poly (R : Type) (n : Nat) where
@@ -69,7 +70,7 @@ def mapCoeff {R S : Type} {n : Nat} (f : R → S) (p : Poly R n) : Poly S n :=
   | Poly.add p q => Poly.add (mapCoeff f p) (mapCoeff f q)
   | Poly.mul p q => Poly.mul (mapCoeff f p) (mapCoeff f q)
 
-/-- Degree preservation under arbitrary coefficient maps: total degree is purely structural. -/
+/-- Total degree is invariant under arbitrary coefficient mappings. -/
 theorem mapCoeff_degree {R S : Type} {n : Nat} (f : R → S) (p : Poly R n) :
     totalDegree (mapCoeff f p) = totalDegree p := by
   induction p with
@@ -83,54 +84,29 @@ theorem mapCoeff_degree {R S : Type} {n : Nat} (f : R → S) (p : Poly R n) :
     rw [ihp, ihq]
 
 abbrev IntPoly (n : Nat) := Poly Int n
-abbrev RatPoly (n : Nat) := Poly RatCoeff n
 
-/-- Canonical embedding of integer polynomials into rational polynomials. -/
-def liftIntPoly {n : Nat} (p : IntPoly n) : RatPoly n :=
-  mapCoeff RatCoeff.ofInt p
-
-/-- Total degree is invariant under integer-to-rational lifting. -/
-theorem liftIntPoly_degree {n : Nat} (p : IntPoly n) :
-    totalDegree (liftIntPoly p) = totalDegree p :=
-  mapCoeff_degree RatCoeff.ofInt p
-
-/-- Evaluation of integer polynomials on integer points. -/
-def evalIntPoly {n : Nat} (p : IntPoly n) (x : Fin n → Int) : Int :=
+/-- Evaluation of polynomial AST on variable assignments. -/
+def evalPoly {R : Type} [Add R] [Mul R] {n : Nat} (p : Poly R n) (x : Fin n → R) : R :=
   match p with
   | Poly.const c => c
   | Poly.var i => x i
-  | Poly.add p q => evalIntPoly p x + evalIntPoly q x
-  | Poly.mul p q => evalIntPoly p x * evalIntPoly q x
+  | Poly.add p q => evalPoly p x + evalPoly q x
+  | Poly.mul p q => evalPoly p x * evalPoly q x
 
-/-- Evaluation of rational polynomials on rational points. -/
-def evalRatPoly {n : Nat} (p : RatPoly n) (x : Fin n → RatCoeff) : RatCoeff :=
-  match p with
-  | Poly.const c => c
-  | Poly.var i => x i
-  | Poly.add p q => addRat (evalRatPoly p x) (evalRatPoly q x)
-  | Poly.mul p q => mulRat (evalRatPoly p x) (evalRatPoly q x)
-
-/-- Exact evaluation preservation theorem for polynomial lifting. -/
-theorem eval_liftIntPoly_exact {n : Nat} (p : IntPoly n) (x : Fin n → Int) :
-    evalRatPoly (liftIntPoly p) (fun i => RatCoeff.ofInt (x i)) =
-    RatCoeff.ofInt (evalIntPoly p x) := by
+/-- Semantic evaluation preservation under field embedding. -/
+theorem eval_mapCoeff {K : Type} [Field K] {n : Nat}
+    (Fld : CharacteristicZeroEmbedding K) (p : IntPoly n) (x : Fin n → Int) :
+    evalPoly (mapCoeff Fld.embedInt p) (fun i => Fld.embedInt (x i)) =
+    Fld.embedInt (evalPoly p x) := by
   induction p with
   | const c => rfl
   | var i => rfl
   | add p q ihp ihq =>
-    change addRat (evalRatPoly (liftIntPoly p) (fun i => RatCoeff.ofInt (x i)))
-                   (evalRatPoly (liftIntPoly q) (fun i => RatCoeff.ofInt (x i))) =
-           RatCoeff.ofInt (evalIntPoly p x + evalIntPoly q x)
-    rw [ihp, ihq]
-    dsimp [addRat, RatCoeff.ofInt]
-    congr 1
-    omega
+    dsimp [mapCoeff, evalPoly]
+    rw [ihp, ihq, Fld.embed_add]
   | mul p q ihp ihq =>
-    change mulRat (evalRatPoly (liftIntPoly p) (fun i => RatCoeff.ofInt (x i)))
-                   (evalRatPoly (liftIntPoly q) (fun i => RatCoeff.ofInt (x i))) =
-           RatCoeff.ofInt (evalIntPoly p x * evalIntPoly q x)
-    rw [ihp, ihq]
-    dsimp [mulRat, RatCoeff.ofInt]
+    dsimp [mapCoeff, evalPoly]
+    rw [ihp, ihq, Fld.embed_mul]
 
 structure Literal (n : Nat) where
   var : Fin n
@@ -156,125 +132,128 @@ def intClausePoly {n : Nat} (c : Clause n) : IntPoly n :=
 def intBoolAxiomPoly {n : Nat} (i : Fin n) : IntPoly n :=
   Poly.add (Poly.mul (Poly.var i) (Poly.var i)) (Poly.mul (Poly.const (-1)) (Poly.var i))
 
-/-- Literal polynomial with rational coefficients. -/
-def ratLitPoly {n : Nat} (lit : Literal n) : RatPoly n :=
+/-- Literal polynomial with field coefficients. -/
+def fieldLitPoly (K : Type) [Field K] {n : Nat} (lit : Literal n) : Poly K n :=
   match lit.polarity with
-  | true => Poly.add (Poly.const RatCoeff.one) (Poly.mul (Poly.const RatCoeff.neg_one) (Poly.var lit.var))
+  | true => Poly.add (Poly.const 1) (Poly.mul (Poly.const (-1)) (Poly.var lit.var))
   | false => Poly.var lit.var
 
-/-- Clause polynomial with rational coefficients. -/
-def ratClausePoly {n : Nat} (c : Clause n) : RatPoly n :=
+/-- Clause polynomial with field coefficients. -/
+def fieldClausePoly (K : Type) [Field K] {n : Nat} (c : Clause n) : Poly K n :=
   match c with
-  | [] => Poly.const RatCoeff.one
-  | lit :: rest => Poly.mul (ratLitPoly lit) (ratClausePoly rest)
+  | [] => Poly.const 1
+  | lit :: rest => Poly.mul (fieldLitPoly K lit) (fieldClausePoly K rest)
 
-/-- Boolean idempotency generator with rational coefficients. -/
-def ratBoolAxiomPoly {n : Nat} (i : Fin n) : RatPoly n :=
-  Poly.add (Poly.mul (Poly.var i) (Poly.var i)) (Poly.mul (Poly.const RatCoeff.neg_one) (Poly.var i))
+/-- Boolean idempotency generator with field coefficients. -/
+def fieldBoolAxiomPoly (K : Type) [Field K] {n : Nat} (i : Fin n) : Poly K n :=
+  Poly.add (Poly.mul (Poly.var i) (Poly.var i)) (Poly.mul (Poly.const (-1)) (Poly.var i))
 
-/-- Integer literal polynomial lifts exactly to rational literal polynomial. -/
-theorem lift_intLitPoly {n : Nat} (lit : Literal n) :
-    liftIntPoly (intLitPoly lit) = ratLitPoly lit := by
+theorem mapCoeff_litPoly {K : Type} [Field K] {n : Nat}
+    (Fld : CharacteristicZeroEmbedding K) (lit : Literal n) :
+    mapCoeff Fld.embedInt (intLitPoly lit) = fieldLitPoly K lit := by
   cases lit with | mk v p =>
   cases p with
-  | true => rfl
   | false => rfl
+  | true =>
+    dsimp [intLitPoly, fieldLitPoly, mapCoeff]
+    have h1 : Fld.embedInt 1 = 1 := Fld.embed_one
+    have h_neg1 : Fld.embedInt (-1) = -1 := by
+      have h_neg := Fld.embed_neg 1
+      rw [Fld.embed_one] at h_neg
+      exact h_neg
+    rw [h1, h_neg1]
 
-/-- Integer clause polynomial lifts exactly to rational clause polynomial. -/
-theorem lift_intClausePoly {n : Nat} (c : Clause n) :
-    liftIntPoly (intClausePoly c) = ratClausePoly c := by
+theorem mapCoeff_clausePoly {K : Type} [Field K] {n : Nat}
+    (Fld : CharacteristicZeroEmbedding K) (c : Clause n) :
+    mapCoeff Fld.embedInt (intClausePoly c) = fieldClausePoly K c := by
   induction c with
-  | nil => rfl
+  | nil =>
+    dsimp [intClausePoly, fieldClausePoly, mapCoeff]
+    rw [Fld.embed_one]
   | cons lit rest ih =>
-    dsimp [intClausePoly, ratClausePoly]
-    change Poly.mul (liftIntPoly (intLitPoly lit)) (liftIntPoly (intClausePoly rest)) =
-           Poly.mul (ratLitPoly lit) (ratClausePoly rest)
-    rw [lift_intLitPoly lit, ih]
+    dsimp [intClausePoly, fieldClausePoly, mapCoeff]
+    rw [mapCoeff_litPoly Fld lit, ih]
 
-/-- Integer Boolean generator lifts exactly to rational Boolean generator. -/
-theorem lift_intBoolAxiomPoly {n : Nat} (i : Fin n) :
-    liftIntPoly (intBoolAxiomPoly i) = ratBoolAxiomPoly i := by
-  rfl
+theorem mapCoeff_boolAxiomPoly {K : Type} [Field K] {n : Nat}
+    (Fld : CharacteristicZeroEmbedding K) (i : Fin n) :
+    mapCoeff Fld.embedInt (intBoolAxiomPoly i) = fieldBoolAxiomPoly K i := by
+  dsimp [intBoolAxiomPoly, fieldBoolAxiomPoly, mapCoeff]
+  have h_neg1 : Fld.embedInt (-1) = -1 := by
+    have h_neg := Fld.embed_neg 1
+    rw [Fld.embed_one] at h_neg
+    exact h_neg
+  rw [h_neg1]
 
-/-- Evaluates sum of clause terms for integer certificates. -/
-def evalIntClauseTerms {n : Nat} (q : List (IntPoly n)) (F : Formula n) (x : Fin n → Int) : Int :=
+def evalClauseTerms {R : Type} [Add R] [Mul R] [Zero R] {n : Nat}
+    (clauseP : Clause n → Poly R n) (q : List (Poly R n)) (F : Formula n) (x : Fin n → R) : R :=
   match q, F with
   | [], _ => 0
   | _, [] => 0
   | q_head :: q_tail, c :: F_tail =>
-    evalIntPoly q_head x * evalIntPoly (intClausePoly c) x + evalIntClauseTerms q_tail F_tail x
+    evalPoly q_head x * evalPoly (clauseP c) x + evalClauseTerms clauseP q_tail F_tail x
 
-/-- Evaluates sum of clause terms for rational certificates. -/
-def evalRatClauseTerms {n : Nat} (q : List (RatPoly n)) (F : Formula n) (x : Fin n → RatCoeff) : RatCoeff :=
-  match q, F with
-  | [], _ => RatCoeff.zero
-  | _, [] => RatCoeff.zero
-  | q_head :: q_tail, c :: F_tail =>
-    addRat (mulRat (evalRatPoly q_head x) (evalRatPoly (ratClausePoly c) x))
-           (evalRatClauseTerms q_tail F_tail x)
+def evalBoolTerms {R : Type} [Add R] [Mul R] [Zero R] {n : Nat}
+    (boolAxiomP : Fin n → Poly R n) (r : Fin n → Poly R n) (x : Fin n → R) : R :=
+  (List.finRange n).foldl (fun acc i => acc + evalPoly (r i) x * evalPoly (boolAxiomP i) x) 0
 
-/-- Evaluates sum of Boolean terms for integer certificates. -/
-def evalIntBoolTerms {n : Nat} (r : Fin n → IntPoly n) (x : Fin n → Int) : Int :=
-  (List.finRange n).foldl (fun acc i => acc + evalIntPoly (r i) x * evalIntPoly (intBoolAxiomPoly i) x) 0
-
-/-- Evaluates sum of Boolean terms for rational certificates. -/
-def evalRatBoolTerms {n : Nat} (r : Fin n → RatPoly n) (x : Fin n → RatCoeff) : RatCoeff :=
-  (List.finRange n).foldl (fun acc i => addRat acc (mulRat (evalRatPoly (r i) x) (evalRatPoly (ratBoolAxiomPoly i) x))) RatCoeff.zero
-
-/-- Evaluation covariance theorem for lifted clause terms. -/
-theorem eval_liftClauseTerms {n : Nat} (q : List (IntPoly n)) (F : Formula n) (x : Fin n → Int) :
-    evalRatClauseTerms (q.map liftIntPoly) F (fun i => RatCoeff.ofInt (x i)) =
-    RatCoeff.ofInt (evalIntClauseTerms q F x) := by
+theorem eval_mapClauseTerms {K : Type} [Field K] {n : Nat}
+    (Fld : CharacteristicZeroEmbedding K) (q : List (IntPoly n)) (F : Formula n) (x : Fin n → Int) :
+    evalClauseTerms (fieldClausePoly K) (q.map (mapCoeff Fld.embedInt)) F (fun i => Fld.embedInt (x i)) =
+    Fld.embedInt (evalClauseTerms intClausePoly q F x) := by
   induction q generalizing F with
-  | nil => rfl
+  | nil =>
+    dsimp [evalClauseTerms, List.map]
+    rw [Fld.embed_zero]
   | cons q_head q_tail ih =>
     cases F with
-    | nil => rfl
+    | nil =>
+      dsimp [evalClauseTerms, List.map]
+      rw [Fld.embed_zero]
     | cons c F_tail =>
-      dsimp [evalRatClauseTerms, evalIntClauseTerms, List.map]
-      rw [eval_liftIntPoly_exact q_head x]
-      rw [← lift_intClausePoly c]
-      rw [eval_liftIntPoly_exact (intClausePoly c) x]
-      have ih_call := ih F_tail
-      rw [ih_call]
-      dsimp [addRat, mulRat, RatCoeff.ofInt]
-      congr 1
-      omega
+      dsimp [evalClauseTerms, List.map]
+      rw [eval_mapCoeff Fld q_head x]
+      rw [← mapCoeff_clausePoly Fld c]
+      rw [eval_mapCoeff Fld (intClausePoly c) x]
+      rw [ih F_tail]
+      rw [← Fld.embed_mul, ← Fld.embed_add]
 
-/-- Congruence lemma for rational list folding. -/
-theorem foldl_rat_int_lift {α : Type} (L : List α) (f : α → Int) (acc : Int) :
-    L.foldl (fun (s : RatCoeff) a => addRat s (RatCoeff.ofInt (f a))) (RatCoeff.ofInt acc) =
-    RatCoeff.ofInt (L.foldl (fun s a => s + f a) acc) := by
-  induction L generalizing acc with
-  | nil => rfl
-  | cons hd tl ih =>
-    dsimp [List.foldl]
-    have h_step : addRat (RatCoeff.ofInt acc) (RatCoeff.ofInt (f hd)) = RatCoeff.ofInt (acc + f hd) := by
-      dsimp [addRat, RatCoeff.ofInt]
-      congr 1
-      omega
-    rw [h_step]
-    exact ih (acc + f hd)
+theorem foldl_field_int_zero {K : Type} [Field K] {α : Type}
+    (Fld : CharacteristicZeroEmbedding K) (L : List α) (f : α → Int) :
+    L.foldl (fun (s : K) a => s + Fld.embedInt (f a)) 0 =
+    Fld.embedInt (L.foldl (fun s a => s + f a) 0) := by
+  have h_gen : ∀ (acc : Int),
+    L.foldl (fun (s : K) a => s + Fld.embedInt (f a)) (Fld.embedInt acc) =
+    Fld.embedInt (L.foldl (fun s a => s + f a) acc) := by
+    intro acc
+    induction L generalizing acc with
+    | nil => rfl
+    | cons hd tl ih =>
+      dsimp [List.foldl]
+      rw [← Fld.embed_add]
+      exact ih (acc + f hd)
+  have := h_gen 0
+  rw [Fld.embed_zero] at this
+  exact this
 
-/-- Evaluation covariance theorem for lifted Boolean terms. -/
-theorem eval_liftBoolTerms {n : Nat} (r : Fin n → IntPoly n) (x : Fin n → Int) :
-    evalRatBoolTerms (fun i => liftIntPoly (r i)) (fun i => RatCoeff.ofInt (x i)) =
-    RatCoeff.ofInt (evalIntBoolTerms r x) := by
-  dsimp [evalRatBoolTerms, evalIntBoolTerms]
+theorem eval_mapBoolTerms {K : Type} [Field K] {n : Nat}
+    (Fld : CharacteristicZeroEmbedding K) (r : Fin n → IntPoly n) (x : Fin n → Int) :
+    evalBoolTerms (fieldBoolAxiomPoly K) (fun i => mapCoeff Fld.embedInt (r i)) (fun i => Fld.embedInt (x i)) =
+    Fld.embedInt (evalBoolTerms intBoolAxiomPoly r x) := by
+  dsimp [evalBoolTerms]
   have h_term : ∀ i : Fin n,
-      mulRat (evalRatPoly (liftIntPoly (r i)) (fun j => RatCoeff.ofInt (x j)))
-             (evalRatPoly (ratBoolAxiomPoly i) (fun j => RatCoeff.ofInt (x j))) =
-      RatCoeff.ofInt (evalIntPoly (r i) x * evalIntPoly (intBoolAxiomPoly i) x) := by
+      evalPoly (mapCoeff Fld.embedInt (r i)) (fun j => Fld.embedInt (x j)) *
+      evalPoly (fieldBoolAxiomPoly K i) (fun j => Fld.embedInt (x j)) =
+      Fld.embedInt (evalPoly (r i) x * evalPoly (intBoolAxiomPoly i) x) := by
     intro i
-    rw [eval_liftIntPoly_exact (r i) x]
-    rw [← lift_intBoolAxiomPoly i]
-    rw [eval_liftIntPoly_exact (intBoolAxiomPoly i) x]
-    dsimp [mulRat, RatCoeff.ofInt]
-  have h_fold := foldl_rat_int_lift (List.finRange n)
-    (fun i => evalIntPoly (r i) x * evalIntPoly (intBoolAxiomPoly i) x) 0
-  have h_step_eq : (fun acc i => addRat acc (mulRat (evalRatPoly (liftIntPoly (r i)) (fun j => RatCoeff.ofInt (x j)))
-                                                  (evalRatPoly (ratBoolAxiomPoly i) (fun j => RatCoeff.ofInt (x j))))) =
-                   (fun acc i => addRat acc (RatCoeff.ofInt (evalIntPoly (r i) x * evalIntPoly (intBoolAxiomPoly i) x))) := by
+    rw [eval_mapCoeff Fld (r i) x]
+    rw [← mapCoeff_boolAxiomPoly Fld i]
+    rw [eval_mapCoeff Fld (intBoolAxiomPoly i) x]
+    rw [← Fld.embed_mul]
+  have h_fold := foldl_field_int_zero Fld (List.finRange n)
+    (fun i => evalPoly (r i) x * evalPoly (intBoolAxiomPoly i) x)
+  have h_step_eq : (fun acc i => acc + evalPoly (mapCoeff Fld.embedInt (r i)) (fun j => Fld.embedInt (x j)) *
+                                       evalPoly (fieldBoolAxiomPoly K i) (fun j => Fld.embedInt (x j))) =
+                   (fun acc i => acc + Fld.embedInt (evalPoly (r i) x * evalPoly (intBoolAxiomPoly i) x)) := by
     funext acc i
     rw [h_term i]
   rw [h_step_eq]
@@ -289,22 +268,24 @@ structure ConcreteIntNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
     totalDegree (q.get ⟨i, hq⟩) + totalDegree (intClausePoly (F.get ⟨i, hF⟩)) ≤ d
   bool_deg_bound : ∀ (i : Fin n), totalDegree (r i) + 2 ≤ d
   identity : ∀ (x : Fin n → Int),
-    evalIntClauseTerms q F x + evalIntBoolTerms r x = 1
+    evalClauseTerms intClausePoly q F x + evalBoolTerms intBoolAxiomPoly r x = 1
 
-/-- Concrete Nullstellensatz refutation certificate with Rational coefficients. -/
-structure ConcreteRatNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
-  q : List (RatPoly n)
-  r : Fin n → RatPoly n
+/-- Concrete Nullstellensatz refutation certificate with coefficients in an arbitrary field K. -/
+structure ConcreteFieldNSRefutation (K : Type) [Field K] (Fld : CharacteristicZeroEmbedding K)
+    {n : Nat} (F : Formula n) (d : Nat) where
+  q : List (Poly K n)
+  r : Fin n → Poly K n
   q_len : q.length = F.length
   clause_deg_bound : ∀ (i : Nat) (hq : i < q.length) (hF : i < F.length),
-    totalDegree (q.get ⟨i, hq⟩) + totalDegree (ratClausePoly (F.get ⟨i, hF⟩)) ≤ d
+    totalDegree (q.get ⟨i, hq⟩) + totalDegree (fieldClausePoly K (F.get ⟨i, hF⟩)) ≤ d
   bool_deg_bound : ∀ (i : Fin n), totalDegree (r i) + 2 ≤ d
   identity : ∀ (x : Fin n → Int),
-    addRat (evalRatClauseTerms q F (fun i => RatCoeff.ofInt (x i)))
-           (evalRatBoolTerms r (fun i => RatCoeff.ofInt (x i))) = RatCoeff.one
+    evalClauseTerms (fieldClausePoly K) q F (fun i => Fld.embedInt (x i)) +
+    evalBoolTerms (fieldBoolAxiomPoly K) r (fun i => Fld.embedInt (x i)) = 1
 
-theorem get_map_liftIntPoly {n : Nat} (q : List (IntPoly n)) (i : Nat) (hq : i < (q.map liftIntPoly).length) :
-    (q.map liftIntPoly).get ⟨i, hq⟩ = liftIntPoly (q.get ⟨i, by rw [List.length_map] at hq; exact hq⟩) := by
+theorem get_map_mapCoeff {R S : Type} {n : Nat} (f : R → S) (q : List (Poly R n))
+    (i : Nat) (hq : i < (q.map (mapCoeff f)).length) :
+    (q.map (mapCoeff f)).get ⟨i, hq⟩ = mapCoeff f (q.get ⟨i, by rw [List.length_map] at hq; exact hq⟩) := by
   induction q generalizing i with
   | nil =>
     have : i < 0 := by rw [List.length_map] at hq; exact hq
@@ -314,73 +295,104 @@ theorem get_map_liftIntPoly {n : Nat} (q : List (IntPoly n)) (i : Nat) (hq : i <
     | zero => rfl
     | succ j =>
       dsimp [List.map, List.get]
-      have hj : j < (tl.map liftIntPoly).length := by
+      have hj : j < (tl.map (mapCoeff f)).length := by
         dsimp [List.map] at hq
         omega
       exact ih j hj
 
-/-- Constructive lifting of an Integer Nullstellensatz refutation to a Rational Nullstellensatz refutation. -/
-def liftConcreteNSRefutation {n : Nat} {F : Formula n} {d : Nat}
-    (cert : ConcreteIntNSRefutation F d) :
-    ConcreteRatNSRefutation F d where
-  q := cert.q.map liftIntPoly
-  r := fun i => liftIntPoly (cert.r i)
+/-- Constructive lifting of an Integer Nullstellensatz certificate to an arbitrary characteristic zero field K. -/
+def liftIntToFieldRefutation {K : Type} [Field K] (Fld : CharacteristicZeroEmbedding K)
+    {n : Nat} {F : Formula n} {d : Nat} (cert : ConcreteIntNSRefutation F d) :
+    ConcreteFieldNSRefutation K Fld F d where
+  q := cert.q.map (mapCoeff Fld.embedInt)
+  r := fun i => mapCoeff Fld.embedInt (cert.r i)
   q_len := by
     rw [List.length_map, cert.q_len]
   clause_deg_bound := by
     intro i hq hF
     have hq_orig : i < cert.q.length := by rw [List.length_map] at hq; exact hq
-    rw [get_map_liftIntPoly]
-    rw [liftIntPoly_degree]
-    rw [← lift_intClausePoly (F.get ⟨i, hF⟩), liftIntPoly_degree]
+    rw [get_map_mapCoeff]
+    rw [mapCoeff_degree]
+    rw [← mapCoeff_clausePoly Fld (F.get ⟨i, hF⟩), mapCoeff_degree]
     exact cert.clause_deg_bound i hq_orig hF
   bool_deg_bound := by
     intro i
-    rw [liftIntPoly_degree]
+    rw [mapCoeff_degree]
     exact cert.bool_deg_bound i
   identity := by
     intro x
-    rw [eval_liftClauseTerms, eval_liftBoolTerms]
-    rw [addRat_ofInt]
+    rw [eval_mapClauseTerms Fld, eval_mapBoolTerms Fld]
+    rw [← Fld.embed_add]
     rw [cert.identity x]
-    rfl
+    exact Fld.embed_one
 
-/-- Master One-Way Embedding Theorem:
-    Any formula admitting an integer Nullstellensatz refutation of degree ≤ d
-    admits a rational Nullstellensatz refutation of degree ≤ d. -/
-theorem int_cert_implies_rat_cert {n : Nat} {F : Formula n} {d : Nat} :
-    Nonempty (ConcreteIntNSRefutation F d) → Nonempty (ConcreteRatNSRefutation F d) := by
+/-- Master One-Way Field Embedding Theorem:
+    Every formula admitting an integer Nullstellensatz refutation of degree ≤ d
+    admits a Nullstellensatz refutation of degree ≤ d over any characteristic zero field K. -/
+theorem int_cert_implies_field_cert {K : Type} [Field K] (Fld : CharacteristicZeroEmbedding K)
+    {n : Nat} {F : Formula n} {d : Nat} :
+    Nonempty (ConcreteIntNSRefutation F d) → Nonempty (ConcreteFieldNSRefutation K Fld F d) := by
   rintro ⟨cert⟩
-  exact ⟨liftConcreteNSRefutation cert⟩
+  exact ⟨liftIntToFieldRefutation Fld cert⟩
 
-/-- Multilinear reduction operator mapping monomials modulo x_i^2 - x_i. -/
-def reducePoly {n : Nat} (p : IntPoly n) : IntPoly n :=
-  match p with
-  | Poly.const c => Poly.const c
-  | Poly.var i => Poly.var i
-  | Poly.add p q => Poly.add (reducePoly p) (reducePoly q)
-  | Poly.mul p q =>
-    match p, q with
-    | Poly.var i, Poly.var j =>
-      if i = j then Poly.var i else Poly.mul (Poly.var i) (Poly.var j)
-    | _, _ => Poly.mul (reducePoly p) (reducePoly q)
+/-- Ordered, deduplicating variable insertion for canonical multilinear monomials. -/
+def insertVar {n : Nat} (v : Fin n) (m : List (Fin n)) : List (Fin n) :=
+  match m with
+  | [] => [v]
+  | u :: rest =>
+    if v == u then u :: rest
+    else if v.val < u.val then v :: u :: rest
+    else u :: insertVar v rest
 
-/-- Formal demonstration of Syntactic Degree Collapse under Boolean Reduction:
-    The monomial x_i^2 has syntactic total degree 2, while its canonical reduction x_i has degree 1. -/
-theorem degree_collapse_example {n : Nat} (i : Fin n) :
-    totalDegree (Poly.mul (Poly.var i : IntPoly n) (Poly.var i)) = 2 ∧
-    totalDegree (reducePoly (Poly.mul (Poly.var i : IntPoly n) (Poly.var i))) = 1 := by
-  dsimp [totalDegree, reducePoly]
-  have h_eq : (if i = i then (Poly.var i : IntPoly n) else Poly.mul (Poly.var i) (Poly.var i)) = Poly.var i := by
-    simp only [ite_true]
-  rw [h_eq]
-  dsimp [totalDegree]
-  decide
+/-- General Canonical Multilinear Monomial Reducer:
+    Reduces an arbitrary variable product x_{i_1} ... x_{i_m} modulo x_i^2 - x_i
+    by sorting and eliminating all duplicate variable factors. -/
+def reduceMonomial {n : Nat} (m : List (Fin n)) : List (Fin n) :=
+  match m with
+  | [] => []
+  | v :: rest => insertVar v (reduceMonomial rest)
+
+theorem insertVar_self {n : Nat} (i : Fin n) (rest : List (Fin n)) :
+    insertVar i (i :: rest) = i :: rest := by
+  dsimp [insertVar]
+  have h : (i == i) = true := beq_self_eq_true' i
+  rw [h]
+  rfl
+
+theorem reduceMonomial_two {n : Nat} (i : Fin n) :
+    reduceMonomial [i, i] = [i] := by
+  dsimp [reduceMonomial]
+  exact insertVar_self i []
+
+theorem reduceMonomial_three {n : Nat} (i : Fin n) :
+    reduceMonomial [i, i, i] = [i] := by
+  change insertVar i (reduceMonomial [i, i]) = [i]
+  rw [reduceMonomial_two]
+  exact insertVar_self i []
+
+/-- Theorem: Arbitrary cube monomial x_i^3 has syntactic degree 3, but reduced degree 1 under canonical reduction. -/
+theorem cube_degree_collapse {n : Nat} (i : Fin n) :
+    [i, i, i].length = 3 ∧ (reduceMonomial [i, i, i]).length = 1 := by
+  rw [reduceMonomial_three]
+  exact ⟨rfl, rfl⟩
+
+/-- Semantic evaluation invariance: on Boolean assignments x ∈ {0, 1}^n, square evaluation is idempotent. -/
+theorem evalMonomial_two (val : Int) (h : val = 0 ∨ val = 1) :
+    val * (val * 1) = val * 1 := by
+  cases h with
+  | inl h0 => rw [h0]; rfl
+  | inr h1 => rw [h1]; rfl
+
+/-- Semantic evaluation invariance: on Boolean assignments x ∈ {0, 1}^n, cube evaluation collapses to x_i. -/
+theorem evalMonomial_three (val : Int) (h : val = 0 ∨ val = 1) :
+    val * (val * (val * 1)) = val * 1 := by
+  cases h with
+  | inl h0 => rw [h0]; rfl
+  | inr h1 => rw [h1]; rfl
 
 /-- Denominator Clearing Obstruction Theorem:
-    A rational certificate equation with common denominator D > 1 clears to ∑ q'_C p_C + ∑ r'_i B_i = D.
-    Because D is not invertible in ℤ, clearing denominators cannot directly yield an integer certificate (RHS = 1).
-    Therefore, the converse implication RatCert(F, d) → IntCert(F, d) does not follow trivially. -/
+    A field refutation cleared of denominators yields ∑ q'_C p_C + ∑ r'_i B_i = D.
+    Because D > 1 is not invertible in ℤ, division by D cannot produce an integer refutation (RHS = 1). -/
 theorem denominator_clearing_obstruction (D : Int) (hD : D > 1) :
     ¬ (∃ (k : Int), D * k = 1) := by
   rintro ⟨k, hk⟩
@@ -407,9 +419,10 @@ theorem denominator_clearing_obstruction (D : Int) (hD : D > 1) :
     have : D * Int.negSucc m < 0 := Int.mul_neg_of_pos_of_neg h1 h2
     omega
 
-end RationalNullstellensatz
+end FieldNullstellensatz
 
-#print axioms RationalNullstellensatz.liftConcreteNSRefutation
-#print axioms RationalNullstellensatz.int_cert_implies_rat_cert
-#print axioms RationalNullstellensatz.degree_collapse_example
-#print axioms RationalNullstellensatz.denominator_clearing_obstruction
+#print axioms FieldNullstellensatz.liftIntToFieldRefutation
+#print axioms FieldNullstellensatz.int_cert_implies_field_cert
+#print axioms FieldNullstellensatz.cube_degree_collapse
+#print axioms FieldNullstellensatz.evalMonomial_three
+#print axioms FieldNullstellensatz.denominator_clearing_obstruction
