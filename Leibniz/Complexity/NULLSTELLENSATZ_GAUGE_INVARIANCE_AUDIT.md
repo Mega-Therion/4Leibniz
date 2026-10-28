@@ -88,6 +88,11 @@ Direct compilation executed against `leanprover/lean4:v4.35.0`:
 
 ## 3. Epistemic Scope & Complexity Frontiers
 
-1. **Concrete Scope:** The evaluation covariance bridge `eval_clausePoly_flip` guarantees that the semantic evaluation of clause polynomials transforms covariantly under affine sign reversal.
-2. **Syntactic Degree Distinction:** The AST `totalDegree` is a syntactic degree measure on polynomial expressions prior to algebraic cancellation or Gröbner basis reduction.
-3. **Complexity Separation:** Degree lower bounds in Nullstellensatz/Polynomial Calculus are proof-system-specific and do not by themselves resolve $P \ne NP$ due to the Cook–Reckhow barrier.
+1. **Integer-Coefficient AST Certificate System Boundary:**
+   The source defines `Poly` using `Int` coefficients and evaluates using a syntactic total-degree measure `totalDegree`. The invariance theorem is certified for this specific system. It does not automatically transfer to conventional field-based Nullstellensatz systems over fields of characteristic zero (e.g. $\mathbb{Q}$) or finite fields $\mathbb{F}_p$ without a separate embedding theorem relating the certificate definitions and reduced algebraic degrees.
+2. **Syntactic Degree vs. Reduced Algebraic Degree:**
+   The AST `totalDegree` is a structural syntactic upper bound on expressions prior to algebraic cancellation or Gröbner basis reduction. While $\text{deg}(\text{flipPoly } g \; p) \le \text{totalDegree}(p)$ is exact for this measure, true polynomial calculus degree modulo the Boolean ideal involves quotient degree measures.
+3. **Execution Receipt Provenance:**
+   The Lean verification results reported (`0 sorry`, Exit Code 0, axiom receipts) represent local verification by the agent in `leanprover/lean4:v4.35.0` within the local workspace environment. External Vercel deployment checks verify website rendering and documentation deployment, not the underlying Lean 4 compilation kernel.
+4. **Complexity Separation (No P vs NP Resolution):**
+   This formalization establishes that the certificate complexity of a CNF formula under sign-reversal gauge action is isomorphic within the defined proof system. Invariance under symmetry does not supply an absolute lower bound across all propositional proof systems (Cook–Reckhow barrier), nor does it establish $P \ne NP$.
