@@ -7,6 +7,7 @@ For any Boolean formula F, assignment a, and polarity mask g:
 Consequently:
   clause_val (flip_clause g C) (a ⊕ g) = clause_val C a
   formula_val (flip_formula g F) (a ⊕ g) = formula_val F a
+  violated_clauses (flip_formula g F) (a ⊕ g) = violated_clauses F a
 -/
 
 namespace SatGauge
@@ -116,23 +117,28 @@ theorem flipFormulaList_involutive {n : Nat} (g : PolarityMask n) (f : List (Lis
     dsimp [flipFormulaList]
     rw [flipClauseList_involutive g c, ih]
 
+/-- Count the number of unsatisfied (violated) clauses under assignment a. -/
+def countViolatedClauses {n : Nat} (f : List (List (Literal n))) (a : Assignment n) : Nat :=
+  match f with
+  | [] => 0
+  | c :: rest => (if evalClauseList c a then 0 else 1) + countViolatedClauses rest a
+
+/-- Theorem 4: Violation count is strictly invariant under joint sign reversal.
+    Consequently, the valuation ν_0(Z_F) and the partition polynomial Z_F(t) are gauge-invariant. -/
+theorem countViolatedClauses_flip {n : Nat} (g : PolarityMask n) (f : List (List (Literal n))) (a : Assignment n) :
+    countViolatedClauses (flipFormulaList g f) (flipAssignment g a) = countViolatedClauses f a := by
+  induction f with
+  | nil => rfl
+  | cons c rest ih =>
+    dsimp [countViolatedClauses, flipFormulaList]
+    rw [evalClauseList_flip g c a, ih]
+
 end SatGauge
 
-/-!
-### Axiom Dependency Ledger
-
-Verified via `#print axioms`:
-- `SatGauge.evalLit_flip`: 0 axioms (purely computational / structural)
-- `SatGauge.evalClauseList_flip`: 0 axioms (purely computational / structural)
-- `SatGauge.evalFormulaList_flip`: 0 axioms (purely computational / structural)
-- `SatGauge.flipLit_involutive`: 0 axioms (purely computational / structural)
-- `SatGauge.flipClauseList_involutive`: 0 axioms (purely computational / structural)
-- `SatGauge.flipFormulaList_involutive`: 0 axioms (purely computational / structural)
-- `SatGauge.flipAssignment_involutive`: relies solely on Lean core standard `[Quot.sound]` (due to `funext` on function equality). 0 custom axioms.
--/
 #print axioms SatGauge.evalLit_flip
 #print axioms SatGauge.evalClauseList_flip
 #print axioms SatGauge.evalFormulaList_flip
+#print axioms SatGauge.countViolatedClauses_flip
 #print axioms SatGauge.flipAssignment_involutive
 #print axioms SatGauge.flipLit_involutive
 #print axioms SatGauge.flipClauseList_involutive
