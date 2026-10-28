@@ -1,0 +1,134 @@
+name: Full verification and corrected formal catalog
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/full-verification.yml'
+      - 'scripts/formal_statement_boundaries.py'
+      - 'scripts/generate_formal_claims_boundary_fixed.py'
+      - 'tests/test_statement_boundaries.py'
+permissions:
+  contents: read
+jobs:
+  lean-and-catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: .
+      - run: lake exe cache get
+      - run: lake build
+      - run: python3 scripts/check_sorries.py
+      - run: python3 scripts/proof_receipt.py
+      - name: Regenerate complete catalog with corrected statement boundaries
+        run: python3 scripts/generate_formal_claims_boundary_fixed.py --emit formal-claims-fresh.json
+      - name: Check committed catalog freshness
+        run: |
+          python3 - <<'PY'
+          import json
+          fresh = json.load(open('formal-claims-fresh.json'))
+          committed = json.load(open('artifacts/v1/formal-claims.json'))
+          assert fresh['claims'] == committed['claims'], 'Catalog is stale; retain the fresh artifact for reviewed replacement'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: corrected-formal-catalog
+          path: |
+            formal-claims-fresh.json
+            proof-receipt.json
+          if-no-files-found: warn
+  python-and-machine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm --prefix circuits ci
+      - name: Dry-run must not claim kernel proof
+        run: |
+          python3 calculemus.py examples/*.uc --dry-run --registry /tmp/full-ci-ledger.jsonl
+          python3 - <<'PY'
+          import json
+          verdicts = [json.loads(line)['verdict'] for line in open('/tmp/full-ci-ledger.jsonl')]
+          assert 'kernel-proven' not in verdicts
+          PY
+      - run: python3 -m pip install flask websockets cryptography pytest jsonschema posthog pillow
+      - run: python3 -m pytest tests/ -q
+        env:
+          LEIBNIZ_API_TOKEN: ci-test-token
+      - name: Dependency audit (reported, matching current nonblocking policy)
+        run: |
+          python3 -m pip install pip-audit
+          pip-audit -r <(pip freeze) --skip-editable || echo 'Dependency findings reported; currently nonblocking'
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+  vkernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: .
+      - run: lake exe cache get
+      - run: python3 -m pip install pynacl
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bubblewrap
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - run: python3 scripts/vkernel/attest.py . scripts/vkernel/vkernel.4leibniz.json proof-record.unsigned.json --unsigned
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-verification-vkernel
+          path: proof-record.unsigned.json
+          if-no-files-found: warn
+  independent-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+      - run: lake exe cache get
+      - run: lake build
+      - run: git clone --depth 1 https://github.com/digama0/lean4lean.git /tmp/lean4lean
+      - run: lake build lean4lean
+        working-directory: /tmp/lean4lean
+      - name: Reject checker diagnostics even on zero exit
+        run: |
+          set -o pipefail
+          lake env /tmp/lean4lean/.lake/build/bin/lean4lean Leibniz 2>&1 | tee lean4lean.log
+          if grep -qiE 'incompatible header|failed to read|error' lean4lean.log; then
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-verification-independent-kernel
+          path: lean4lean.log
+          if-no-files-found: warn
