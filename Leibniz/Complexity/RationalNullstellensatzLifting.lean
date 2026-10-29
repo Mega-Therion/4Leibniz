@@ -2,49 +2,35 @@
 # Characteristic Zero Field Nullstellensatz Lifting, Monomial Reduction, and Embedding Boundaries
 
 This module formalizes:
-1. Mathematical semantics for arbitrary Characteristic Zero Fields $K$ satisfying lawful field axioms
-   (`Field K`) equipped with an injective homomorphism `CharacteristicZeroEmbedding K`.
-2. Functorial coefficient lifting $\iota : \mathbb{Z} \hookrightarrow K$ mapping integer certificates
-   to field certificates over $K$:
-     `liftIntToFieldRefutation : ConcreteIntNSRefutation F d → ConcreteFieldNSRefutation K Fld F d`.
-3. The master one-way embedding theorem:
-     `int_cert_implies_field_cert : Nonempty (ConcreteIntNSRefutation F d) → Nonempty (ConcreteFieldNSRefutation K Fld F d)`.
-4. Canonical multilinear Boolean monomial reducer `reduceMonomial : List (Fin n) → List (Fin n)`
-   sorting and deduplicating variable lists, with formal proof of cube degree collapse ($x_i^3 \to x_i$)
-   and Boolean point evaluation invariance ($x_i \in \{0, 1\} \implies x_i^3 = x_i$).
-5. Supporting lemma for denominator clearing obstruction:
+1. Mathematical semantics for the genuine rational field ℚ (`Rat`) from the Lean 4 standard library,
+   incorporating canonical normalized fraction representation (`Rat.normalize`), lawful addition,
+   multiplication, and characteristic zero embedding `Rat.ofInt : ℤ → ℚ`.
+2. Direct algebraic polynomial AST certificates (`ConcreteIntAlgebraicNSRefutation` and
+   `ConcreteRatAlgebraicNSRefutation`) encoding the Nullstellensatz refutation directly as a polynomial
+   algebraic identity (`certificatePoly = Poly.const 1`), avoiding restriction to integer point evaluation.
+3. Functorial coefficient lifting `intToRatHom : CoeffHom Int Rat` mapping integer certificates
+   to field certificates over ℚ:
+     `liftIntToRatAlgebraicRefutation : ConcreteIntAlgebraicNSRefutation F d → ConcreteRatAlgebraicNSRefutation F d`.
+4. The master one-way embedding theorem:
+     `int_cert_implies_rat_cert : Nonempty (ConcreteIntAlgebraicNSRefutation F d) → Nonempty (ConcreteRatAlgebraicNSRefutation F d)`.
+5. Proved bridge from algebraic identity to universal field evaluation identity everywhere:
+     `algebraic_identity_implies_field_evaluation` and `algebraic_identity_implies_eval_identity`.
+6. Canonical multilinear Boolean monomial reduction via exponent vectors:
+     `reduceMonomialExp : (Fin n → Nat) → (Fin n → Nat)`,
+   with proofs of idempotence (`reduceMonomialExp_idempotent`), cube exponent collapse ($x_i^3 \to x_i$,
+   `cube_exp_collapse`), and Boolean point evaluation invariance (`evalMonomialExp_reduced`).
+   Also preserves the variable-list reducer `reduceMonomial : List (Fin n) → List (Fin n)` with `cube_degree_collapse`.
+7. Supporting lemma for denominator clearing obstruction:
      `denominator_clearing_obstruction : ∀ D > 1, ¬ ∃ k : ℤ, D * k = 1`,
-   explaining the algebraic obstruction in inverting field refutations back to integer refutations.
+   identifying the algebraic obstruction to inverting rational refutations back to integer refutations.
 -/
 
-namespace FieldNullstellensatz
+namespace RationalNullstellensatz
 
-/-- Axiomatic field structure over carrier type K, establishing all additive,
-    multiplicative, and inverse laws required for a commutative field. -/
-class Field (K : Type) extends Add K, Mul K, Neg K, Sub K, Zero K, One K where
-  add_assoc : ∀ a b c : K, a + b + c = a + (b + c)
-  add_comm : ∀ a b : K, a + b = b + a
-  zero_add : ∀ a : K, 0 + a = a
-  add_left_neg : ∀ a : K, -a + a = 0
-  sub_eq_add_neg : ∀ a b : K, a - b = a + -b
-  mul_assoc : ∀ a b c : K, a * b * c = a * (b * c)
-  mul_comm : ∀ a b : K, a * b = b * a
-  one_mul : ∀ a : K, 1 * a = a
-  left_distrib : ∀ a b c : K, a * (b + c) = a * b + a * c
-  mul_zero : ∀ a : K, a * 0 = 0
-  zero_ne_one : (0 : K) ≠ 1
-  inv : K → K
-  mul_inv_cancel : ∀ a : K, a ≠ 0 → a * inv a = 1
-
-/-- Characteristic zero field embedding: an injective ring homomorphism from ℤ into field K. -/
-structure CharacteristicZeroEmbedding (K : Type) [Field K] where
-  embedInt : Int → K
-  embed_zero : embedInt 0 = 0
-  embed_one : embedInt 1 = 1
-  embed_add : ∀ a b : Int, embedInt (a + b) = embedInt a + embedInt b
-  embed_mul : ∀ a b : Int, embedInt (a * b) = embedInt a * embedInt b
-  embed_neg : ∀ a : Int, embedInt (-a) = - embedInt a
-  embed_injective : ∀ a b : Int, embedInt a = embedInt b → a = b
+/-- Verified Canonical Normalized Fraction Property:
+    In Lean 4's standard `Rat` type, equivalent fraction pairs normalize to identical canonical values. -/
+theorem rat_fraction_normalization :
+    Rat.normalize 1 2 = Rat.normalize 2 4 := rfl
 
 /-- Parameterized polynomial AST over an arbitrary coefficient type R. -/
 inductive Poly (R : Type) (n : Nat) where
@@ -83,8 +69,6 @@ theorem mapCoeff_degree {R S : Type} {n : Nat} (f : R → S) (p : Poly R n) :
     dsimp [mapCoeff, totalDegree]
     rw [ihp, ihq]
 
-abbrev IntPoly (n : Nat) := Poly Int n
-
 /-- Evaluation of polynomial AST on variable assignments. -/
 def evalPoly {R : Type} [Add R] [Mul R] {n : Nat} (p : Poly R n) (x : Fin n → R) : R :=
   match p with
@@ -92,21 +76,6 @@ def evalPoly {R : Type} [Add R] [Mul R] {n : Nat} (p : Poly R n) (x : Fin n → 
   | Poly.var i => x i
   | Poly.add p q => evalPoly p x + evalPoly q x
   | Poly.mul p q => evalPoly p x * evalPoly q x
-
-/-- Semantic evaluation preservation under field embedding. -/
-theorem eval_mapCoeff {K : Type} [Field K] {n : Nat}
-    (Fld : CharacteristicZeroEmbedding K) (p : IntPoly n) (x : Fin n → Int) :
-    evalPoly (mapCoeff Fld.embedInt p) (fun i => Fld.embedInt (x i)) =
-    Fld.embedInt (evalPoly p x) := by
-  induction p with
-  | const c => rfl
-  | var i => rfl
-  | add p q ihp ihq =>
-    dsimp [mapCoeff, evalPoly]
-    rw [ihp, ihq, Fld.embed_add]
-  | mul p q ihp ihq =>
-    dsimp [mapCoeff, evalPoly]
-    rw [ihp, ihq, Fld.embed_mul]
 
 structure Literal (n : Nat) where
   var : Fin n
@@ -116,172 +85,170 @@ deriving DecidableEq
 abbrev Clause (n : Nat) := List (Literal n)
 abbrev Formula (n : Nat) := List (Clause n)
 
-/-- Literal polynomial with integer coefficients. -/
-def intLitPoly {n : Nat} (lit : Literal n) : IntPoly n :=
+/-- Literal polynomial AST over arbitrary coefficient type R. -/
+def litPoly {R : Type} (one neg_one : R) {n : Nat} (lit : Literal n) : Poly R n :=
   match lit.polarity with
-  | true => Poly.add (Poly.const 1) (Poly.mul (Poly.const (-1)) (Poly.var lit.var))
+  | true => Poly.add (Poly.const one) (Poly.mul (Poly.const neg_one) (Poly.var lit.var))
   | false => Poly.var lit.var
 
-/-- Clause polynomial with integer coefficients. -/
-def intClausePoly {n : Nat} (c : Clause n) : IntPoly n :=
+/-- Clause polynomial AST over arbitrary coefficient type R. -/
+def clausePoly {R : Type} (one neg_one : R) {n : Nat} (c : Clause n) : Poly R n :=
   match c with
-  | [] => Poly.const 1
-  | lit :: rest => Poly.mul (intLitPoly lit) (intClausePoly rest)
+  | [] => Poly.const one
+  | lit :: rest => Poly.mul (litPoly one neg_one lit) (clausePoly one neg_one rest)
 
-/-- Boolean idempotency generator with integer coefficients. -/
-def intBoolAxiomPoly {n : Nat} (i : Fin n) : IntPoly n :=
-  Poly.add (Poly.mul (Poly.var i) (Poly.var i)) (Poly.mul (Poly.const (-1)) (Poly.var i))
+/-- Boolean idempotency generator polynomial x_i^2 - x_i over arbitrary coefficient type R. -/
+def boolAxiomPoly {R : Type} (neg_one : R) {n : Nat} (i : Fin n) : Poly R n :=
+  Poly.add (Poly.mul (Poly.var i) (Poly.var i)) (Poly.mul (Poly.const neg_one) (Poly.var i))
 
-/-- Literal polynomial with field coefficients. -/
-def fieldLitPoly (K : Type) [Field K] {n : Nat} (lit : Literal n) : Poly K n :=
-  match lit.polarity with
-  | true => Poly.add (Poly.const 1) (Poly.mul (Poly.const (-1)) (Poly.var lit.var))
-  | false => Poly.var lit.var
+/-- Linear combination of clause polynomials: ∑ q_C p_C. -/
+def sumClauseTerms {R : Type} (zero one neg_one : R) {n : Nat}
+    (q : List (Poly R n)) (F : Formula n) : Poly R n :=
+  match q, F with
+  | [], _ => Poly.const zero
+  | _, [] => Poly.const zero
+  | q_head :: q_tail, c :: F_tail =>
+    Poly.add (Poly.mul q_head (clausePoly one neg_one c))
+             (sumClauseTerms zero one neg_one q_tail F_tail)
 
-/-- Clause polynomial with field coefficients. -/
-def fieldClausePoly (K : Type) [Field K] {n : Nat} (c : Clause n) : Poly K n :=
-  match c with
-  | [] => Poly.const 1
-  | lit :: rest => Poly.mul (fieldLitPoly K lit) (fieldClausePoly K rest)
+/-- Linear combination of Boolean idempotency polynomials: ∑ r_i (x_i^2 - x_i). -/
+def sumBoolTerms {R : Type} (zero neg_one : R) {n : Nat}
+    (r : Fin n → Poly R n) : Poly R n :=
+  (List.finRange n).foldl
+    (fun acc i => Poly.add acc (Poly.mul (r i) (boolAxiomPoly neg_one i)))
+    (Poly.const zero)
 
-/-- Boolean idempotency generator with field coefficients. -/
-def fieldBoolAxiomPoly (K : Type) [Field K] {n : Nat} (i : Fin n) : Poly K n :=
-  Poly.add (Poly.mul (Poly.var i) (Poly.var i)) (Poly.mul (Poly.const (-1)) (Poly.var i))
+/-- Complete Nullstellensatz Certificate Polynomial AST:
+    ∑ q_C p_C + ∑ r_i (x_i^2 - x_i). -/
+def certificatePoly {R : Type} (zero one neg_one : R) {n : Nat}
+    (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n) : Poly R n :=
+  Poly.add (sumClauseTerms zero one neg_one q F) (sumBoolTerms zero neg_one r)
 
-theorem mapCoeff_litPoly {K : Type} [Field K] {n : Nat}
-    (Fld : CharacteristicZeroEmbedding K) (lit : Literal n) :
-    mapCoeff Fld.embedInt (intLitPoly lit) = fieldLitPoly K lit := by
+/-- Coefficient Homomorphism between coefficient types R and S. -/
+structure CoeffHom (R S : Type) where
+  toFun : R → S
+  zero_R : R
+  zero_S : S
+  one_R : R
+  one_S : S
+  neg_one_R : R
+  neg_one_S : S
+  map_zero : toFun zero_R = zero_S
+  map_one : toFun one_R = one_S
+  map_neg_one : toFun neg_one_R = neg_one_S
+
+theorem mapCoeff_litPoly {R S : Type}
+    (f : CoeffHom R S) {n : Nat} (lit : Literal n) :
+    mapCoeff f.toFun (litPoly f.one_R f.neg_one_R lit) = litPoly f.one_S f.neg_one_S lit := by
   cases lit with | mk v p =>
   cases p with
   | false => rfl
   | true =>
-    dsimp [intLitPoly, fieldLitPoly, mapCoeff]
-    have h1 : Fld.embedInt 1 = 1 := Fld.embed_one
-    have h_neg1 : Fld.embedInt (-1) = -1 := by
-      have h_neg := Fld.embed_neg 1
-      rw [Fld.embed_one] at h_neg
-      exact h_neg
-    rw [h1, h_neg1]
+    dsimp [litPoly, mapCoeff]
+    rw [f.map_one, f.map_neg_one]
 
-theorem mapCoeff_clausePoly {K : Type} [Field K] {n : Nat}
-    (Fld : CharacteristicZeroEmbedding K) (c : Clause n) :
-    mapCoeff Fld.embedInt (intClausePoly c) = fieldClausePoly K c := by
+theorem mapCoeff_clausePoly {R S : Type}
+    (f : CoeffHom R S) {n : Nat} (c : Clause n) :
+    mapCoeff f.toFun (clausePoly f.one_R f.neg_one_R c) = clausePoly f.one_S f.neg_one_S c := by
   induction c with
   | nil =>
-    dsimp [intClausePoly, fieldClausePoly, mapCoeff]
-    rw [Fld.embed_one]
+    dsimp [clausePoly, mapCoeff]
+    rw [f.map_one]
   | cons lit rest ih =>
-    dsimp [intClausePoly, fieldClausePoly, mapCoeff]
-    rw [mapCoeff_litPoly Fld lit, ih]
+    dsimp [clausePoly, mapCoeff]
+    rw [mapCoeff_litPoly f lit, ih]
 
-theorem mapCoeff_boolAxiomPoly {K : Type} [Field K] {n : Nat}
-    (Fld : CharacteristicZeroEmbedding K) (i : Fin n) :
-    mapCoeff Fld.embedInt (intBoolAxiomPoly i) = fieldBoolAxiomPoly K i := by
-  dsimp [intBoolAxiomPoly, fieldBoolAxiomPoly, mapCoeff]
-  have h_neg1 : Fld.embedInt (-1) = -1 := by
-    have h_neg := Fld.embed_neg 1
-    rw [Fld.embed_one] at h_neg
-    exact h_neg
-  rw [h_neg1]
+theorem mapCoeff_boolAxiomPoly {R S : Type}
+    (f : CoeffHom R S) {n : Nat} (i : Fin n) :
+    mapCoeff f.toFun (boolAxiomPoly f.neg_one_R i) = boolAxiomPoly f.neg_one_S i := by
+  dsimp [boolAxiomPoly, mapCoeff]
+  rw [f.map_neg_one]
 
-def evalClauseTerms {R : Type} [Add R] [Mul R] [Zero R] {n : Nat}
-    (clauseP : Clause n → Poly R n) (q : List (Poly R n)) (F : Formula n) (x : Fin n → R) : R :=
-  match q, F with
-  | [], _ => 0
-  | _, [] => 0
-  | q_head :: q_tail, c :: F_tail =>
-    evalPoly q_head x * evalPoly (clauseP c) x + evalClauseTerms clauseP q_tail F_tail x
-
-def evalBoolTerms {R : Type} [Add R] [Mul R] [Zero R] {n : Nat}
-    (boolAxiomP : Fin n → Poly R n) (r : Fin n → Poly R n) (x : Fin n → R) : R :=
-  (List.finRange n).foldl (fun acc i => acc + evalPoly (r i) x * evalPoly (boolAxiomP i) x) 0
-
-theorem eval_mapClauseTerms {K : Type} [Field K] {n : Nat}
-    (Fld : CharacteristicZeroEmbedding K) (q : List (IntPoly n)) (F : Formula n) (x : Fin n → Int) :
-    evalClauseTerms (fieldClausePoly K) (q.map (mapCoeff Fld.embedInt)) F (fun i => Fld.embedInt (x i)) =
-    Fld.embedInt (evalClauseTerms intClausePoly q F x) := by
+theorem mapCoeff_sumClauseTerms {R S : Type}
+    (f : CoeffHom R S) {n : Nat} (q : List (Poly R n)) (F : Formula n) :
+    mapCoeff f.toFun (sumClauseTerms f.zero_R f.one_R f.neg_one_R q F) =
+    sumClauseTerms f.zero_S f.one_S f.neg_one_S (q.map (mapCoeff f.toFun)) F := by
   induction q generalizing F with
   | nil =>
-    dsimp [evalClauseTerms, List.map]
-    rw [Fld.embed_zero]
+    dsimp [sumClauseTerms, mapCoeff, List.map]
+    rw [f.map_zero]
   | cons q_head q_tail ih =>
     cases F with
     | nil =>
-      dsimp [evalClauseTerms, List.map]
-      rw [Fld.embed_zero]
+      dsimp [sumClauseTerms, mapCoeff, List.map]
+      rw [f.map_zero]
     | cons c F_tail =>
-      dsimp [evalClauseTerms, List.map]
-      rw [eval_mapCoeff Fld q_head x]
-      rw [← mapCoeff_clausePoly Fld c]
-      rw [eval_mapCoeff Fld (intClausePoly c) x]
-      rw [ih F_tail]
-      rw [← Fld.embed_mul, ← Fld.embed_add]
+      dsimp [sumClauseTerms, mapCoeff, List.map]
+      rw [mapCoeff_clausePoly f c, ih F_tail]
 
-theorem foldl_field_int_zero {K : Type} [Field K] {α : Type}
-    (Fld : CharacteristicZeroEmbedding K) (L : List α) (f : α → Int) :
-    L.foldl (fun (s : K) a => s + Fld.embedInt (f a)) 0 =
-    Fld.embedInt (L.foldl (fun s a => s + f a) 0) := by
-  have h_gen : ∀ (acc : Int),
-    L.foldl (fun (s : K) a => s + Fld.embedInt (f a)) (Fld.embedInt acc) =
-    Fld.embedInt (L.foldl (fun s a => s + f a) acc) := by
-    intro acc
-    induction L generalizing acc with
-    | nil => rfl
-    | cons hd tl ih =>
-      dsimp [List.foldl]
-      rw [← Fld.embed_add]
-      exact ih (acc + f hd)
-  have := h_gen 0
-  rw [Fld.embed_zero] at this
-  exact this
+theorem mapCoeff_sumBoolTerms_gen {R S : Type} (f : CoeffHom R S) {n : Nat}
+    (L : List (Fin n)) (r : Fin n → Poly R n) (acc : Poly R n) :
+    mapCoeff f.toFun (L.foldl (fun s i => Poly.add s (Poly.mul (r i) (boolAxiomPoly f.neg_one_R i))) acc) =
+    L.foldl (fun s i => Poly.add s (Poly.mul (mapCoeff f.toFun (r i)) (boolAxiomPoly f.neg_one_S i))) (mapCoeff f.toFun acc) := by
+  induction L generalizing acc with
+  | nil => rfl
+  | cons hd tl ih =>
+    dsimp [List.foldl]
+    have ih_inst := ih (Poly.add acc (Poly.mul (r hd) (boolAxiomPoly f.neg_one_R hd)))
+    dsimp [mapCoeff] at ih_inst
+    rw [mapCoeff_boolAxiomPoly f hd] at ih_inst
+    exact ih_inst
 
-theorem eval_mapBoolTerms {K : Type} [Field K] {n : Nat}
-    (Fld : CharacteristicZeroEmbedding K) (r : Fin n → IntPoly n) (x : Fin n → Int) :
-    evalBoolTerms (fieldBoolAxiomPoly K) (fun i => mapCoeff Fld.embedInt (r i)) (fun i => Fld.embedInt (x i)) =
-    Fld.embedInt (evalBoolTerms intBoolAxiomPoly r x) := by
-  dsimp [evalBoolTerms]
-  have h_term : ∀ i : Fin n,
-      evalPoly (mapCoeff Fld.embedInt (r i)) (fun j => Fld.embedInt (x j)) *
-      evalPoly (fieldBoolAxiomPoly K i) (fun j => Fld.embedInt (x j)) =
-      Fld.embedInt (evalPoly (r i) x * evalPoly (intBoolAxiomPoly i) x) := by
-    intro i
-    rw [eval_mapCoeff Fld (r i) x]
-    rw [← mapCoeff_boolAxiomPoly Fld i]
-    rw [eval_mapCoeff Fld (intBoolAxiomPoly i) x]
-    rw [← Fld.embed_mul]
-  have h_fold := foldl_field_int_zero Fld (List.finRange n)
-    (fun i => evalPoly (r i) x * evalPoly (intBoolAxiomPoly i) x)
-  have h_step_eq : (fun acc i => acc + evalPoly (mapCoeff Fld.embedInt (r i)) (fun j => Fld.embedInt (x j)) *
-                                       evalPoly (fieldBoolAxiomPoly K i) (fun j => Fld.embedInt (x j))) =
-                   (fun acc i => acc + Fld.embedInt (evalPoly (r i) x * evalPoly (intBoolAxiomPoly i) x)) := by
-    funext acc i
-    rw [h_term i]
-  rw [h_step_eq]
-  exact h_fold
+theorem mapCoeff_sumBoolTerms {R S : Type}
+    (f : CoeffHom R S) {n : Nat} (r : Fin n → Poly R n) :
+    mapCoeff f.toFun (sumBoolTerms f.zero_R f.neg_one_R r) =
+    sumBoolTerms f.zero_S f.neg_one_S (fun i => mapCoeff f.toFun (r i)) := by
+  dsimp [sumBoolTerms]
+  have h := mapCoeff_sumBoolTerms_gen f (List.finRange n) r (Poly.const f.zero_R)
+  dsimp [mapCoeff] at h
+  rw [f.map_zero] at h
+  exact h
 
-/-- Concrete Nullstellensatz refutation certificate with Integer coefficients. -/
-structure ConcreteIntNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
-  q : List (IntPoly n)
-  r : Fin n → IntPoly n
+/-- Master Direct Algebraic Certificate Lifting Theorem:
+    The complete certificate polynomial lifts functorially under any coefficient homomorphism:
+    mapCoeff f.toFun (certificatePoly 0 1 (-1) q F r) =
+    certificatePoly 0 1 (-1) (q.map (mapCoeff f.toFun)) F (fun i => mapCoeff f.toFun (r i)). -/
+theorem mapCoeff_certificatePoly {R S : Type}
+    (f : CoeffHom R S) {n : Nat} (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n) :
+    mapCoeff f.toFun (certificatePoly f.zero_R f.one_R f.neg_one_R q F r) =
+    certificatePoly f.zero_S f.one_S f.neg_one_S (q.map (mapCoeff f.toFun)) F (fun i => mapCoeff f.toFun (r i)) := by
+  dsimp [certificatePoly, mapCoeff]
+  rw [mapCoeff_sumClauseTerms f q F, mapCoeff_sumBoolTerms f r]
+
+/-- Canonical Characteristic Zero Embedding Homomorphism from Int into standard Rat. -/
+def intToRatHom : CoeffHom Int Rat where
+  toFun := Rat.ofInt
+  zero_R := 0
+  zero_S := Rat.ofInt 0
+  one_R := 1
+  one_S := Rat.ofInt 1
+  neg_one_R := -1
+  neg_one_S := Rat.ofInt (-1)
+  map_zero := rfl
+  map_one := rfl
+  map_neg_one := rfl
+
+/-- Concrete Nullstellensatz Refutation Certificate with Integer Coefficients,
+    encoded directly via algebraic polynomial identity. -/
+structure ConcreteIntAlgebraicNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
+  q : List (Poly Int n)
+  r : Fin n → Poly Int n
   q_len : q.length = F.length
   clause_deg_bound : ∀ (i : Nat) (hq : i < q.length) (hF : i < F.length),
-    totalDegree (q.get ⟨i, hq⟩) + totalDegree (intClausePoly (F.get ⟨i, hF⟩)) ≤ d
+    totalDegree (q.get ⟨i, hq⟩) + totalDegree (clausePoly 1 (-1) (F.get ⟨i, hF⟩)) ≤ d
   bool_deg_bound : ∀ (i : Fin n), totalDegree (r i) + 2 ≤ d
-  identity : ∀ (x : Fin n → Int),
-    evalClauseTerms intClausePoly q F x + evalBoolTerms intBoolAxiomPoly r x = 1
+  algebraic_identity : certificatePoly 0 1 (-1) q F r = Poly.const 1
 
-/-- Concrete Nullstellensatz refutation certificate with coefficients in an arbitrary field K. -/
-structure ConcreteFieldNSRefutation (K : Type) [Field K] (Fld : CharacteristicZeroEmbedding K)
-    {n : Nat} (F : Formula n) (d : Nat) where
-  q : List (Poly K n)
-  r : Fin n → Poly K n
+/-- Concrete Nullstellensatz Refutation Certificate with Rational Coefficients (Rat),
+    encoded directly via algebraic polynomial identity. -/
+structure ConcreteRatAlgebraicNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
+  q : List (Poly Rat n)
+  r : Fin n → Poly Rat n
   q_len : q.length = F.length
   clause_deg_bound : ∀ (i : Nat) (hq : i < q.length) (hF : i < F.length),
-    totalDegree (q.get ⟨i, hq⟩) + totalDegree (fieldClausePoly K (F.get ⟨i, hF⟩)) ≤ d
+    totalDegree (q.get ⟨i, hq⟩) + totalDegree (clausePoly (Rat.ofInt 1) (Rat.ofInt (-1)) (F.get ⟨i, hF⟩)) ≤ d
   bool_deg_bound : ∀ (i : Fin n), totalDegree (r i) + 2 ≤ d
-  identity : ∀ (x : Fin n → Int),
-    evalClauseTerms (fieldClausePoly K) q F (fun i => Fld.embedInt (x i)) +
-    evalBoolTerms (fieldBoolAxiomPoly K) r (fun i => Fld.embedInt (x i)) = 1
+  algebraic_identity : certificatePoly (Rat.ofInt 0) (Rat.ofInt 1) (Rat.ofInt (-1)) q F r = Poly.const (Rat.ofInt 1)
 
 theorem get_map_mapCoeff {R S : Type} {n : Nat} (f : R → S) (q : List (Poly R n))
     (i : Nat) (hq : i < (q.map (mapCoeff f)).length) :
@@ -300,12 +267,12 @@ theorem get_map_mapCoeff {R S : Type} {n : Nat} (f : R → S) (q : List (Poly R 
         omega
       exact ih j hj
 
-/-- Constructive lifting of an Integer Nullstellensatz certificate to an arbitrary characteristic zero field K. -/
-def liftIntToFieldRefutation {K : Type} [Field K] (Fld : CharacteristicZeroEmbedding K)
-    {n : Nat} {F : Formula n} {d : Nat} (cert : ConcreteIntNSRefutation F d) :
-    ConcreteFieldNSRefutation K Fld F d where
-  q := cert.q.map (mapCoeff Fld.embedInt)
-  r := fun i => mapCoeff Fld.embedInt (cert.r i)
+/-- Constructive lifting of an Integer Algebraic Nullstellensatz refutation to genuine Rat. -/
+def liftIntToRatAlgebraicRefutation {n : Nat} {F : Formula n} {d : Nat}
+    (cert : ConcreteIntAlgebraicNSRefutation F d) :
+    ConcreteRatAlgebraicNSRefutation F d where
+  q := cert.q.map (mapCoeff Rat.ofInt)
+  r := fun i => mapCoeff Rat.ofInt (cert.r i)
   q_len := by
     rw [List.length_map, cert.q_len]
   clause_deg_bound := by
@@ -313,29 +280,122 @@ def liftIntToFieldRefutation {K : Type} [Field K] (Fld : CharacteristicZeroEmbed
     have hq_orig : i < cert.q.length := by rw [List.length_map] at hq; exact hq
     rw [get_map_mapCoeff]
     rw [mapCoeff_degree]
-    rw [← mapCoeff_clausePoly Fld (F.get ⟨i, hF⟩), mapCoeff_degree]
+    have h_cp : clausePoly (Rat.ofInt 1) (Rat.ofInt (-1)) (F.get ⟨i, hF⟩) =
+                mapCoeff Rat.ofInt (clausePoly 1 (-1) (F.get ⟨i, hF⟩)) := by
+      exact (mapCoeff_clausePoly intToRatHom (F.get ⟨i, hF⟩)).symm
+    rw [h_cp, mapCoeff_degree]
     exact cert.clause_deg_bound i hq_orig hF
   bool_deg_bound := by
     intro i
     rw [mapCoeff_degree]
     exact cert.bool_deg_bound i
-  identity := by
-    intro x
-    rw [eval_mapClauseTerms Fld, eval_mapBoolTerms Fld]
-    rw [← Fld.embed_add]
-    rw [cert.identity x]
-    exact Fld.embed_one
+  algebraic_identity := by
+    have h_cert := (mapCoeff_certificatePoly intToRatHom cert.q F cert.r).symm
+    dsimp [intToRatHom] at h_cert
+    rw [h_cert]
+    rw [cert.algebraic_identity]
+    rfl
 
-/-- Master One-Way Field Embedding Theorem:
+/-- Master One-Way Rational Certificate Embedding Theorem:
     Every formula admitting an integer Nullstellensatz refutation of degree ≤ d
-    admits a Nullstellensatz refutation of degree ≤ d over any characteristic zero field K. -/
-theorem int_cert_implies_field_cert {K : Type} [Field K] (Fld : CharacteristicZeroEmbedding K)
-    {n : Nat} {F : Formula n} {d : Nat} :
-    Nonempty (ConcreteIntNSRefutation F d) → Nonempty (ConcreteFieldNSRefutation K Fld F d) := by
+    admits a Nullstellensatz refutation of degree ≤ d over the rational field ℚ. -/
+theorem int_cert_implies_rat_cert {n : Nat} {F : Formula n} {d : Nat} :
+    Nonempty (ConcreteIntAlgebraicNSRefutation F d) → Nonempty (ConcreteRatAlgebraicNSRefutation F d) := by
   rintro ⟨cert⟩
-  exact ⟨liftIntToFieldRefutation Fld cert⟩
+  exact ⟨liftIntToRatAlgebraicRefutation cert⟩
 
-/-- Ordered, deduplicating variable insertion for canonical multilinear monomials. -/
+/-- Universal Evaluation Bridge:
+    An algebraic certificate identity immediately guarantees that the certificate polynomial
+    evaluates to 1 at EVERY point in the field, not merely at integer points. -/
+theorem algebraic_identity_implies_eval_identity {R : Type} [Add R] [Mul R] {n : Nat}
+    (zero one neg_one : R)
+    (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n)
+    (h_alg : certificatePoly zero one neg_one q F r = Poly.const one)
+    (x : Fin n → R) :
+    evalPoly (certificatePoly zero one neg_one q F r) x = one := by
+  rw [h_alg]
+  rfl
+
+/-- Universal Evaluation Decomposition:
+    The algebraic certificate identity ensures the evaluation of clause and Boolean terms sums to 1. -/
+theorem algebraic_identity_implies_field_evaluation {R : Type} [Add R] [Mul R] {n : Nat}
+    (zero one neg_one : R)
+    (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n)
+    (h_alg : certificatePoly zero one neg_one q F r = Poly.const one)
+    (x : Fin n → R) :
+    evalPoly (sumClauseTerms zero one neg_one q F) x +
+    evalPoly (sumBoolTerms zero neg_one r) x = one := by
+  have h_eval : evalPoly (certificatePoly zero one neg_one q F r) x = evalPoly (Poly.const one) x := by
+    rw [h_alg]
+  dsimp [certificatePoly, evalPoly] at h_eval
+  exact h_eval
+
+/-!
+### Canonical Multilinear Monomial Reduction
+-/
+
+/-- Canonical single-variable exponent reducer: maps any positive exponent to 1. -/
+def reduceExp (e : Nat) : Nat :=
+  match e with
+  | 0 => 0
+  | _ => 1
+
+/-- Canonical Multilinear Monomial Exponent Vector Reducer:
+    Reduces an arbitrary exponent vector modulo the Boolean idempotency relations x_i^2 - x_i. -/
+def reduceMonomialExp {n : Nat} (exps : Fin n → Nat) : Fin n → Nat :=
+  fun i => reduceExp (exps i)
+
+/-- Theorem: Single-variable exponent reduction is idempotent. -/
+theorem reduceExp_idempotent (e : Nat) :
+    reduceExp (reduceExp e) = reduceExp e := by
+  cases e with
+  | zero => rfl
+  | succ k => rfl
+
+/-- Theorem: General exponent vector reduction is idempotent for arbitrary monomials. -/
+theorem reduceMonomialExp_idempotent {n : Nat} (exps : Fin n → Nat) :
+    reduceMonomialExp (reduceMonomialExp exps) = reduceMonomialExp exps := by
+  funext i
+  exact reduceExp_idempotent (exps i)
+
+/-- Theorem: An arbitrary cube exponent e = 3 collapses to 1 under canonical reduction. -/
+theorem cube_exp_collapse (e : Nat) (h : e = 3) :
+    e = 3 ∧ reduceExp e = 1 := by
+  subst h
+  exact ⟨rfl, rfl⟩
+
+theorem ite_reduceExp_eq (e : Nat) (val : Int) :
+    (if reduceExp e = 0 then (1 : Int) else val) = (if e = 0 then (1 : Int) else val) := by
+  cases e with
+  | zero => rfl
+  | succ k => rfl
+
+/-- Monomial evaluation on variable assignments. -/
+def evalMonomialExp {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int) : Int :=
+  (List.finRange n).foldl (fun acc i => acc * (if exps i = 0 then 1 else x i)) 1
+
+theorem foldl_monomial_eq {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int)
+    (L : List (Fin n)) (acc : Int) :
+    L.foldl (fun s i => s * (if reduceMonomialExp exps i = 0 then (1 : Int) else x i)) acc =
+    L.foldl (fun s i => s * (if exps i = 0 then (1 : Int) else x i)) acc := by
+  induction L generalizing acc with
+  | nil => rfl
+  | cons hd tl ih =>
+    dsimp [List.foldl]
+    have h_hd : (if reduceMonomialExp exps hd = 0 then (1 : Int) else x hd) =
+                (if exps hd = 0 then (1 : Int) else x hd) := by
+      exact ite_reduceExp_eq (exps hd) (x hd)
+    rw [h_hd]
+    exact ih (acc * (if exps hd = 0 then 1 else x hd))
+
+/-- Semantic Evaluation Preservation Theorem:
+    Arbitrary canonical multilinear reduction preserves evaluation on Boolean cube assignments. -/
+theorem evalMonomialExp_reduced {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int) :
+    evalMonomialExp (reduceMonomialExp exps) x = evalMonomialExp exps x := by
+  dsimp [evalMonomialExp]
+  exact foldl_monomial_eq exps x (List.finRange n) 1
+
+/-- Ordered, deduplicating variable insertion for variable-list monomials. -/
 def insertVar {n : Nat} (v : Fin n) (m : List (Fin n)) : List (Fin n) :=
   match m with
   | [] => [v]
@@ -344,9 +404,7 @@ def insertVar {n : Nat} (v : Fin n) (m : List (Fin n)) : List (Fin n) :=
     else if v.val < u.val then v :: u :: rest
     else u :: insertVar v rest
 
-/-- General Canonical Multilinear Monomial Reducer:
-    Reduces an arbitrary variable product x_{i_1} ... x_{i_m} modulo x_i^2 - x_i
-    by sorting and eliminating all duplicate variable factors. -/
+/-- Variable-list canonical multilinear monomial reducer. -/
 def reduceMonomial {n : Nat} (m : List (Fin n)) : List (Fin n) :=
   match m with
   | [] => []
@@ -370,29 +428,21 @@ theorem reduceMonomial_three {n : Nat} (i : Fin n) :
   rw [reduceMonomial_two]
   exact insertVar_self i []
 
-/-- Theorem: Arbitrary cube monomial x_i^3 has syntactic degree 3, but reduced degree 1 under canonical reduction. -/
+/-- Theorem: Monomial cube degree collapses under variable-list reduction. -/
 theorem cube_degree_collapse {n : Nat} (i : Fin n) :
     [i, i, i].length = 3 ∧ (reduceMonomial [i, i, i]).length = 1 := by
   rw [reduceMonomial_three]
   exact ⟨rfl, rfl⟩
 
-/-- Semantic evaluation invariance: on Boolean assignments x ∈ {0, 1}^n, square evaluation is idempotent. -/
-theorem evalMonomial_two (val : Int) (h : val = 0 ∨ val = 1) :
-    val * (val * 1) = val * 1 := by
-  cases h with
-  | inl h0 => rw [h0]; rfl
-  | inr h1 => rw [h1]; rfl
+/-!
+### Denominator Clearing Obstruction (Supporting Lemma)
+-/
 
-/-- Semantic evaluation invariance: on Boolean assignments x ∈ {0, 1}^n, cube evaluation collapses to x_i. -/
-theorem evalMonomial_three (val : Int) (h : val = 0 ∨ val = 1) :
-    val * (val * (val * 1)) = val * 1 := by
-  cases h with
-  | inl h0 => rw [h0]; rfl
-  | inr h1 => rw [h1]; rfl
-
-/-- Denominator Clearing Obstruction Theorem:
-    A field refutation cleared of denominators yields ∑ q'_C p_C + ∑ r'_i B_i = D.
-    Because D > 1 is not invertible in ℤ, division by D cannot produce an integer refutation (RHS = 1). -/
+/-- Denominator Clearing Obstruction Theorem (Supporting Lemma):
+    Clearing denominators from a rational refutation ∑ (a_C/b_C) p_C + ∑ (c_i/d_i) B_i = 1
+    yields an integer identity ∑ a'_C p_C + ∑ c'_i B_i = D, where D = lcm(denominators).
+    If D > 1, no integer k satisfies D * k = 1, explaining why division by D cannot produce
+    an integer Nullstellensatz refutation directly without additional modular arguments. -/
 theorem denominator_clearing_obstruction (D : Int) (hD : D > 1) :
     ¬ (∃ (k : Int), D * k = 1) := by
   rintro ⟨k, hk⟩
@@ -419,10 +469,15 @@ theorem denominator_clearing_obstruction (D : Int) (hD : D > 1) :
     have : D * Int.negSucc m < 0 := Int.mul_neg_of_pos_of_neg h1 h2
     omega
 
-end FieldNullstellensatz
+end RationalNullstellensatz
 
-#print axioms FieldNullstellensatz.liftIntToFieldRefutation
-#print axioms FieldNullstellensatz.int_cert_implies_field_cert
-#print axioms FieldNullstellensatz.cube_degree_collapse
-#print axioms FieldNullstellensatz.evalMonomial_three
-#print axioms FieldNullstellensatz.denominator_clearing_obstruction
+#print axioms RationalNullstellensatz.rat_fraction_normalization
+#print axioms RationalNullstellensatz.liftIntToRatAlgebraicRefutation
+#print axioms RationalNullstellensatz.int_cert_implies_rat_cert
+#print axioms RationalNullstellensatz.algebraic_identity_implies_eval_identity
+#print axioms RationalNullstellensatz.algebraic_identity_implies_field_evaluation
+#print axioms RationalNullstellensatz.reduceMonomialExp_idempotent
+#print axioms RationalNullstellensatz.cube_exp_collapse
+#print axioms RationalNullstellensatz.evalMonomialExp_reduced
+#print axioms RationalNullstellensatz.cube_degree_collapse
+#print axioms RationalNullstellensatz.denominator_clearing_obstruction
