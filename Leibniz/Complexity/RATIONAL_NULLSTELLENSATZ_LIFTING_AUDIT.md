@@ -1,46 +1,86 @@
-# Field-Based Rational Nullstellensatz Lifting, Canonical Multilinear Reduction, and Epistemic Audit
+# Field-Based Rational Nullstellensatz Lifting, Polynomial Ring Equivalence, and Epistemic Audit
 
-**Date:**  2026-10-28  
-**Status:** Certified in Lean 4 (`0 sorry`,  Exit  Code 0)  
-**Location:**  `/home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean`  
-**Source  SHA-256:** `d0d2a1c523744531a914fe5b6bacc90169b4e77f066cc1fd81b47f84f5f99c73`  
+**Date:**  2026-10-29  
+**Status:** Certified in Lean 4 (`0 sorry`,  Exit  Code 0,  Zero  Custom Axioms)  
+**Location:** `/home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean`  
+**Source SHA-256:** `014115f56893ab2849da3141705494e9c9c85c059e632b314c25cfb6ee38e836`  
 **Toolchain:** `leanprover/lean4:v4.33.0-rc1` (commit `62eed1db4d67327ec8120be05f1a1b0847d74561`, Release)  
-**Epistemic Classification:** Machine-Checked Formal Theorem (`0 sorry`, standard Lean core axioms `[propext, Quot.sound]`); Mathematical Semantics Repaired; Rational Field Embedding Proved
+**Epistemic Classification:** Machine-Checked Formal Theorem (`0 sorry`, standard Lean core axioms `[propext, Classical.choice, Quot.sound]`); Mathematical Semantics Repaired; Rational Field Embedding Proved
 
 ---
 
-## 1. Accomplished Formal Advancements & Semantic Repairs
+## 1. Accomplished Formal Advancements & Semantic Repairs (Audit BLK-887 Resolution)
 
-In  response to the audit critique regarding  unnormalized  fraction pairs,  integer-only  point evaluation, and limited degree collapse examples, [`RationalNullstellensatzLifting.lean`](file:///home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean) has been completely refactored to establish lawful rational field semantics, direct algebraic polynomial identities, and general multilinear reduction:
+In  response to the audit findings in  [BLK-887](https://app.notion.com/p/40877b95a965815781a2d08fa411a2e0),  [`RationalNullstellensatzLifting.lean`](file:///home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean) has  been  refactored to resolve all three audit defects:
 
-### A. Genuine Rational Field Semantics (`Rat`)
-- Employs Lean 4's standard library `Rat` type with canonical normalized fraction representation:
+### A. Finding 1 / Finding A: Genuine Monomial Exponent Evaluation & Boolean Cube Invariance
+- Replaced the previous linear placeholder factor with genuine integer exponentiation:
   ```lean
-  theorem rat_fraction_normalization :
-      Rat.normalize 1 2 = Rat.normalize 2 4 := rfl
-  ```
-- Characteristic zero embedding homomorphism:
-  ```lean
-  def intToRatHom : CoeffHom Int Rat
-  ```
-  with  certified preservation of zero, unit, and  negation  (`Rat.ofInt`).
-- Certified that  `Poly (R : Type) n`  degree is invariant under arbitrary coefficient maps:
-  $$\text{totalDegree}(\text{mapCoeff } f \; p) = \text{totalDegree}(p)$$
+  def intPow (val : Int) (e : Nat) : Int :=
+    match e with
+    | 0 => 1
+    | Nat.succ k => val * intPow val k
 
-### B. Direct Algebraic AST Polynomial Certificates & Universal Evaluation Bridge
-- Nullstellensatz refutations are encoded **directly as algebraic polynomial identities**:
-  ```lean
-  certificatePoly 0 1 (-1) q F r = Poly.const 1
-  certificatePoly (Rat.ofInt 0) (Rat.ofInt 1) (Rat.ofInt (-1)) q F r = Poly.const (Rat.ofInt 1)
+  def evalMonomialExp {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int) : Int :=
+    (List.finRange n).foldl (fun acc i => acc * intPow (x i) (exps i)) 1
   ```
-  This  eliminates any reliance on integer-restricted point  evaluation.
-- **Universal  Evaluation Decomposition  Theorem  (`algebraic_identity_implies_field_evaluation`):**
-  $$\forall x \in \mathbb{Q}^n, \quad \operatorname{evalPoly} \left(\sum q_C p_C\right) x + \operatorname{evalPoly} \left(\sum r_i (x_i^2 - x_i)\right) x = 1$$
-  Formally proves that the direct algebraic identity immediately forces the Nullstellensatz sum to evaluate to 1 everywhere across the entire field $\mathbb{Q}$ (and any ring $R$).
+- **Distinction  at $x=2$ (`test_exponent_distinction`):**
+  Formally verified that the  evaluator  evaluates actual  powers  before reduction:
+  ```lean
+  theorem test_exponent_distinction :
+      intPow 2 2 = 4 ∧ intPow 2 1 = 2 ∧ intPow 2 2 ≠ intPow 2 1 := by decide
+  ```
+- **Pointwise  Boolean Reduction Invariance (`evalMonomialExp_reduced`):**
+  Proved by induction  on  the variable  range  that under the explicit Boolean cube hypothesis $\forall i, x_i = 0 \lor x_i = 1$, evaluation is invariant under multilinear exponent reduction:
+  $$\forall x \in \{0, 1\}^n, \quad \operatorname{evalMonomialExp} (\operatorname{reduceMonomialExp} \text{exps}) x = \operatorname{evalMonomialExp} \text{exps} x$$
+- Preserved reducer idempotence (`reduceMonomialExp_idempotent`) and arbitrary cube exponent collapse (`cube_exp_collapse`).
 
-### C. Master One-Way Field Embedding Theorem: $\operatorname{IntCert}(F, d) \implies \operatorname{RatCert}(F, d)$
-- Constructed  the functorial certificate polynomial lifting:
-  $$\operatorname{mapCoeff} f  (\operatorname{certificatePoly}  0 \,  1  \, (-1) \, q \, F \, r) = \operatorname{certificatePoly} 0 \, 1 \, (-1) (q.\operatorname{map}(\operatorname{mapCoeff} f)) \, F \, (\lambda i, \operatorname{mapCoeff} f (r \, i))$$
+### B. Finding 2 / Finding B: Polynomial Ring Equivalence Modulo Ring Laws
+- Replaced  overly restrictive literal AST constructor equality  with  the inductive  equivalence  relation `PolyRingEq` generated by the standard commutative ring axioms:
+  - Associativity, commutativity, and distributivity of addition and multiplication.
+  - Zero addition and unit multiplication identities.
+  - Additive inverse cancellation: $( -1 \cdot p ) + p \equiv 0$.
+  - Constant addition and multiplication evaluation.
+- **Verification on unnormalized $(1 - x) + x = 1$:**
+  1. Formally proved that literal AST equality **fails** on unnormalized syntax trees:
+     ```lean
+     theorem test_ast_differs : testOneMinusXPlusX ≠ Poly.const 1 := by intro h; injection h
+     ```
+  2. Formally  proved that `PolyRingEq` **accepts** $(1 -  x)  + x  =  1$ without axioms (`0 axioms`):
+     ```lean
+     theorem test_poly_ring_eq_accepts : PolyRingEq testOneMinusXPlusX (Poly.const 1 : Poly Int 1)
+     ```
+- **Functorial  Ring Equivalence Lifting Theorem (`mapCoeff_polyRingEq`):**
+  Formally proved  without  axioms (`0 axioms`)  that  polynomial ring equivalence lifts functorially under any ring homomorphism:
+  $$\forall p, q \in \operatorname{Poly} R n, \quad \operatorname{PolyRingEq} p q \implies \operatorname{PolyRingEq} (\operatorname{mapCoeff} f.\text{toFun} p) (\operatorname{mapCoeff} f.\text{toFun} q)$$
+
+### C. Finding 3 / Finding C: Certified Ring Homomorphism and Characteristic Zero Embedding
+- Formulated the full algebraic structures `RingHom` and `RingEmbedding`:
+  ```lean
+  structure RingHom (R S : Type) [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                  [Add S] [Mul S] [Zero S] [One S] [Neg S] where
+    toFun : R → S
+    map_zero : toFun 0 = 0
+    map_one : toFun 1 = 1
+    map_add : ∀ a b : R, toFun (a + b) = toFun a + toFun b
+    map_mul : ∀ a b : R, toFun (a * b) = toFun a * toFun b
+    map_neg : ∀ a : R, toFun (-a) = -toFun a
+
+  structure RingEmbedding (R S : Type) [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                       [Add S] [Mul S] [Zero S] [One S] [Neg S]
+      extends RingHom R S where
+    injective : ∀ a b : R, toFun a = toFun b → a = b
+  ```
+- Formally  proved that Lean's standard library `Rat.ofInt`  satisfies  all ring  homomorphism  laws and injectivity:
+  - `rat_ofInt_zero : Rat.ofInt 0 = 0` (`rfl`)
+  - `rat_ofInt_one : Rat.ofInt 1 = 1` (`rfl`)
+  - `rat_ofInt_add : Rat.ofInt (a + b) = Rat.ofInt a + Rat.ofInt b`
+  - `rat_ofInt_mul : Rat.ofInt (a * b) = Rat.ofInt a * Rat.ofInt b`
+  - `rat_ofInt_neg : Rat.ofInt (-a) = -Rat.ofInt a` (`rfl`)
+  - `rat_ofInt_injective : Rat.ofInt a = Rat.ofInt b → a = b`
+- Certified [`intToRatEmbedding : RingEmbedding Int Rat`](file:///home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean#L80-L88).
+
+### D. Master One-Way Field Embedding Theorem: $\operatorname{IntCert}(F, d) \implies \operatorname{RatCert}(F, d)$
 - Constructed the constructive certificate transformer:
   ```lean
   def liftIntToRatAlgebraicRefutation {n : Nat} {F : Formula n} {d : Nat}
@@ -49,20 +89,7 @@ In  response to the audit critique regarding  unnormalized  fraction pairs,  int
   ```
 - **Master  Embedding Theorem (`int_cert_implies_rat_cert`):**
   $$\operatorname{Nonempty}(\operatorname{ConcreteIntAlgebraicNSRefutation}(F, d)) \implies \operatorname{Nonempty}(\operatorname{ConcreteRatAlgebraicNSRefutation}(F,  d))$$
-  Proves  that any  integer  Nullstellensatz refutation embeds into $\mathbb{Q}$ preserving all clause degree bounds and Boolean degree bounds $\le d$.
-
-### D. General Canonical Multilinear Monomial Reducer
-- Monomials  are represented via exponent vectors `exps : Fin n → Nat`.
-- Exponent  vector  reduction `reduceMonomialExp`  reduces  each exponent modulo $x_i^2 - x_i$ by mapping $e > 0 \mapsto 1$.
-- **Idempotence Theorem (`reduceMonomialExp_idempotent`):**
-  $$\operatorname{reduceMonomialExp}(\operatorname{reduceMonomialExp}(\text{exps})) = \operatorname{reduceMonomialExp}(\text{exps})$$
-- **Arbitrary Cube Exponent Collapse Theorem (`cube_exp_collapse`):**
-  $$\forall e, \quad e = 3 \implies \operatorname{reduceExp}(e) = 1$$
-  Certified without axioms (`0 axioms`).
-- **Semantic Boolean Evaluation Preservation Theorem (`evalMonomialExp_reduced`):**
-  $$\forall x \in \{0, 1\}^n, \quad \operatorname{evalMonomialExp} (\operatorname{reduceMonomialExp} \text{exps}) x = \operatorname{evalMonomialExp} \text{exps} x$$
-  Certified without axioms (`0 axioms`).
-- Variable-list monomial reduction `reduceMonomial` and `cube_degree_collapse` are likewise preserved.
+  Proved  strictly preserving  all  clause degree bounds and Boolean degree bounds $\le d$.
 
 ### E. Denominator Clearing Obstruction (Supporting Lemma)
 - **Theorem  (`denominator_clearing_obstruction`):**
@@ -73,31 +100,36 @@ In  response to the audit critique regarding  unnormalized  fraction pairs,  int
 
 ## 2. Standalone Verification & Axiom Receipt
 
-Direct compilation executed against `leanprover/lean4:v4.33.0-rc1` (`/home/mega/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean`):
+Direct compilation executed against `leanprover/lean4:v4.33.0-rc1` (`/home/mega/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean`):
 
 ```text
 'RationalNullstellensatz.rat_fraction_normalization' depends on axioms: [propext, Classical.choice, Quot.sound]
-'RationalNullstellensatz.liftIntToRatAlgebraicRefutation' depends on axioms: [propext, Quot.sound]
-'RationalNullstellensatz.int_cert_implies_rat_cert' depends on axioms: [propext, Quot.sound]
-'RationalNullstellensatz.algebraic_identity_implies_eval_identity' does not depend on any axioms
-'RationalNullstellensatz.algebraic_identity_implies_field_evaluation' does not depend on any axioms
+'RationalNullstellensatz.intToRatEmbedding' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RationalNullstellensatz.test_ast_differs' does not depend on any axioms
+'RationalNullstellensatz.test_poly_ring_eq_accepts' does not depend on any axioms
+'RationalNullstellensatz.mapCoeff_polyRingEq' does not depend on any axioms
+'RationalNullstellensatz.liftIntToRatAlgebraicRefutation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RationalNullstellensatz.int_cert_implies_rat_cert' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RationalNullstellensatz.test_exponent_distinction' does not depend on any axioms
+'RationalNullstellensatz.intPow_boolean_reduced' depends on axioms: [propext]
+'RationalNullstellensatz.evalMonomialExp_reduced' depends on axioms: [propext]
 'RationalNullstellensatz.reduceMonomialExp_idempotent' depends on axioms: [Quot.sound]
 'RationalNullstellensatz.cube_exp_collapse' does not depend on any axioms
-'RationalNullstellensatz.evalMonomialExp_reduced' does not depend on any axioms
 'RationalNullstellensatz.cube_degree_collapse' does not depend on any axioms
 'RationalNullstellensatz.denominator_clearing_obstruction' depends on axioms: [propext, Quot.sound]
 ```
 
 - **Exit  Code:** `0`
-- **Compiler Warnings / Errors:** `0`
-- **Custom  Axioms:**  `0`
-- **`sorry` Instances:**  `0`
-- **Standard  Core Axioms:** Relies solely on standard propositional extensionality (`propext`), quotient sound extensionality (`Quot.sound`), and classical choice (`Classical.choice`).
+- **Compiler Errors:** `0`
+- **Compiler Warnings:** `0`
+- **`sorry`  Bypasses:**  `0`
+- **Custom Axioms:**  `0`
+- **Standard  Core Axioms:** Relies solely on standard Lean foundational axioms (`propext`, `Quot.sound`, `Classical.choice`).
 
 ---
 
 ## 3. Epistemic Scope Boundaries
 
-1. **One-Way  Direction Bound:** The theorem establishes $\operatorname{IntCert}(F,  d)  \implies \operatorname{RatCert}(F,  d)$.  Bidirectional minimum degree equivalence between integer and rational refutations is **not** asserted or assumed.
-2. **Algebraic Encoding:** Certificate identity is established as an exact equality of polynomial ASTs, with universal evaluation over the rational field proved as a corollary.
-3. **Complexity Separation:** No claims regarding super-polynomial lower bounds, proof system separation, or $P$ versus $NP$.
+1. **Proof-System  Scope:** This formalization establishes a verified  syntactic  and semantic  bridge  between integer and rational Nullstellensatz refutations ($\operatorname{IntCert}(F, d) \implies \operatorname{RatCert}(F, d)$) modulo commutative ring laws.
+2. **Non-Equivalence Boundary:** The obstruction to clearing denominators ($D > 1$) illustrates that integer division is blocked algebraically, but does not prove that minimal refutation degrees between $\mathbb{Z}$ and $\mathbb{Q}$ diverge. Bidirectional equivalence remains unasserted.
+3. **Complexity Separation:** This formalization is an algebraic proof-system milestone. It establishes no lower bounds on polynomial refutation degrees and does not resolve $P$ versus $NP$.

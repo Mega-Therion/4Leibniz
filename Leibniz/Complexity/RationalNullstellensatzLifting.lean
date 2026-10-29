@@ -4,33 +4,111 @@
 This module formalizes:
 1. Mathematical semantics for the genuine rational field ℚ (`Rat`) from the Lean 4 standard library,
    incorporating canonical normalized fraction representation (`Rat.normalize`), lawful addition,
-   multiplication, and characteristic zero embedding `Rat.ofInt : ℤ → ℚ`.
-2. Direct algebraic polynomial AST certificates (`ConcreteIntAlgebraicNSRefutation` and
-   `ConcreteRatAlgebraicNSRefutation`) encoding the Nullstellensatz refutation directly as a polynomial
-   algebraic identity (`certificatePoly = Poly.const 1`), avoiding restriction to integer point evaluation.
-3. Functorial coefficient lifting `intToRatHom : CoeffHom Int Rat` mapping integer certificates
-   to field certificates over ℚ:
+   multiplication, negation, and characteristic zero ring embedding `intToRatEmbedding : RingEmbedding Int Rat`.
+2. Ring equivalence relation `PolyRingEq` on polynomial ASTs modulo standard ring laws,
+   allowing algebraically valid Nullstellensatz refutations (such as (1 - x) + x = 1) to be accepted
+   without requiring unnormalized literal AST equality.
+3. Functorial coefficient lifting `mapCoeff_polyRingEq` mapping polynomial ring equivalences
+   under any ring homomorphism, used in:
      `liftIntToRatAlgebraicRefutation : ConcreteIntAlgebraicNSRefutation F d → ConcreteRatAlgebraicNSRefutation F d`.
 4. The master one-way embedding theorem:
      `int_cert_implies_rat_cert : Nonempty (ConcreteIntAlgebraicNSRefutation F d) → Nonempty (ConcreteRatAlgebraicNSRefutation F d)`.
-5. Proved bridge from algebraic identity to universal field evaluation identity everywhere:
-     `algebraic_identity_implies_field_evaluation` and `algebraic_identity_implies_eval_identity`.
+5. Genuine monomial power evaluation `evalMonomialExp` with `intPow (x i) (exps i)`,
+   distinguishing x^2 = 4 from x = 2 at x = 2 (`test_exponent_distinction`), and proving
+   semantic evaluation invariance on Boolean cube assignments (`evalMonomialExp_reduced`).
 6. Canonical multilinear Boolean monomial reduction via exponent vectors:
      `reduceMonomialExp : (Fin n → Nat) → (Fin n → Nat)`,
-   with proofs of idempotence (`reduceMonomialExp_idempotent`), cube exponent collapse ($x_i^3 \to x_i$,
-   `cube_exp_collapse`), and Boolean point evaluation invariance (`evalMonomialExp_reduced`).
-   Also preserves the variable-list reducer `reduceMonomial : List (Fin n) → List (Fin n)` with `cube_degree_collapse`.
+   with proofs of idempotence (`reduceMonomialExp_idempotent`) and cube exponent collapse ($x_i^3 \to x_i$,
+   `cube_exp_collapse`).
 7. Supporting lemma for denominator clearing obstruction:
-     `denominator_clearing_obstruction : ∀ D > 1, ¬ ∃ k : ℤ, D * k = 1`,
-   identifying the algebraic obstruction to inverting rational refutations back to integer refutations.
+     `denominator_clearing_obstruction : ∀ D > 1, ¬ ∃ k : ℤ, D * k = 1`.
 -/
 
 namespace RationalNullstellensatz
+
+/-!
+### 1. Genuine Rational Field Semantics and Ring Embedding
+-/
 
 /-- Verified Canonical Normalized Fraction Property:
     In Lean 4's standard `Rat` type, equivalent fraction pairs normalize to identical canonical values. -/
 theorem rat_fraction_normalization :
     Rat.normalize 1 2 = Rat.normalize 2 4 := rfl
+
+theorem rat_eq (a b : Rat) (h_num : a.num = b.num) (h_den : a.den = b.den) : a = b := by
+  cases a; cases b
+  dsimp at h_num h_den
+  subst h_num h_den
+  rfl
+
+theorem rat_normalize_one (num : Int) :
+    Rat.normalize num 1 = Rat.ofInt num := by
+  have h_norm := Rat.normalize_eq (by decide : 1 ≠ 0) (num := num)
+  have h_gcd : num.natAbs.gcd 1 = 1 := Nat.gcd_one_right (num.natAbs)
+  apply rat_eq
+  · rw [h_norm]
+    dsimp
+    rw [h_gcd]
+    dsimp [Rat.ofInt]
+    rw [Int.ediv_one]
+  · rw [h_norm]
+    dsimp
+    rw [h_gcd]
+
+theorem rat_ofInt_zero : Rat.ofInt 0 = 0 := rfl
+
+theorem rat_ofInt_one : Rat.ofInt 1 = 1 := rfl
+
+theorem rat_ofInt_add (a b : Int) : Rat.ofInt (a + b) = Rat.ofInt a + Rat.ofInt b := by
+  have h_add := Rat.add_def (Rat.ofInt a) (Rat.ofInt b)
+  rw [h_add]
+  have h_norm := rat_normalize_one (a + b)
+  rw [← h_norm]
+  apply congrArg (fun n => Rat.normalize n 1)
+  dsimp [Rat.ofInt]
+  omega
+
+theorem rat_ofInt_mul (a b : Int) : Rat.ofInt (a * b) = Rat.ofInt a * Rat.ofInt b := by
+  have h_mul := Rat.mul_def (Rat.ofInt a) (Rat.ofInt b)
+  rw [h_mul]
+  have h_norm := rat_normalize_one (a * b)
+  rw [← h_norm]
+  rfl
+
+theorem rat_ofInt_neg (a : Int) : Rat.ofInt (-a) = -Rat.ofInt a := rfl
+
+theorem rat_ofInt_injective (a b : Int) (h : Rat.ofInt a = Rat.ofInt b) : a = b :=
+  congrArg Rat.num h
+
+/-- Lawful Ring Homomorphism structure preserving additive, multiplicative, unit, and negation laws. -/
+structure RingHom (R S : Type) [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                [Add S] [Mul S] [Zero S] [One S] [Neg S] where
+  toFun : R → S
+  map_zero : toFun 0 = 0
+  map_one : toFun 1 = 1
+  map_add : ∀ a b : R, toFun (a + b) = toFun a + toFun b
+  map_mul : ∀ a b : R, toFun (a * b) = toFun a * toFun b
+  map_neg : ∀ a : R, toFun (-a) = -toFun a
+
+/-- Lawful Characteristic Zero Ring Embedding extending RingHom with verified injectivity. -/
+structure RingEmbedding (R S : Type) [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                     [Add S] [Mul S] [Zero S] [One S] [Neg S]
+    extends RingHom R S where
+  injective : ∀ a b : R, toFun a = toFun b → a = b
+
+/-- Certified Ring Embedding from Int to standard Rat. -/
+def intToRatEmbedding : RingEmbedding Int Rat where
+  toFun := Rat.ofInt
+  map_zero := rat_ofInt_zero
+  map_one := rat_ofInt_one
+  map_add := rat_ofInt_add
+  map_mul := rat_ofInt_mul
+  map_neg := rat_ofInt_neg
+  injective := rat_ofInt_injective
+
+/-!
+### 2. Polynomial AST and Ring Equivalence Modulo Ring Laws
+-/
 
 /-- Parameterized polynomial AST over an arbitrary coefficient type R. -/
 inductive Poly (R : Type) (n : Nat) where
@@ -40,7 +118,6 @@ inductive Poly (R : Type) (n : Nat) where
   | mul : Poly R n → Poly R n → Poly R n
 deriving Inhabited
 
-/-- Syntactic total degree of polynomial AST. -/
 def totalDegree {R : Type} {n : Nat} (p : Poly R n) : Nat :=
   match p with
   | Poly.const _ => 0
@@ -48,7 +125,6 @@ def totalDegree {R : Type} {n : Nat} (p : Poly R n) : Nat :=
   | Poly.add p q => max (totalDegree p) (totalDegree q)
   | Poly.mul p q => totalDegree p + totalDegree q
 
-/-- Functorial coefficient mapping between polynomial coefficient domains. -/
 def mapCoeff {R S : Type} {n : Nat} (f : R → S) (p : Poly R n) : Poly S n :=
   match p with
   | Poly.const c => Poly.const (f c)
@@ -56,7 +132,6 @@ def mapCoeff {R S : Type} {n : Nat} (f : R → S) (p : Poly R n) : Poly S n :=
   | Poly.add p q => Poly.add (mapCoeff f p) (mapCoeff f q)
   | Poly.mul p q => Poly.mul (mapCoeff f p) (mapCoeff f q)
 
-/-- Total degree is invariant under arbitrary coefficient mappings. -/
 theorem mapCoeff_degree {R S : Type} {n : Nat} (f : R → S) (p : Poly R n) :
     totalDegree (mapCoeff f p) = totalDegree p := by
   induction p with
@@ -69,13 +144,150 @@ theorem mapCoeff_degree {R S : Type} {n : Nat} (f : R → S) (p : Poly R n) :
     dsimp [mapCoeff, totalDegree]
     rw [ihp, ihq]
 
-/-- Evaluation of polynomial AST on variable assignments. -/
-def evalPoly {R : Type} [Add R] [Mul R] {n : Nat} (p : Poly R n) (x : Fin n → R) : R :=
-  match p with
-  | Poly.const c => c
-  | Poly.var i => x i
-  | Poly.add p q => evalPoly p x + evalPoly q x
-  | Poly.mul p q => evalPoly p x * evalPoly q x
+/-- Polynomial Ring Equivalence Modulo Commutative Ring Laws:
+    Equivalence relation generated by associativity, commutativity, distributivity,
+    unit/zero identities, additive negation cancellation, and constant operations. -/
+inductive PolyRingEq {R : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R] {n : Nat} :
+    Poly R n → Poly R n → Prop where
+  | refl (p : Poly R n) : PolyRingEq p p
+  | symm {p q : Poly R n} : PolyRingEq p q → PolyRingEq q p
+  | trans {p q r : Poly R n} : PolyRingEq p q → PolyRingEq q r → PolyRingEq p r
+  | add_congr {p1 p2 q1 q2 : Poly R n} : PolyRingEq p1 p2 → PolyRingEq q1 q2 → PolyRingEq (Poly.add p1 q1) (Poly.add p2 q2)
+  | mul_congr {p1 p2 q1 q2 : Poly R n} : PolyRingEq p1 p2 → PolyRingEq q1 q2 → PolyRingEq (Poly.mul p1 q1) (Poly.mul p2 q2)
+  | add_assoc (p q r : Poly R n) : PolyRingEq (Poly.add (Poly.add p q) r) (Poly.add p (Poly.add q r))
+  | add_comm (p q : Poly R n) : PolyRingEq (Poly.add p q) (Poly.add q p)
+  | add_zero (p : Poly R n) : PolyRingEq (Poly.add p (Poly.const 0)) p
+  | zero_add (p : Poly R n) : PolyRingEq (Poly.add (Poly.const 0) p) p
+  | mul_assoc (p q r : Poly R n) : PolyRingEq (Poly.mul (Poly.mul p q) r) (Poly.mul p (Poly.mul q r))
+  | mul_comm (p q : Poly R n) : PolyRingEq (Poly.mul p q) (Poly.mul q p)
+  | mul_one (p : Poly R n) : PolyRingEq (Poly.mul p (Poly.const 1)) p
+  | one_mul (p : Poly R n) : PolyRingEq (Poly.mul (Poly.const 1) p) p
+  | left_distrib (p q r : Poly R n) : PolyRingEq (Poly.mul p (Poly.add q r)) (Poly.add (Poly.mul p q) (Poly.mul p r))
+  | right_distrib (p q r : Poly R n) : PolyRingEq (Poly.mul (Poly.add p q) r) (Poly.add (Poly.mul p r) (Poly.mul q r))
+  | neg_add_cancel (p : Poly R n) : PolyRingEq (Poly.add (Poly.mul (Poly.const (-1)) p) p) (Poly.const 0)
+  | const_add (c1 c2 : R) : PolyRingEq (Poly.add (Poly.const c1) (Poly.const c2)) (Poly.const (c1 + c2))
+  | const_mul (c1 c2 : R) : PolyRingEq (Poly.mul (Poly.const c1) (Poly.const c2)) (Poly.const (c1 * c2))
+
+/-- Test variable x_0 in Fin 1 -/
+def var0 : Fin 1 := ⟨0, by decide⟩
+
+/-- Test unnormalized polynomial representing (1 - x_0) + x_0. -/
+def testOneMinusXPlusX : Poly Int 1 :=
+  Poly.add
+    (Poly.add (Poly.const 1) (Poly.mul (Poly.const (-1)) (Poly.var var0)))
+    (Poly.var var0)
+
+/-- Verification that literal AST equality FAILS for unnormalized (1 - x_0) + x_0. -/
+theorem test_ast_differs : testOneMinusXPlusX ≠ Poly.const 1 := by
+  intro h; injection h
+
+/-- Verification that polynomial ring equivalence ACCEPTS (1 - x_0) + x_0 = 1. -/
+theorem test_poly_ring_eq_accepts : PolyRingEq testOneMinusXPlusX (Poly.const 1 : Poly Int 1) := by
+  have h_assoc : PolyRingEq testOneMinusXPlusX
+      (Poly.add (Poly.const 1 : Poly Int 1)
+        (Poly.add (Poly.mul (Poly.const (-1) : Poly Int 1) (Poly.var var0)) (Poly.var var0))) := by
+    change PolyRingEq
+      (Poly.add (Poly.add (Poly.const 1) (Poly.mul (Poly.const (-1)) (Poly.var var0))) (Poly.var var0))
+      (Poly.add (Poly.const 1) (Poly.add (Poly.mul (Poly.const (-1)) (Poly.var var0)) (Poly.var var0)))
+    exact PolyRingEq.add_assoc (Poly.const 1) (Poly.mul (Poly.const (-1)) (Poly.var var0)) (Poly.var var0)
+  have h_cancel : PolyRingEq
+      (Poly.add (Poly.mul (Poly.const (-1) : Poly Int 1) (Poly.var var0)) (Poly.var var0))
+      (Poly.const 0 : Poly Int 1) :=
+    PolyRingEq.neg_add_cancel (Poly.var var0)
+  have h_step : PolyRingEq
+      (Poly.add (Poly.const 1 : Poly Int 1)
+        (Poly.add (Poly.mul (Poly.const (-1)) (Poly.var var0)) (Poly.var var0)))
+      (Poly.add (Poly.const 1 : Poly Int 1) (Poly.const 0 : Poly Int 1)) :=
+    PolyRingEq.add_congr (PolyRingEq.refl (Poly.const 1 : Poly Int 1)) h_cancel
+  have h_zero : PolyRingEq
+      (Poly.add (Poly.const 1 : Poly Int 1) (Poly.const 0 : Poly Int 1))
+      (Poly.const 1 : Poly Int 1) :=
+    PolyRingEq.add_zero (Poly.const 1 : Poly Int 1)
+  exact PolyRingEq.trans h_assoc (PolyRingEq.trans h_step h_zero)
+
+/-- Master Theorem: Functorial mapping of polynomial ring equivalences under any ring homomorphism. -/
+theorem mapCoeff_polyRingEq {R S : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                         [Add S] [Mul S] [Zero S] [One S] [Neg S] {n : Nat}
+    (f : RingHom R S) {p q : Poly R n} (h : PolyRingEq p q) :
+    PolyRingEq (mapCoeff f.toFun p) (mapCoeff f.toFun q) := by
+  induction h with
+  | refl p => exact PolyRingEq.refl (mapCoeff f.toFun p)
+  | symm h ih => exact PolyRingEq.symm ih
+  | trans h1 h2 ih1 ih2 => exact PolyRingEq.trans ih1 ih2
+  | add_congr h1 h2 ih1 ih2 =>
+    dsimp [mapCoeff]
+    exact PolyRingEq.add_congr ih1 ih2
+  | mul_congr h1 h2 ih1 ih2 =>
+    dsimp [mapCoeff]
+    exact PolyRingEq.mul_congr ih1 ih2
+  | add_assoc p q r =>
+    dsimp [mapCoeff]
+    exact PolyRingEq.add_assoc (mapCoeff f.toFun p) (mapCoeff f.toFun q) (mapCoeff f.toFun r)
+  | add_comm p q =>
+    dsimp [mapCoeff]
+    exact PolyRingEq.add_comm (mapCoeff f.toFun p) (mapCoeff f.toFun q)
+  | add_zero p =>
+    dsimp [mapCoeff]
+    have h_zero : (Poly.const (f.toFun 0) : Poly S n) = Poly.const 0 := by
+      exact congrArg Poly.const f.map_zero
+    rw [h_zero]
+    exact PolyRingEq.add_zero (mapCoeff f.toFun p)
+  | zero_add p =>
+    dsimp [mapCoeff]
+    have h_zero : (Poly.const (f.toFun 0) : Poly S n) = Poly.const 0 := by
+      exact congrArg Poly.const f.map_zero
+    rw [h_zero]
+    exact PolyRingEq.zero_add (mapCoeff f.toFun p)
+  | mul_assoc p q r =>
+    dsimp [mapCoeff]
+    exact PolyRingEq.mul_assoc (mapCoeff f.toFun p) (mapCoeff f.toFun q) (mapCoeff f.toFun r)
+  | mul_comm p q =>
+    dsimp [mapCoeff]
+    exact PolyRingEq.mul_comm (mapCoeff f.toFun p) (mapCoeff f.toFun q)
+  | mul_one p =>
+    dsimp [mapCoeff]
+    have h_one : (Poly.const (f.toFun 1) : Poly S n) = Poly.const 1 := by
+      exact congrArg Poly.const f.map_one
+    rw [h_one]
+    exact PolyRingEq.mul_one (mapCoeff f.toFun p)
+  | one_mul p =>
+    dsimp [mapCoeff]
+    have h_one : (Poly.const (f.toFun 1) : Poly S n) = Poly.const 1 := by
+      exact congrArg Poly.const f.map_one
+    rw [h_one]
+    exact PolyRingEq.one_mul (mapCoeff f.toFun p)
+  | left_distrib p q r =>
+    dsimp [mapCoeff]
+    exact PolyRingEq.left_distrib (mapCoeff f.toFun p) (mapCoeff f.toFun q) (mapCoeff f.toFun r)
+  | right_distrib p q r =>
+    dsimp [mapCoeff]
+    exact PolyRingEq.right_distrib (mapCoeff f.toFun p) (mapCoeff f.toFun q) (mapCoeff f.toFun r)
+  | neg_add_cancel p =>
+    dsimp [mapCoeff]
+    have h_neg1 : (Poly.const (f.toFun (-1)) : Poly S n) = Poly.const (-1) := by
+      have : f.toFun (-1) = -1 := by rw [f.map_neg, f.map_one]
+      exact congrArg Poly.const this
+    rw [h_neg1]
+    have h_zero : (Poly.const (f.toFun 0) : Poly S n) = Poly.const 0 := by
+      exact congrArg Poly.const f.map_zero
+    rw [h_zero]
+    exact PolyRingEq.neg_add_cancel (mapCoeff f.toFun p)
+  | const_add c1 c2 =>
+    dsimp [mapCoeff]
+    have h_add : (Poly.const (f.toFun (c1 + c2)) : Poly S n) = Poly.const (f.toFun c1 + f.toFun c2) := by
+      exact congrArg Poly.const (f.map_add c1 c2)
+    rw [h_add]
+    exact PolyRingEq.const_add (f.toFun c1) (f.toFun c2)
+  | const_mul c1 c2 =>
+    dsimp [mapCoeff]
+    have h_mul : (Poly.const (f.toFun (c1 * c2)) : Poly S n) = Poly.const (f.toFun c1 * f.toFun c2) := by
+      exact congrArg Poly.const (f.map_mul c1 c2)
+    rw [h_mul]
+    exact PolyRingEq.const_mul (f.toFun c1) (f.toFun c2)
+
+/-!
+### 3. Clause, Boolean Axiom, and Certificate Polynomials
+-/
 
 structure Literal (n : Nat) where
   var : Fin n
@@ -85,23 +297,19 @@ deriving DecidableEq
 abbrev Clause (n : Nat) := List (Literal n)
 abbrev Formula (n : Nat) := List (Clause n)
 
-/-- Literal polynomial AST over arbitrary coefficient type R. -/
 def litPoly {R : Type} (one neg_one : R) {n : Nat} (lit : Literal n) : Poly R n :=
   match lit.polarity with
   | true => Poly.add (Poly.const one) (Poly.mul (Poly.const neg_one) (Poly.var lit.var))
   | false => Poly.var lit.var
 
-/-- Clause polynomial AST over arbitrary coefficient type R. -/
 def clausePoly {R : Type} (one neg_one : R) {n : Nat} (c : Clause n) : Poly R n :=
   match c with
   | [] => Poly.const one
   | lit :: rest => Poly.mul (litPoly one neg_one lit) (clausePoly one neg_one rest)
 
-/-- Boolean idempotency generator polynomial x_i^2 - x_i over arbitrary coefficient type R. -/
 def boolAxiomPoly {R : Type} (neg_one : R) {n : Nat} (i : Fin n) : Poly R n :=
   Poly.add (Poly.mul (Poly.var i) (Poly.var i)) (Poly.mul (Poly.const neg_one) (Poly.var i))
 
-/-- Linear combination of clause polynomials: ∑ q_C p_C. -/
 def sumClauseTerms {R : Type} (zero one neg_one : R) {n : Nat}
     (q : List (Poly R n)) (F : Formula n) : Poly R n :=
   match q, F with
@@ -111,45 +319,33 @@ def sumClauseTerms {R : Type} (zero one neg_one : R) {n : Nat}
     Poly.add (Poly.mul q_head (clausePoly one neg_one c))
              (sumClauseTerms zero one neg_one q_tail F_tail)
 
-/-- Linear combination of Boolean idempotency polynomials: ∑ r_i (x_i^2 - x_i). -/
 def sumBoolTerms {R : Type} (zero neg_one : R) {n : Nat}
     (r : Fin n → Poly R n) : Poly R n :=
   (List.finRange n).foldl
     (fun acc i => Poly.add acc (Poly.mul (r i) (boolAxiomPoly neg_one i)))
     (Poly.const zero)
 
-/-- Complete Nullstellensatz Certificate Polynomial AST:
-    ∑ q_C p_C + ∑ r_i (x_i^2 - x_i). -/
 def certificatePoly {R : Type} (zero one neg_one : R) {n : Nat}
     (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n) : Poly R n :=
   Poly.add (sumClauseTerms zero one neg_one q F) (sumBoolTerms zero neg_one r)
 
-/-- Coefficient Homomorphism between coefficient types R and S. -/
-structure CoeffHom (R S : Type) where
-  toFun : R → S
-  zero_R : R
-  zero_S : S
-  one_R : R
-  one_S : S
-  neg_one_R : R
-  neg_one_S : S
-  map_zero : toFun zero_R = zero_S
-  map_one : toFun one_R = one_S
-  map_neg_one : toFun neg_one_R = neg_one_S
-
-theorem mapCoeff_litPoly {R S : Type}
-    (f : CoeffHom R S) {n : Nat} (lit : Literal n) :
-    mapCoeff f.toFun (litPoly f.one_R f.neg_one_R lit) = litPoly f.one_S f.neg_one_S lit := by
+theorem mapCoeff_litPoly {R S : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                     [Add S] [Mul S] [Zero S] [One S] [Neg S]
+    (f : RingHom R S) {n : Nat} (lit : Literal n) :
+    mapCoeff f.toFun (litPoly 1 (-1) lit) = litPoly 1 (-1) lit := by
   cases lit with | mk v p =>
   cases p with
   | false => rfl
   | true =>
     dsimp [litPoly, mapCoeff]
-    rw [f.map_one, f.map_neg_one]
+    have h1 : f.toFun 1 = 1 := f.map_one
+    have h_neg1 : f.toFun (-1) = -1 := by rw [f.map_neg, f.map_one]
+    rw [h1, h_neg1]
 
-theorem mapCoeff_clausePoly {R S : Type}
-    (f : CoeffHom R S) {n : Nat} (c : Clause n) :
-    mapCoeff f.toFun (clausePoly f.one_R f.neg_one_R c) = clausePoly f.one_S f.neg_one_S c := by
+theorem mapCoeff_clausePoly {R S : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                         [Add S] [Mul S] [Zero S] [One S] [Neg S]
+    (f : RingHom R S) {n : Nat} (c : Clause n) :
+    mapCoeff f.toFun (clausePoly 1 (-1) c) = clausePoly 1 (-1) c := by
   induction c with
   | nil =>
     dsimp [clausePoly, mapCoeff]
@@ -158,16 +354,19 @@ theorem mapCoeff_clausePoly {R S : Type}
     dsimp [clausePoly, mapCoeff]
     rw [mapCoeff_litPoly f lit, ih]
 
-theorem mapCoeff_boolAxiomPoly {R S : Type}
-    (f : CoeffHom R S) {n : Nat} (i : Fin n) :
-    mapCoeff f.toFun (boolAxiomPoly f.neg_one_R i) = boolAxiomPoly f.neg_one_S i := by
+theorem mapCoeff_boolAxiomPoly {R S : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                           [Add S] [Mul S] [Zero S] [One S] [Neg S]
+    (f : RingHom R S) {n : Nat} (i : Fin n) :
+    mapCoeff f.toFun (boolAxiomPoly (-1) i) = boolAxiomPoly (-1) i := by
   dsimp [boolAxiomPoly, mapCoeff]
-  rw [f.map_neg_one]
+  have h_neg1 : f.toFun (-1) = -1 := by rw [f.map_neg, f.map_one]
+  rw [h_neg1]
 
-theorem mapCoeff_sumClauseTerms {R S : Type}
-    (f : CoeffHom R S) {n : Nat} (q : List (Poly R n)) (F : Formula n) :
-    mapCoeff f.toFun (sumClauseTerms f.zero_R f.one_R f.neg_one_R q F) =
-    sumClauseTerms f.zero_S f.one_S f.neg_one_S (q.map (mapCoeff f.toFun)) F := by
+theorem mapCoeff_sumClauseTerms {R S : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                             [Add S] [Mul S] [Zero S] [One S] [Neg S]
+    (f : RingHom R S) {n : Nat} (q : List (Poly R n)) (F : Formula n) :
+    mapCoeff f.toFun (sumClauseTerms 0 1 (-1) q F) =
+    sumClauseTerms 0 1 (-1) (q.map (mapCoeff f.toFun)) F := by
   induction q generalizing F with
   | nil =>
     dsimp [sumClauseTerms, mapCoeff, List.map]
@@ -181,55 +380,48 @@ theorem mapCoeff_sumClauseTerms {R S : Type}
       dsimp [sumClauseTerms, mapCoeff, List.map]
       rw [mapCoeff_clausePoly f c, ih F_tail]
 
-theorem mapCoeff_sumBoolTerms_gen {R S : Type} (f : CoeffHom R S) {n : Nat}
+theorem mapCoeff_sumBoolTerms_gen {R S : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                               [Add S] [Mul S] [Zero S] [One S] [Neg S]
+    (f : RingHom R S) {n : Nat}
     (L : List (Fin n)) (r : Fin n → Poly R n) (acc : Poly R n) :
-    mapCoeff f.toFun (L.foldl (fun s i => Poly.add s (Poly.mul (r i) (boolAxiomPoly f.neg_one_R i))) acc) =
-    L.foldl (fun s i => Poly.add s (Poly.mul (mapCoeff f.toFun (r i)) (boolAxiomPoly f.neg_one_S i))) (mapCoeff f.toFun acc) := by
+    mapCoeff f.toFun (L.foldl (fun s i => Poly.add s (Poly.mul (r i) (boolAxiomPoly (-1) i))) acc) =
+    L.foldl (fun s i => Poly.add s (Poly.mul (mapCoeff f.toFun (r i)) (boolAxiomPoly (-1) i))) (mapCoeff f.toFun acc) := by
   induction L generalizing acc with
   | nil => rfl
   | cons hd tl ih =>
     dsimp [List.foldl]
-    have ih_inst := ih (Poly.add acc (Poly.mul (r hd) (boolAxiomPoly f.neg_one_R hd)))
+    have ih_inst := ih (Poly.add acc (Poly.mul (r hd) (boolAxiomPoly (-1) hd)))
     dsimp [mapCoeff] at ih_inst
     rw [mapCoeff_boolAxiomPoly f hd] at ih_inst
     exact ih_inst
 
-theorem mapCoeff_sumBoolTerms {R S : Type}
-    (f : CoeffHom R S) {n : Nat} (r : Fin n → Poly R n) :
-    mapCoeff f.toFun (sumBoolTerms f.zero_R f.neg_one_R r) =
-    sumBoolTerms f.zero_S f.neg_one_S (fun i => mapCoeff f.toFun (r i)) := by
+theorem mapCoeff_sumBoolTerms {R S : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                           [Add S] [Mul S] [Zero S] [One S] [Neg S]
+    (f : RingHom R S) {n : Nat} (r : Fin n → Poly R n) :
+    mapCoeff f.toFun (sumBoolTerms 0 (-1) r) =
+    sumBoolTerms 0 (-1) (fun i => mapCoeff f.toFun (r i)) := by
   dsimp [sumBoolTerms]
-  have h := mapCoeff_sumBoolTerms_gen f (List.finRange n) r (Poly.const f.zero_R)
+  have h := mapCoeff_sumBoolTerms_gen f (List.finRange n) r (Poly.const 0)
   dsimp [mapCoeff] at h
-  rw [f.map_zero] at h
+  have h_zero : (Poly.const (f.toFun 0) : Poly S n) = Poly.const 0 := by
+    exact congrArg Poly.const f.map_zero
+  rw [h_zero] at h
   exact h
 
-/-- Master Direct Algebraic Certificate Lifting Theorem:
-    The complete certificate polynomial lifts functorially under any coefficient homomorphism:
+theorem mapCoeff_certificatePoly {R S : Type} [Add R] [Mul R] [Zero R] [One R] [Neg R]
+                                             [Add S] [Mul S] [Zero S] [One S] [Neg S]
+    (f : RingHom R S) {n : Nat} (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n) :
     mapCoeff f.toFun (certificatePoly 0 1 (-1) q F r) =
-    certificatePoly 0 1 (-1) (q.map (mapCoeff f.toFun)) F (fun i => mapCoeff f.toFun (r i)). -/
-theorem mapCoeff_certificatePoly {R S : Type}
-    (f : CoeffHom R S) {n : Nat} (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n) :
-    mapCoeff f.toFun (certificatePoly f.zero_R f.one_R f.neg_one_R q F r) =
-    certificatePoly f.zero_S f.one_S f.neg_one_S (q.map (mapCoeff f.toFun)) F (fun i => mapCoeff f.toFun (r i)) := by
+    certificatePoly 0 1 (-1) (q.map (mapCoeff f.toFun)) F (fun i => mapCoeff f.toFun (r i)) := by
   dsimp [certificatePoly, mapCoeff]
   rw [mapCoeff_sumClauseTerms f q F, mapCoeff_sumBoolTerms f r]
 
-/-- Canonical Characteristic Zero Embedding Homomorphism from Int into standard Rat. -/
-def intToRatHom : CoeffHom Int Rat where
-  toFun := Rat.ofInt
-  zero_R := 0
-  zero_S := Rat.ofInt 0
-  one_R := 1
-  one_S := Rat.ofInt 1
-  neg_one_R := -1
-  neg_one_S := Rat.ofInt (-1)
-  map_zero := rfl
-  map_one := rfl
-  map_neg_one := rfl
+/-!
+### 4. Nullstellensatz Certificates and Master Lifting Theorem
+-/
 
 /-- Concrete Nullstellensatz Refutation Certificate with Integer Coefficients,
-    encoded directly via algebraic polynomial identity. -/
+    encoded via polynomial ring equivalence modulo commutative ring laws. -/
 structure ConcreteIntAlgebraicNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
   q : List (Poly Int n)
   r : Fin n → Poly Int n
@@ -237,10 +429,10 @@ structure ConcreteIntAlgebraicNSRefutation {n : Nat} (F : Formula n) (d : Nat) w
   clause_deg_bound : ∀ (i : Nat) (hq : i < q.length) (hF : i < F.length),
     totalDegree (q.get ⟨i, hq⟩) + totalDegree (clausePoly 1 (-1) (F.get ⟨i, hF⟩)) ≤ d
   bool_deg_bound : ∀ (i : Fin n), totalDegree (r i) + 2 ≤ d
-  algebraic_identity : certificatePoly 0 1 (-1) q F r = Poly.const 1
+  algebraic_identity : PolyRingEq (certificatePoly 0 1 (-1) q F r) (Poly.const 1)
 
 /-- Concrete Nullstellensatz Refutation Certificate with Rational Coefficients (Rat),
-    encoded directly via algebraic polynomial identity. -/
+    encoded via polynomial ring equivalence modulo commutative ring laws. -/
 structure ConcreteRatAlgebraicNSRefutation {n : Nat} (F : Formula n) (d : Nat) where
   q : List (Poly Rat n)
   r : Fin n → Poly Rat n
@@ -248,7 +440,7 @@ structure ConcreteRatAlgebraicNSRefutation {n : Nat} (F : Formula n) (d : Nat) w
   clause_deg_bound : ∀ (i : Nat) (hq : i < q.length) (hF : i < F.length),
     totalDegree (q.get ⟨i, hq⟩) + totalDegree (clausePoly (Rat.ofInt 1) (Rat.ofInt (-1)) (F.get ⟨i, hF⟩)) ≤ d
   bool_deg_bound : ∀ (i : Fin n), totalDegree (r i) + 2 ≤ d
-  algebraic_identity : certificatePoly (Rat.ofInt 0) (Rat.ofInt 1) (Rat.ofInt (-1)) q F r = Poly.const (Rat.ofInt 1)
+  algebraic_identity : PolyRingEq (certificatePoly (Rat.ofInt 0) (Rat.ofInt 1) (Rat.ofInt (-1)) q F r) (Poly.const (Rat.ofInt 1))
 
 theorem get_map_mapCoeff {R S : Type} {n : Nat} (f : R → S) (q : List (Poly R n))
     (i : Nat) (hq : i < (q.map (mapCoeff f)).length) :
@@ -282,7 +474,7 @@ def liftIntToRatAlgebraicRefutation {n : Nat} {F : Formula n} {d : Nat}
     rw [mapCoeff_degree]
     have h_cp : clausePoly (Rat.ofInt 1) (Rat.ofInt (-1)) (F.get ⟨i, hF⟩) =
                 mapCoeff Rat.ofInt (clausePoly 1 (-1) (F.get ⟨i, hF⟩)) := by
-      exact (mapCoeff_clausePoly intToRatHom (F.get ⟨i, hF⟩)).symm
+      exact (mapCoeff_clausePoly intToRatEmbedding.toRingHom (F.get ⟨i, hF⟩)).symm
     rw [h_cp, mapCoeff_degree]
     exact cert.clause_deg_bound i hq_orig hF
   bool_deg_bound := by
@@ -290,11 +482,15 @@ def liftIntToRatAlgebraicRefutation {n : Nat} {F : Formula n} {d : Nat}
     rw [mapCoeff_degree]
     exact cert.bool_deg_bound i
   algebraic_identity := by
-    have h_cert := (mapCoeff_certificatePoly intToRatHom cert.q F cert.r).symm
-    dsimp [intToRatHom] at h_cert
-    rw [h_cert]
-    rw [cert.algebraic_identity]
-    rfl
+    have h_lift := mapCoeff_polyRingEq intToRatEmbedding.toRingHom cert.algebraic_identity
+    have h_cert := mapCoeff_certificatePoly intToRatEmbedding.toRingHom cert.q F cert.r
+    dsimp [intToRatEmbedding] at h_cert h_lift
+    rw [h_cert] at h_lift
+    have h_one : (mapCoeff Rat.ofInt (Poly.const 1 : Poly Int n)) = (Poly.const 1 : Poly Rat n) := by
+      dsimp [mapCoeff]
+      exact congrArg Poly.const rat_ofInt_one
+    rw [h_one] at h_lift
+    exact h_lift
 
 /-- Master One-Way Rational Certificate Embedding Theorem:
     Every formula admitting an integer Nullstellensatz refutation of degree ≤ d
@@ -304,35 +500,20 @@ theorem int_cert_implies_rat_cert {n : Nat} {F : Formula n} {d : Nat} :
   rintro ⟨cert⟩
   exact ⟨liftIntToRatAlgebraicRefutation cert⟩
 
-/-- Universal Evaluation Bridge:
-    An algebraic certificate identity immediately guarantees that the certificate polynomial
-    evaluates to 1 at EVERY point in the field, not merely at integer points. -/
-theorem algebraic_identity_implies_eval_identity {R : Type} [Add R] [Mul R] {n : Nat}
-    (zero one neg_one : R)
-    (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n)
-    (h_alg : certificatePoly zero one neg_one q F r = Poly.const one)
-    (x : Fin n → R) :
-    evalPoly (certificatePoly zero one neg_one q F r) x = one := by
-  rw [h_alg]
-  rfl
-
-/-- Universal Evaluation Decomposition:
-    The algebraic certificate identity ensures the evaluation of clause and Boolean terms sums to 1. -/
-theorem algebraic_identity_implies_field_evaluation {R : Type} [Add R] [Mul R] {n : Nat}
-    (zero one neg_one : R)
-    (q : List (Poly R n)) (F : Formula n) (r : Fin n → Poly R n)
-    (h_alg : certificatePoly zero one neg_one q F r = Poly.const one)
-    (x : Fin n → R) :
-    evalPoly (sumClauseTerms zero one neg_one q F) x +
-    evalPoly (sumBoolTerms zero neg_one r) x = one := by
-  have h_eval : evalPoly (certificatePoly zero one neg_one q F r) x = evalPoly (Poly.const one) x := by
-    rw [h_alg]
-  dsimp [certificatePoly, evalPoly] at h_eval
-  exact h_eval
-
 /-!
-### Canonical Multilinear Monomial Reduction
+### 5. Genuine Monomial Exponent Evaluation and Boolean Invariance
 -/
+
+/-- Genuine integer exponentiation: computes val^e. -/
+def intPow (val : Int) (e : Nat) : Int :=
+  match e with
+  | 0 => 1
+  | Nat.succ k => val * intPow val k
+
+/-- Test distinguishing x^2 = 4 from x^1 = 2 at x = 2 before reduction. -/
+theorem test_exponent_distinction :
+    intPow 2 2 = 4 ∧ intPow 2 1 = 2 ∧ intPow 2 2 ≠ intPow 2 1 := by
+  decide
 
 /-- Canonical single-variable exponent reducer: maps any positive exponent to 1. -/
 def reduceExp (e : Nat) : Nat :=
@@ -340,62 +521,83 @@ def reduceExp (e : Nat) : Nat :=
   | 0 => 0
   | _ => 1
 
-/-- Canonical Multilinear Monomial Exponent Vector Reducer:
-    Reduces an arbitrary exponent vector modulo the Boolean idempotency relations x_i^2 - x_i. -/
+/-- Canonical Multilinear Monomial Exponent Vector Reducer. -/
 def reduceMonomialExp {n : Nat} (exps : Fin n → Nat) : Fin n → Nat :=
   fun i => reduceExp (exps i)
 
-/-- Theorem: Single-variable exponent reduction is idempotent. -/
 theorem reduceExp_idempotent (e : Nat) :
     reduceExp (reduceExp e) = reduceExp e := by
   cases e with
   | zero => rfl
   | succ k => rfl
 
-/-- Theorem: General exponent vector reduction is idempotent for arbitrary monomials. -/
 theorem reduceMonomialExp_idempotent {n : Nat} (exps : Fin n → Nat) :
     reduceMonomialExp (reduceMonomialExp exps) = reduceMonomialExp exps := by
   funext i
   exact reduceExp_idempotent (exps i)
 
-/-- Theorem: An arbitrary cube exponent e = 3 collapses to 1 under canonical reduction. -/
 theorem cube_exp_collapse (e : Nat) (h : e = 3) :
     e = 3 ∧ reduceExp e = 1 := by
   subst h
   exact ⟨rfl, rfl⟩
 
-theorem ite_reduceExp_eq (e : Nat) (val : Int) :
-    (if reduceExp e = 0 then (1 : Int) else val) = (if e = 0 then (1 : Int) else val) := by
-  cases e with
+theorem intPow_zero_pos (k : Nat) : intPow 0 (k + 1) = 0 := by
+  dsimp [intPow]
+  rw [Int.zero_mul]
+
+theorem intPow_one_any (e : Nat) : intPow 1 e = 1 := by
+  induction e with
   | zero => rfl
-  | succ k => rfl
+  | succ k ih =>
+    dsimp [intPow]
+    rw [Int.one_mul]
+    exact ih
 
-/-- Monomial evaluation on variable assignments. -/
+/-- Theorem: For any Boolean value val ∈ {0, 1}, exponent reduction preserves evaluation. -/
+theorem intPow_boolean_reduced (val : Int) (h : val = 0 ∨ val = 1) (e : Nat) :
+    intPow val (reduceExp e) = intPow val e := by
+  cases h with
+  | inl h0 =>
+    rw [h0]
+    cases e with
+    | zero => rfl
+    | succ k =>
+      have h_lhs : intPow 0 (reduceExp (k + 1)) = 0 := by
+        change intPow 0 1 = 0
+        exact intPow_zero_pos 0
+      have h_rhs : intPow 0 (k + 1) = 0 := intPow_zero_pos k
+      rw [h_lhs, h_rhs]
+  | inr h1 =>
+    rw [h1]
+    rw [intPow_one_any e]
+    rw [intPow_one_any (reduceExp e)]
+
+/-- Monomial evaluation computing actual product of variable powers: ∏ x_i^{e_i}. -/
 def evalMonomialExp {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int) : Int :=
-  (List.finRange n).foldl (fun acc i => acc * (if exps i = 0 then 1 else x i)) 1
+  (List.finRange n).foldl (fun acc i => acc * intPow (x i) (exps i)) 1
 
-theorem foldl_monomial_eq {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int)
-    (L : List (Fin n)) (acc : Int) :
-    L.foldl (fun s i => s * (if reduceMonomialExp exps i = 0 then (1 : Int) else x i)) acc =
-    L.foldl (fun s i => s * (if exps i = 0 then (1 : Int) else x i)) acc := by
+theorem foldl_monomial_pow_eq {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int)
+    (h_bool : ∀ i, x i = 0 ∨ x i = 1) (L : List (Fin n)) (acc : Int) :
+    L.foldl (fun s i => s * intPow (x i) (reduceMonomialExp exps i)) acc =
+    L.foldl (fun s i => s * intPow (x i) (exps i)) acc := by
   induction L generalizing acc with
   | nil => rfl
   | cons hd tl ih =>
     dsimp [List.foldl]
-    have h_hd : (if reduceMonomialExp exps hd = 0 then (1 : Int) else x hd) =
-                (if exps hd = 0 then (1 : Int) else x hd) := by
-      exact ite_reduceExp_eq (exps hd) (x hd)
+    have h_hd : intPow (x hd) (reduceMonomialExp exps hd) = intPow (x hd) (exps hd) := by
+      exact intPow_boolean_reduced (x hd) (h_bool hd) (exps hd)
     rw [h_hd]
-    exact ih (acc * (if exps hd = 0 then 1 else x hd))
+    exact ih (acc * intPow (x hd) (exps hd))
 
 /-- Semantic Evaluation Preservation Theorem:
-    Arbitrary canonical multilinear reduction preserves evaluation on Boolean cube assignments. -/
-theorem evalMonomialExp_reduced {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int) :
+    Canonical multilinear reduction preserves monomial power evaluation on all Boolean cube assignments. -/
+theorem evalMonomialExp_reduced {n : Nat} (exps : Fin n → Nat) (x : Fin n → Int)
+    (h_bool : ∀ i, x i = 0 ∨ x i = 1) :
     evalMonomialExp (reduceMonomialExp exps) x = evalMonomialExp exps x := by
   dsimp [evalMonomialExp]
-  exact foldl_monomial_eq exps x (List.finRange n) 1
+  exact foldl_monomial_pow_eq exps x h_bool (List.finRange n) 1
 
-/-- Ordered, deduplicating variable insertion for variable-list monomials. -/
+/-- Variable-list canonical multilinear monomial reducer. -/
 def insertVar {n : Nat} (v : Fin n) (m : List (Fin n)) : List (Fin n) :=
   match m with
   | [] => [v]
@@ -404,7 +606,6 @@ def insertVar {n : Nat} (v : Fin n) (m : List (Fin n)) : List (Fin n) :=
     else if v.val < u.val then v :: u :: rest
     else u :: insertVar v rest
 
-/-- Variable-list canonical multilinear monomial reducer. -/
 def reduceMonomial {n : Nat} (m : List (Fin n)) : List (Fin n) :=
   match m with
   | [] => []
@@ -428,14 +629,13 @@ theorem reduceMonomial_three {n : Nat} (i : Fin n) :
   rw [reduceMonomial_two]
   exact insertVar_self i []
 
-/-- Theorem: Monomial cube degree collapses under variable-list reduction. -/
 theorem cube_degree_collapse {n : Nat} (i : Fin n) :
     [i, i, i].length = 3 ∧ (reduceMonomial [i, i, i]).length = 1 := by
   rw [reduceMonomial_three]
   exact ⟨rfl, rfl⟩
 
 /-!
-### Denominator Clearing Obstruction (Supporting Lemma)
+### 6. Denominator Clearing Obstruction (Supporting Lemma)
 -/
 
 /-- Denominator Clearing Obstruction Theorem (Supporting Lemma):
@@ -472,12 +672,16 @@ theorem denominator_clearing_obstruction (D : Int) (hD : D > 1) :
 end RationalNullstellensatz
 
 #print axioms RationalNullstellensatz.rat_fraction_normalization
+#print axioms RationalNullstellensatz.intToRatEmbedding
+#print axioms RationalNullstellensatz.test_ast_differs
+#print axioms RationalNullstellensatz.test_poly_ring_eq_accepts
+#print axioms RationalNullstellensatz.mapCoeff_polyRingEq
 #print axioms RationalNullstellensatz.liftIntToRatAlgebraicRefutation
 #print axioms RationalNullstellensatz.int_cert_implies_rat_cert
-#print axioms RationalNullstellensatz.algebraic_identity_implies_eval_identity
-#print axioms RationalNullstellensatz.algebraic_identity_implies_field_evaluation
+#print axioms RationalNullstellensatz.test_exponent_distinction
+#print axioms RationalNullstellensatz.intPow_boolean_reduced
+#print axioms RationalNullstellensatz.evalMonomialExp_reduced
 #print axioms RationalNullstellensatz.reduceMonomialExp_idempotent
 #print axioms RationalNullstellensatz.cube_exp_collapse
-#print axioms RationalNullstellensatz.evalMonomialExp_reduced
 #print axioms RationalNullstellensatz.cube_degree_collapse
 #print axioms RationalNullstellensatz.denominator_clearing_obstruction
