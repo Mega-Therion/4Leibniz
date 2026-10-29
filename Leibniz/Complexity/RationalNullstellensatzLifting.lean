@@ -809,6 +809,264 @@ theorem denominator_clearing_obstruction (D : Int) (hD : D > 1) :
     have : D * Int.negSucc m < 0 := Int.mul_neg_of_pos_of_neg h1 h2
     omega
 
+/-!
+### 7. Refutation Soundness: Nullstellensatz Certificates Imply CNF Unsatisfiability
+-/
+
+/-- A Boolean assignment maps each variable index to a boolean truth value. -/
+def Assignment (n : Nat) := Fin n → Bool
+
+/-- A literal is satisfied under assignment a if its truth value matches its polarity:
+    polarity = true corresponds to positive literal (satisfied if a lit.var = true)
+    polarity = false corresponds to negative literal (satisfied if a lit.var = false). -/
+def satLit {n : Nat} (lit : Literal n) (a : Assignment n) : Bool :=
+  match lit.polarity with
+  | true => a lit.var
+  | false => !(a lit.var)
+
+/-- Evaluating a clause as a disjunction of literals under assignment a.
+    The empty clause is false (unsatisfiable). -/
+def satClause {n : Nat} (c : Clause n) (a : Assignment n) : Bool :=
+  match c with
+  | [] => false
+  | lit :: rest => satLit lit a || satClause rest a
+
+/-- Evaluating a formula as a conjunction of clauses under assignment a.
+    The empty formula is true (vacuously satisfied). -/
+def satFormula {n : Nat} (F : Formula n) (a : Assignment n) : Bool :=
+  match F with
+  | [] => true
+  | c :: rest => satClause c a && satFormula rest a
+
+/-- A formula is unsatisfiable if no assignment satisfies it. -/
+def FormulaUnsatisfiable {n : Nat} (F : Formula n) : Prop :=
+  ∀ (a : Assignment n), satFormula F a = false
+
+/-- Canonical embedding of a Boolean assignment into ℚ^n. -/
+def assignToRat {n : Nat} (a : Assignment n) : Fin n → Rat :=
+  fun i => if a i then (1 : Rat) else (0 : Rat)
+
+/-- Canonical embedding of a Boolean assignment into ℤ^n. -/
+def assignToInt {n : Nat} (a : Assignment n) : Fin n → Int :=
+  fun i => if a i then (1 : Int) else (0 : Int)
+
+/-- Lemma 1a: Evaluation of literal polynomial when literal is satisfied.
+    Evaluates to 0 on the embedded Boolean assignment. -/
+theorem eval_litPoly_satisfied_rat {n : Nat} (lit : Literal n) (a : Assignment n)
+    (h : satLit lit a = true) :
+    evalPoly (litPoly (Rat.ofInt 1) (Rat.ofInt (-1)) lit) (assignToRat a) = (0 : Rat) := by
+  cases lit with | mk var pol =>
+  cases pol with
+  | false =>
+    dsimp [satLit] at h
+    have h_a : a var = false := by
+      cases h_v : a var
+      · rfl
+      · rw [h_v] at h; contradiction
+    dsimp [litPoly, evalPoly, assignToRat]
+    rw [h_a]
+    rfl
+  | true =>
+    dsimp [satLit] at h
+    dsimp [litPoly, evalPoly, assignToRat]
+    rw [h]
+    dsimp
+    have h1 : Rat.ofInt 1 = 1 := rfl
+    have h_neg1 : Rat.ofInt (-1) = -1 := rfl
+    rw [h1, h_neg1]
+    rw [Rat.mul_one]
+    exact Rat.add_neg_cancel 1
+
+/-- Lemma 1b: Evaluation of literal polynomial when literal is falsified.
+    Evaluates to 1 on the embedded Boolean assignment. -/
+theorem eval_litPoly_falsified_rat {n : Nat} (lit : Literal n) (a : Assignment n)
+    (h : satLit lit a = false) :
+    evalPoly (litPoly (Rat.ofInt 1) (Rat.ofInt (-1)) lit) (assignToRat a) = (1 : Rat) := by
+  cases lit with | mk var pol =>
+  cases pol with
+  | false =>
+    dsimp [satLit] at h
+    have h_a : a var = true := by
+      cases h_v : a var
+      · rw [h_v] at h; contradiction
+      · rfl
+    dsimp [litPoly, evalPoly, assignToRat]
+    rw [h_a]
+    rfl
+  | true =>
+    dsimp [satLit] at h
+    dsimp [litPoly, evalPoly, assignToRat]
+    rw [h]
+    dsimp
+    have h1 : Rat.ofInt 1 = 1 := rfl
+    have h_neg1 : Rat.ofInt (-1) = -1 := rfl
+    rw [h1, h_neg1]
+    rw [Rat.mul_zero, Rat.add_zero]
+
+/-- Lemma 1: Exact Boolean literal polynomial evaluation dichotomy. -/
+theorem eval_litPoly_boolean {n : Nat} (lit : Literal n) (a : Assignment n) :
+    (satLit lit a = true ∧ evalPoly (litPoly (Rat.ofInt 1) (Rat.ofInt (-1)) lit) (assignToRat a) = 0) ∨
+    (satLit lit a = false ∧ evalPoly (litPoly (Rat.ofInt 1) (Rat.ofInt (-1)) lit) (assignToRat a) = 1) := by
+  cases h : satLit lit a with
+  | true => exact Or.inl ⟨rfl, eval_litPoly_satisfied_rat lit a h⟩
+  | false => exact Or.inr ⟨rfl, eval_litPoly_falsified_rat lit a h⟩
+
+/-- Lemma 2: Evaluation of clause polynomial on embedded Boolean assignment.
+    Every satisfied clause evaluates to 0. -/
+theorem eval_clausePoly_zero_of_satisfied_rat {n : Nat} (c : Clause n) (a : Assignment n)
+    (h : satClause c a = true) :
+    evalPoly (clausePoly (Rat.ofInt 1) (Rat.ofInt (-1)) c) (assignToRat a) = (0 : Rat) := by
+  induction c with
+  | nil =>
+    dsimp [satClause] at h
+    contradiction
+  | cons lit rest ih =>
+    dsimp [satClause] at h
+    dsimp [clausePoly, evalPoly]
+    cases h_lit : satLit lit a
+    · rw [h_lit] at h
+      change satClause rest a = true at h
+      have ih_zero := ih h
+      rw [ih_zero, Rat.mul_zero]
+    · have h_zero : evalPoly (litPoly (Rat.ofInt 1) (Rat.ofInt (-1)) lit) (assignToRat a) = 0 :=
+        eval_litPoly_satisfied_rat lit a h_lit
+      rw [h_zero, Rat.zero_mul]
+
+/-- Lemma 3: Evaluation of Boolean axiom polynomial on embedded Boolean assignment.
+    For every variable i, x_i^2 - x_i = 0 at x = assignToRat a. -/
+theorem eval_boolAxiomPoly_rat {n : Nat} (i : Fin n) (a : Assignment n) :
+    evalPoly (boolAxiomPoly (Rat.ofInt (-1)) i) (assignToRat a) = (0 : Rat) := by
+  dsimp [boolAxiomPoly, evalPoly, assignToRat]
+  cases (a i) with
+  | false =>
+    dsimp
+    rw [Rat.zero_mul, Rat.mul_zero, Rat.add_zero]
+  | true =>
+    dsimp
+    rw [Rat.one_mul, Rat.mul_one]
+    exact Rat.add_neg_cancel 1
+
+/-- Fold accumulator lemma for sumBoolTerms evaluation. -/
+theorem eval_foldl_sumBoolTerms_rat {n : Nat} (L : List (Fin n))
+    (r : Fin n → Poly Rat n) (acc : Poly Rat n) (a : Assignment n)
+    (hacc : evalPoly acc (assignToRat a) = 0) :
+    evalPoly (L.foldl (fun s i => Poly.add s (Poly.mul (r i) (boolAxiomPoly (Rat.ofInt (-1)) i))) acc) (assignToRat a) = 0 := by
+  induction L generalizing acc with
+  | nil => exact hacc
+  | cons hd tl ih =>
+    dsimp [List.foldl]
+    apply ih
+    dsimp [evalPoly]
+    rw [eval_boolAxiomPoly_rat]
+    rw [Rat.mul_zero, hacc, Rat.add_zero]
+
+/-- Evaluation of sum of Boolean axiom terms evaluates to 0 on any Boolean assignment. -/
+theorem eval_sumBoolTerms_rat {n : Nat} (r : Fin n → Poly Rat n) (a : Assignment n) :
+    evalPoly (sumBoolTerms (Rat.ofInt 0) (Rat.ofInt (-1)) r) (assignToRat a) = 0 := by
+  dsimp [sumBoolTerms]
+  apply eval_foldl_sumBoolTerms_rat
+  rfl
+
+/-- Evaluation of sum of clause terms evaluates to 0 under any satisfying assignment. -/
+theorem eval_sumClauseTerms_rat {n : Nat} (q : List (Poly Rat n)) (F : Formula n)
+    (a : Assignment n) (h_sat : satFormula F a = true) :
+    evalPoly (sumClauseTerms (Rat.ofInt 0) (Rat.ofInt 1) (Rat.ofInt (-1)) q F) (assignToRat a) = 0 := by
+  induction F generalizing q with
+  | nil =>
+    cases q <;> rfl
+  | cons c rest ih =>
+    dsimp [satFormula] at h_sat
+    cases h_c : satClause c a
+    · rw [h_c] at h_sat
+      change false = true at h_sat
+      contradiction
+    · rw [h_c] at h_sat
+      change satFormula rest a = true at h_sat
+      cases q with
+      | nil => rfl
+      | cons q_head q_tail =>
+        dsimp [sumClauseTerms, evalPoly]
+        have h_c_zero := eval_clausePoly_zero_of_satisfied_rat c a h_c
+        rw [h_c_zero, Rat.mul_zero]
+        have ih_tail := ih q_tail h_sat
+        rw [ih_tail, Rat.zero_add]
+
+/-- Lemma 4: The full Nullstellensatz certificate polynomial evaluates to 0
+    at any assignment that satisfies the formula F. -/
+theorem eval_certificatePoly_zero_of_satisfied_formula_rat {n : Nat}
+    (q : List (Poly Rat n)) (F : Formula n) (r : Fin n → Poly Rat n)
+    (a : Assignment n) (h_sat : satFormula F a = true) :
+    evalPoly (certificatePoly (Rat.ofInt 0) (Rat.ofInt 1) (Rat.ofInt (-1)) q F r) (assignToRat a) = (0 : Rat) := by
+  dsimp [certificatePoly, evalPoly]
+  have h_clauses := eval_sumClauseTerms_rat q F a h_sat
+  have h_bool := eval_sumBoolTerms_rat r a
+  rw [h_clauses, h_bool, Rat.add_zero]
+
+theorem rat_zero_ne_one : (0 : Rat) ≠ 1 := by
+  intro h
+  have h_num : (0 : Rat).num = (1 : Rat).num := congrArg Rat.num h
+  revert h_num
+  decide
+
+/-- Theorem: Rational Nullstellensatz Refutation Soundness for CNF formulas.
+    If a formula admits a valid Nullstellensatz refutation over ℚ, it is unsatisfiable. -/
+theorem rat_refutation_soundness {n : Nat} {F : Formula n} {d : Nat}
+    (cert : ConcreteRatAlgebraicNSRefutation F d) :
+    FormulaUnsatisfiable F := by
+  intro a
+  cases h_sat : satFormula F a with
+  | false => rfl
+  | true =>
+    have h_zero := eval_certificatePoly_zero_of_satisfied_formula_rat cert.q F cert.r a h_sat
+    have h_one := eval_concrete_rat_refutation cert (assignToRat a)
+    rw [h_zero] at h_one
+    exfalso
+    exact rat_zero_ne_one h_one
+
+/-- Theorem: Integer Nullstellensatz Refutation Soundness for CNF formulas.
+    If a formula admits a valid Nullstellensatz refutation over ℤ, it is unsatisfiable. -/
+theorem int_refutation_soundness {n : Nat} {F : Formula n} {d : Nat}
+    (cert : ConcreteIntAlgebraicNSRefutation F d) :
+    FormulaUnsatisfiable F := by
+  have rat_cert := liftIntToRatAlgebraicRefutation cert
+  exact rat_refutation_soundness rat_cert
+
+/-!
+### 8. Concrete Sanity Tests: Satisfiable Unit vs Explicit Contradiction
+-/
+
+/-- Satisfiable unit clause formula: F_sat = [[x_0]]. -/
+def unitSatFormula : Formula 1 := [[⟨var0, true⟩]]
+
+/-- Verification that unitSatFormula is satisfied by the assignment setting x_0 = true. -/
+theorem unitSatFormula_satisfiable : satFormula unitSatFormula (fun _ => true) = true := rfl
+
+/-- Test 1: No Nullstellensatz refutation can exist for the satisfiable unit clause [[x_0]]. -/
+theorem no_refutation_of_satisfiable_unit_clause {d : Nat} :
+    ¬ Nonempty (ConcreteRatAlgebraicNSRefutation unitSatFormula d) := by
+  rintro ⟨cert⟩
+  have h_unsat := rat_refutation_soundness cert (fun _ => true)
+  have h_sat : satFormula unitSatFormula (fun _ => true) = true := unitSatFormula_satisfiable
+  rw [h_sat] at h_unsat
+  contradiction
+
+/-- Explicitly contradictory formula: F_contra = [[x_0], [¬x_0]] ((x_0) ∧ (¬x_0)). -/
+def contraFormula : Formula 1 := [[⟨var0, true⟩], [⟨var0, false⟩]]
+
+/-- Direct verification that contraFormula is unsatisfiable by exhaustive truth-table check. -/
+theorem contraFormula_truth_table_unsat : FormulaUnsatisfiable contraFormula := by
+  intro a
+  dsimp [contraFormula, satFormula, satClause, satLit]
+  cases (a var0) <;> rfl
+
+/-- Test 2: Soundness applies to any refutation of contraFormula:
+    If any Nullstellensatz refutation certificate exists for contraFormula at any degree d,
+    the semantic soundness theorem concludes that contraFormula is unsatisfiable. -/
+theorem contraFormula_unsatisfiable_of_certificate {d : Nat}
+    (cert : ConcreteRatAlgebraicNSRefutation contraFormula d) :
+    FormulaUnsatisfiable contraFormula :=
+  rat_refutation_soundness cert
+
 end RationalNullstellensatz
 
 #print axioms RationalNullstellensatz.rat_fraction_normalization
@@ -832,3 +1090,17 @@ end RationalNullstellensatz
 #print axioms RationalNullstellensatz.cube_exp_collapse
 #print axioms RationalNullstellensatz.cube_degree_collapse
 #print axioms RationalNullstellensatz.denominator_clearing_obstruction
+#print axioms RationalNullstellensatz.eval_litPoly_satisfied_rat
+#print axioms RationalNullstellensatz.eval_litPoly_falsified_rat
+#print axioms RationalNullstellensatz.eval_litPoly_boolean
+#print axioms RationalNullstellensatz.eval_clausePoly_zero_of_satisfied_rat
+#print axioms RationalNullstellensatz.eval_boolAxiomPoly_rat
+#print axioms RationalNullstellensatz.eval_sumBoolTerms_rat
+#print axioms RationalNullstellensatz.eval_sumClauseTerms_rat
+#print axioms RationalNullstellensatz.eval_certificatePoly_zero_of_satisfied_formula_rat
+#print axioms RationalNullstellensatz.rat_refutation_soundness
+#print axioms RationalNullstellensatz.int_refutation_soundness
+#print axioms RationalNullstellensatz.unitSatFormula_satisfiable
+#print axioms RationalNullstellensatz.no_refutation_of_satisfiable_unit_clause
+#print axioms RationalNullstellensatz.contraFormula_truth_table_unsat
+#print axioms RationalNullstellensatz.contraFormula_unsatisfiable_of_certificate
