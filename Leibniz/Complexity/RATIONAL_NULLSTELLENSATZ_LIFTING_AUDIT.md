@@ -6,7 +6,8 @@
 **Source SHA-256:** `08f67b751a39e436648d1cfecfcc608ec93b553bd419468658c30947c3066d23`  
 **Toolchain:** `leanprover/lean4:v4.34.0-rc2` (Release)  
 **Compiler Invocation:** `/home/mega/.elan/toolchains/leanprover--lean4---v4.34.0-rc2/bin/lean /home/mega/Chyren/3_research/4Leibniz/Leibniz/Complexity/RationalNullstellensatzLifting.lean`  
-**Epistemic Classification:** Machine-Checked Formal Theorem (`0 sorry`, standard Lean core axioms `[propext, Classical.choice, Quot.sound]`); Mathematical Semantics Repaired; Rational Field Embedding Proved; Semantic Soundness Formally Verified; Refutation Soundness for CNF Proved; Bounded Completeness on the Boolean Cube Proved ($d \le \max(2, n)$); CNF Normalization Semantics Proved; Exhaustive BLK-892 Verification Suite Certified.
+**Epistemic Classification:** Machine-Checked Formal Theorem (`0 sorry`, standard Lean core axioms `[propext, Classical.choice, Quot.sound]`); Mathematical Semantics Repaired; Rational Field Embedding Proved; Semantic Soundness Formally Verified; Refutation Soundness for CNF Proved; Bounded Completeness Building Blocks Certified (Minterm Partition of Unity $\sum_a \delta_a \equiv 1$, Semantic CNF Normalization, and Concrete Refutation Constructors at $d \le \max(2, n)$); Exhaustive BLK-892 Verification Suite Certified.  
+**Scope Restriction Notice (BLK-897 Audit):** The general quantifier $\forall F, \operatorname{IsUnsat}(F) \implies \exists (q, r), \dots$ grouping cofactors across arbitrary clause sets is not formalized in Lean 4. The certified completeness theorems apply to the minterm partition of unity, semantic normalization, and concrete constructors (`emptyClauseFormulaRefutation`, `contraRefutation`).
 
 ---
 
