@@ -27,16 +27,10 @@ jobs:
         run: python3 scripts/proof_receipt.py
       - name: Generate and check formal-claims artifact (issue #11)
         run: |
-          python3 scripts/generate_formal_claims.py --emit /tmp/formal-claims.json
-          # Keep the freshly generated catalog where the upload step can find it,
-          # BEFORE the assertion below can abort the job. Regenerating locally
-          # takes hours (every module re-elaborates); CI does it in minutes, so
-          # on a staleness failure the correct file should be downloadable rather
-          # than recomputed by hand.
-          cp /tmp/formal-claims.json formal-claims-fresh.json
+          python3 scripts/generate_formal_claims.py --emit formal-claims-fresh.json
           python3 - <<'PY'
           import json
-          fresh = json.load(open('/tmp/formal-claims.json'))
+          fresh = json.load(open('formal-claims-fresh.json'))
           committed = json.load(open('artifacts/v1/formal-claims.json'))
           assert fresh['claims'] == committed['claims'], (
               'committed artifacts/v1/formal-claims.json is stale. Download the '
