@@ -19,8 +19,15 @@ jobs:
           lake-package-directory: .
       - name: Fetch pre-built Mathlib binaries
         run: lake exe cache get
-      - name: Build Lean library
-        run: lake build
+      - name: Build Lean library (fail on elaborator-reported sorry)
+        # check_sorries.py scans source text; this checks what Lean itself reports.
+        # Lean 4 prints  declaration uses `sorry`  (backticks) as a warning and exits 0.
+        run: |
+          set -o pipefail
+          lake build 2>&1 | tee lake-build.log
+          if grep -qE "declaration uses ['\`]sorry['\`]" lake-build.log; then
+            echo "::error::Lean elaborator reported sorry"; exit 1
+          fi
       - name: Reject sorry placeholders
         run: python3 scripts/check_sorries.py
       - name: Generate proof receipt
