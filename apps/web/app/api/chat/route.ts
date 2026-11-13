@@ -99,8 +99,8 @@ export async function POST(req: Request) {
     messages: await convertToModelMessages(incoming.map(toUIMessage)),
     temperature: 0.4,
     maxOutputTokens: 1200,
-    onFinish: ({ text }) => {
-      void persist(text);
+    onFinish: async ({ text }) => {
+      await persist(text);
     },
   });
 
