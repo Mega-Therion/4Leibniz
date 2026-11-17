@@ -39,14 +39,23 @@ User Query ──► /api/search / /api/chat ──► pgvector Retrieval ──
 
 ## Local Development
 
+Run these from `apps/web/`:
+
 ```bash
-# Install dependencies
 npm ci
-
-# Run development server
 npm run dev
-
-# Run typecheck and tests
-npm run typecheck
-npm test
 ```
+
+## Verification
+
+Run the same checks used by the web-app CI workflow:
+
+```bash
+npx tsc --noEmit
+npm run test:chat
+npm run test:contract
+npm run lint
+npm run build
+```
+
+The chat metadata test exercises legacy-content compatibility, UI-message `parts`, and streamed retrieval metadata. The formal-claims contract test checks the packaged catalog and its consumer gate. End-to-end chat and transcript persistence still require the configured AI Gateway and Postgres services; these local contract checks do not replace that live integration test.
