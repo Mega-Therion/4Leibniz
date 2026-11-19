@@ -62,10 +62,9 @@ theorem ceiling_squared : chiCeil ^ 2 = theta * (2 - theta) := by
   rw [sq_sqrt]
   norm_num [theta]
 
-/-- The continuity floor is not posited: it is the universal floor of dyadic
-chiral dominance — the equipartition bound of the vis viva. Every
-non-degenerate dyad's chiral dominance is at least chiFloor (open problem
-`chiral-floor`, closed 2026-09-12). -/
+/-- Two-member dyad equipartition bound (`1/√2`), NOT a multi-shell dyadic energy floor (O35).
+Every non-degenerate two-member dyad's chiral dominance is at least `chiFloor`
+(attained at `|v₁| = |v₂|`); an infinite multi-shell floor `E_j ≥ 1/√2` would diverge in `L²`. -/
 theorem chiFloor_is_dyadic_floor {v₁ v₂ : ℝ} (h : 0 < v₁ ^ 2 + v₂ ^ 2) :
     chiFloor ≤ Leibniz.VisViva.dominatioChiralis v₁ v₂ :=
   Leibniz.VisViva.chiral_dominance_ge_floor h
