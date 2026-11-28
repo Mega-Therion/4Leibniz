@@ -12,7 +12,7 @@ export const gateway = createOpenAI({
 });
 
 export function chatModel() {
-  return gateway(env.chatModel);
+  return gateway.chat(env.chatModel);
 }
 
 export function embedModel() {
