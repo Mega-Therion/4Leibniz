@@ -1,3 +1,6 @@
+> **Track:** `TRACK_II` | **Author:** Ryan W. Yett (`Mega-Therion`) | **ORCID:** `0009-0001-1303-7190`
+> **Epistemic Fencing:** `[P]` Proved · `[D]` Derived · `[E]` Empirical · `[O]` Open · `[X]` Falsified
+
 # 4Leibniz
 
 [![Lean 4 Verification](https://github.com/Mega-Therion/4Leibniz/actions/workflows/verify.yml/badge.svg)](https://github.com/Mega-Therion/4Leibniz/actions/workflows/verify.yml)
