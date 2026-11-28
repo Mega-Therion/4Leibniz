@@ -355,23 +355,48 @@ impl Groth16Verifier for SnarkJsVerifier {
                 .stderr(Stdio::piped())
                 .spawn()
                 .map_err(|e| e.to_string())?;
+            // Drain both pipes while the child runs. A child that
+            // writes more than the pipe capacity blocks on the write
+            // and never exits, so polling try_wait without draining
+            // reports a false timeout for a run that would have
+            // finished; the drainer threads keep the pipes moving.
+            let mut out_pipe = child.stdout.take();
+            let out_thread = std::thread::spawn(move || {
+                let mut buf = Vec::new();
+                if let Some(mut pipe) = out_pipe {
+                    let _ = std::io::Read::read_to_end(&mut pipe, &mut buf);
+                }
+                buf
+            });
+            let mut err_pipe = child.stderr.take();
+            let err_thread = std::thread::spawn(move || {
+                let mut buf = Vec::new();
+                if let Some(mut pipe) = err_pipe {
+                    let _ = std::io::Read::read_to_end(&mut pipe, &mut buf);
+                }
+                buf
+            });
             let deadline = Instant::now() + self.timeout;
-            loop {
+            let status = loop {
                 match child.try_wait().map_err(|e| e.to_string())? {
-                    Some(_) => break,
+                    Some(status) => break status,
                     None => {
                         if Instant::now() >= deadline {
                             let _ = child.kill();
+                            let _ = child.wait();
+                            let _ = out_thread.join();
+                            let _ = err_thread.join();
                             return Err("Command 'npx snarkjs groth16 verify' timed out".into());
                         }
                         std::thread::sleep(Duration::from_millis(25));
                     }
                 }
-            }
-            let output = child.wait_with_output().map_err(|e| e.to_string())?;
-            let stdout = String::from_utf8_lossy(&output.stdout).into_owned();
-            let stderr = String::from_utf8_lossy(&output.stderr).into_owned();
-            let ok_exit = output.status.success();
+            };
+            let stdout_bytes = out_thread.join().unwrap_or_default();
+            let stderr_bytes = err_thread.join().unwrap_or_default();
+            let stdout = String::from_utf8_lossy(&stdout_bytes).into_owned();
+            let stderr = String::from_utf8_lossy(&stderr_bytes).into_owned();
+            let ok_exit = status.success();
             let verified = ok_exit && stdout.contains("OK");
             let status = if ok_exit {
                 VerifyStatus::Verified
@@ -486,6 +511,34 @@ mod tests {
         let out = verify_groth16(&good_proof(), &signals, Some(&k), &err);
         assert!(!out.verified && out.status == VerifyStatus::Error);
         assert_eq!(out.reason.as_deref(), Some("spawn failed"));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn chatty_child_that_floods_stdout_still_verifies() {
+        // Regression: the child writes ~300 KB (far past the pipe
+        // capacity) before printing OK. Without concurrent draining it
+        // blocks on the write and the run is misreported as a timeout.
+        use std::os::unix::fs::PermissionsExt;
+        let dir = std::env::temp_dir().join(format!("zk-flood-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let script = dir.join("fake-npx.sh");
+        std::fs::write(
+            &script,
+            "#!/bin/sh\nhead -c 300000 /dev/zero | tr '\\0' 'x'\necho OK\n",
+        )
+        .unwrap();
+        std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o755)).unwrap();
+        let verifier = SnarkJsVerifier {
+            circuits_dir: dir.clone(),
+            npx: script.to_string_lossy().into_owned(),
+            timeout: Duration::from_secs(30),
+        };
+        let result = verifier.verify(&good_proof(), &[json!(1)], &key());
+        let _ = std::fs::remove_dir_all(&dir);
+        let (verified, status, _output) = result.expect("flooded child must not error");
+        assert!(verified);
+        assert_eq!(status, VerifyStatus::Verified);
     }
 
     #[test]

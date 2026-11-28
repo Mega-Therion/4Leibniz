@@ -135,28 +135,77 @@ fn terms(text: &str) -> Vec<String> {
     }
 }
 
-/// Port of `counterexample._value`.
-fn value(term: &str, assignment: &BTreeMap<String, i64>) -> i64 {
+/// Canonical decimal string for a term: the literal itself (leading
+/// zeros stripped, ``-0`` normalized to ``0``) or the assigned value.
+///
+/// Python integers have arbitrary precision, so a literal outside the
+/// i64 range (e.g. ``9223372036854775808``) is a perfectly good value
+/// there and must compare correctly here too. Comparing canonical
+/// decimal strings gives exact arbitrary-precision ordering with no
+/// big-integer dependency — and, unlike a bare ``parse::<i64>()``, it
+/// never panics on a valid literal.
+fn decimal_string(term: &str, assignment: &BTreeMap<String, i64>) -> String {
     if is_integer_literal(term) {
-        term.parse::<i64>()
-            .expect("integer literal checked by is_integer_literal")
+        canonical_decimal(term)
     } else {
-        assignment[term]
+        assignment[term].to_string()
+    }
+}
+
+/// Strip leading zeros and normalize ``-0`` for a checked integer literal.
+fn canonical_decimal(term: &str) -> String {
+    let (negative, digits) = match term.strip_prefix('-') {
+        Some(rest) => (true, rest),
+        None => (false, term),
+    };
+    let digits = digits.trim_start_matches('0');
+    if digits.is_empty() {
+        return "0".to_string();
+    }
+    if negative {
+        format!("-{digits}")
+    } else {
+        digits.to_string()
+    }
+}
+
+/// Arbitrary-precision comparison of two canonical decimal strings.
+fn cmp_decimal(a: &str, b: &str) -> std::cmp::Ordering {
+    use std::cmp::Ordering::*;
+    let a_negative = a.starts_with('-');
+    let b_negative = b.starts_with('-');
+    let a_digits = a.trim_start_matches('-');
+    let b_digits = b.trim_start_matches('-');
+    match (a_negative, b_negative) {
+        (true, false) => Less,
+        (false, true) => Greater,
+        (false, false) => cmp_magnitude(a_digits, b_digits),
+        (true, true) => cmp_magnitude(b_digits, a_digits),
+    }
+}
+
+/// Compare two non-negative canonical digit strings (no leading zeros).
+fn cmp_magnitude(a: &str, b: &str) -> std::cmp::Ordering {
+    match a.len().cmp(&b.len()) {
+        std::cmp::Ordering::Equal => a.cmp(b),
+        other => other,
     }
 }
 
 /// Port of `counterexample._holds`: `None` when the text is not a
 /// relation over the supported operators.
 fn holds(text: &str, assignment: &BTreeMap<String, i64>) -> Option<bool> {
+    use std::cmp::Ordering::*;
     let (left, op, right) = relation(text)?;
-    let a = value(&left, assignment);
-    let b = value(&right, assignment);
+    let a = decimal_string(&left, assignment);
+    let b = decimal_string(&right, assignment);
+    let ord = cmp_decimal(&a, &b);
     Some(match op.as_str() {
-        ">=" => a >= b,
-        "<=" => a <= b,
-        ">" => a > b,
-        "<" => a < b,
-        "=" => a == b,
+        ">=" => ord != Less,
+        "<=" => ord != Greater,
+        ">" => ord == Greater,
+        "<" => ord == Less,
+        "=" => ord == Equal,
         _ => unreachable!("relation only yields the five operators"),
     })
 }
@@ -330,6 +379,33 @@ mod tests {
         assert_eq!(bad.outcome, "refuted");
         assert_eq!(bad.assignment.get("x"), Some(&5));
         assert_eq!(bad.bound, 5);
+    }
+
+    #[test]
+    fn oversized_literals_compare_without_panicking() {
+        // Python evaluates integer literals of any size; the port must
+        // compare them exactly instead of panicking on parse::<i64>().
+        let empty = BTreeMap::new();
+        assert_eq!(holds("0 > 9223372036854775808", &empty), Some(false));
+        assert_eq!(holds("9223372036854775808 > 0", &empty), Some(true));
+        assert_eq!(
+            holds("-9223372036854775809 < -9223372036854775808", &empty),
+            Some(true)
+        );
+        assert_eq!(
+            holds("9223372036854775808 = 9223372036854775808", &empty),
+            Some(true)
+        );
+        assert_eq!(holds("007 = 7", &empty), Some(true));
+        assert_eq!(holds("-0 = 0", &empty), Some(true));
+    }
+
+    #[test]
+    fn oversized_literal_premise_is_no_witness_not_a_crash() {
+        // No bounded assignment satisfies the premise; evaluating it
+        // must yield no-witness (as in Python), never a panic.
+        let result = find(&claim(&["x > 9223372036854775808"], "x < 0"), 3);
+        assert_eq!(result.outcome, "no-witness");
     }
 
     #[test]
