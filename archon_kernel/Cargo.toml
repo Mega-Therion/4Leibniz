@@ -1,0 +1,11 @@
+[package]
+name = "archon_kernel"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+description = "Rust port of the 4Leibniz verified epistemic/consensus primitives (SAMO v2.0 spec section 8, Target 2): epistemic monad taint rules, counterexample certificates, Groth16 verification gate, BFT decision accounting, and multi-prover aggregation."
+
+[dependencies]
+serde_json = "1.0"
+sha2 = "0.10"
